@@ -1,7 +1,7 @@
 import { and, asc, eq } from "drizzle-orm"
-import { studiesTable, tasksTable } from "../db/schema"
-import { db } from "../lib/drizzle"
-import { StudyInsert } from "../schemas/study"
+import { studiesTable, tasksTable } from "../db/schema.js"
+import { db } from "../lib/drizzle.js"
+import { StudyInsert } from "../schemas/study.js"
 
 export const findAllStudies = async (userId: number, perPage: number, currentPage: number) => {
   return await db.select().from(studiesTable)

@@ -1,7 +1,7 @@
 import { eq, and, isNotNull, asc } from "drizzle-orm";
-import { tasksTable } from "../db/schema";
-import { db } from "../lib/drizzle";
-import { TaskInsert } from "../schemas/task";
+import { tasksTable } from "../db/schema.js";
+import { db } from "../lib/drizzle.js";
+import { TaskInsert } from "../schemas/task.js";
 
 export const findUserTasks = async (studyId: number) => {
   return await db.select()

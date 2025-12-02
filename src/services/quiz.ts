@@ -1,12 +1,12 @@
 import { eq, desc, and, isNull, inArray } from "drizzle-orm";
-import { db } from "../lib/drizzle";
+import { db } from "../lib/drizzle.js";
 import {
   quizzesTable,
   userQuizzesTable,
   quizAttemptsTable,
   questionsTable,
   alternativesTable
-} from "../db/schema";
+} from "../db/schema.js";
 
 export const createNewQuiz = async (
   data: typeof quizzesTable.$inferInsert

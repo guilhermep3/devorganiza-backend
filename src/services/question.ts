@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
-import { db } from "../lib/drizzle";
-import { questionsTable, alternativesTable } from "../db/schema";
+import { db } from "../lib/drizzle.js";
+import { questionsTable, alternativesTable } from "../db/schema.js";
 
 export const findQuestions = async (quizId: number) => {
   return await db.select().from(questionsTable)

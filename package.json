@@ -4,14 +4,13 @@
   "description": "",
   "license": "ISC",
   "author": "",
-  "type": "commonjs",
+  "type": "module",
   "main": "server.js",
   "scripts": {
     "dev": "node --import=tsx --watch --env-file=.env ./src/server.ts",
     "generate": "drizzle-kit generate",
     "build": "tsc",
     "prebuild": "drizzle-kit generate",
-    "postbuild": "copyfiles -u 1 src/generated/**/* dist/generated",
     "start": "node dist/server.js"
   },
   "dependencies": {

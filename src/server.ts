@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from "cors"
 import helmet from 'helmet';
-import mainRouter from './routes/main';
+import mainRouter from './routes/main.js';
 
 export const server = express();
 

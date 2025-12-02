@@ -1,8 +1,8 @@
-import { createAlternativeSchema, createManyAlternativeSchema, updateAlternativeSchema } from "../schemas/alternative";
+import { createAlternativeSchema, createManyAlternativeSchema, updateAlternativeSchema } from "../schemas/alternative.js";
 import {
   createNewAlternative, createNewAlternatives, deleteAlternativeById,
   findAlternatives, updateAlternativeById
-} from "../services/question";
+} from "../services/question.js";
 import type { ExtendedRequest } from "../types/request.js";
 import type { Response } from "express";
 

@@ -1,7 +1,7 @@
 import { desc, eq } from "drizzle-orm"
-import { studiesTable, usersTable } from "../db/schema"
-import { db } from "../lib/drizzle"
-import { UpdateUserType } from "../schemas/auth"
+import { studiesTable, usersTable } from "../db/schema.js"
+import { db } from "../lib/drizzle.js"
+import { UpdateUserType } from "../schemas/auth.js"
 
 export const findAllUsers = async (perPage: number, currentPage: number) => {
   return await db.select().from(usersTable)

@@ -1,13 +1,12 @@
 import { Response } from "express";
-import { ExtendedRequest } from "../types/request";
-import { usersTable } from "../db/schema";
+import { ExtendedRequest } from "../types/request.js";
 import {
   deleteUserById, findAllUsers, findUserById, findUserStudies,
   getUserStudiesCount, updateImageByUser, updateUserById
-} from "../services/user";
-import cloudinary from "../utils/cloudinary";
-import { uploadToCloudinary } from "../utils/uploadToCloudinary";
-import { UpdateUserType } from "../schemas/auth";
+} from "../services/user.js";
+import cloudinary from "../utils/cloudinary.js";
+import { uploadToCloudinary } from "../utils/uploadToCloudinary.js";
+import { UpdateUserType } from "../schemas/auth.js";
 
 export const getAllUsers = async (req: ExtendedRequest, res: Response) => {
   try {
