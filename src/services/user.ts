@@ -1,5 +1,5 @@
 import { desc, eq } from "drizzle-orm"
-import { studiesTable, usersTable } from "../db/schema.js"
+import { studiesTable, tasksTable, usersTable } from "../db/schema.js"
 import { db } from "../lib/drizzle.js"
 import { UpdateUserType } from "../schemas/auth.js"
 
@@ -31,6 +31,25 @@ export const createUser = async (data: typeof usersTable.$inferInsert) => {
 export const getUserStudiesCount = async (id: number) => {
   return await db.select().from(studiesTable)
     .where(eq(studiesTable.userId, id)).then(res => res.length)
+}
+
+export const getUserTasksCount = async (id: number) => {
+  return await db.select().from(tasksTable)
+    .leftJoin(studiesTable, eq(studiesTable.id, tasksTable.studyId))
+    .where(eq(studiesTable.userId, id)).then(res => res.length)
+}
+
+export const getUserStudiesPercentage = async (id: number) => {
+  const studies = await db.select().from(studiesTable)
+    .where(eq(studiesTable.userId, id))
+
+  if (studies.length === 0) return 0;
+
+  const totalProgress = studies.reduce((acc, study) => acc + study.progress, 0);
+
+  const percentage = totalProgress / studies.length;
+
+  return percentage;
 }
 
 export const findUserStudies = async (id: number) => {

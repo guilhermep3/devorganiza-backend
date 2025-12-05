@@ -18,10 +18,7 @@ export const signinSchema = z.object({
 })
 
 export const updateUserSchema = z.object({
-  name: z.string().min(1, "Nome é obrigatório").max(100, "Nome deve ter no máximo 100 caracteres").optional(),
-  username: z.string().min(3, "Usuário muito curto").max(40, "Usuário deve ter no máximo 40 caracteres")
-    .regex(/^[a-zA-Z0-9_.-]+$/, "Username pode conter letras, números, _ . -").optional(),
-  email: z.string().email("Email inválido").max(100).optional(),
-  password: z.string().min(4, "Senha deve ter pelo menos 4 caracteres").max(255, "Senha muito longa").optional(),
-  role: z.string().optional()
-})
+  name: z.string().min(1).max(100).optional(),
+  username: z.string().min(3).max(40).regex(/^[a-zA-Z0-9_.-]+$/).optional(),
+  password: z.string().min(4).max(255).optional(),
+});

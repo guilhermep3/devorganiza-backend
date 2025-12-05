@@ -2,11 +2,11 @@ import { Response } from "express";
 import { ExtendedRequest } from "../types/request.js";
 import {
   deleteUserById, findAllUsers, findUserById, findUserStudies,
-  getUserStudiesCount, updateImageByUser, updateUserById
+  getUserStudiesCount, getUserStudiesPercentage, getUserTasksCount, updateImageByUser, updateUserById
 } from "../services/user.js";
 import cloudinary from "../utils/cloudinary.js";
 import { uploadToCloudinary } from "../utils/uploadToCloudinary.js";
-import { UpdateUserType } from "../schemas/auth.js";
+import { updateUserSchema, UpdateUserType } from "../schemas/auth.js";
 
 export const getAllUsers = async (req: ExtendedRequest, res: Response) => {
   try {
@@ -34,8 +34,10 @@ export const getUser = async (req: ExtendedRequest, res: Response) => {
     }
 
     const studiesCount = await getUserStudiesCount(user.id);
+    const tasksCount = await getUserTasksCount(user.id);
+    const studiesPercentage = await getUserStudiesPercentage(user.id);
 
-    res.json({ user, studiesCount });
+    res.json({ user, studiesCount, tasksCount, studiesPercentage });
   } catch (error) {
     res.status(500).json({ error: "Erro ao buscar usuário", errorDetails: error });
   }
@@ -60,13 +62,13 @@ export const getStudies = async (req: ExtendedRequest, res: Response) => {
 export const updateUser = async (req: ExtendedRequest, res: Response) => {
   try {
     const idLogged = req.idLogged as number;
-    const data = (req.body) as UpdateUserType;
-    if (!data || Object.keys(data).length === 0) {
-      res.status(422).json({ error: "Dados inválidos" });
+    const data = updateUserSchema.safeParse(req.body);
+    if (!data.success || !data.data) {
+      res.status(422).json({ error: data.error.flatten() });
       return;
     }
 
-    const userUpdated = await updateUserById(idLogged, data);
+    const userUpdated = await updateUserById(idLogged, data.data);
     if (!userUpdated) {
       res.status(404).json({ error: "Usuário não encontrado" });
       return;
