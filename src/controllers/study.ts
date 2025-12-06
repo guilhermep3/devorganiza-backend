@@ -63,9 +63,9 @@ export const createStudy = async (req: ExtendedRequest, res: Response) => {
       res.status(422).json({ error: safeData.error.flatten().fieldErrors });
       return;
     }
-
+    
     const haveStudy = await findUserStudyByName(safeData.data.name, idLogged);
-    if (haveStudy) {
+    if (haveStudy && haveStudy.length > 0) {
       res.status(400).json({ error: "Já existe um estudo com o mesmo nome" });
       return;
     }

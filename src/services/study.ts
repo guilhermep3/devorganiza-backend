@@ -20,9 +20,12 @@ export const findUserStudies = async (userId: number) => {
 
 export const findUserStudyByName = async (name: string, userId: number) => {
   return await db.select().from(studiesTable)
-    .where(eq(studiesTable.name, name))
-    .leftJoin(tasksTable, eq(studiesTable.id, tasksTable.studyId))
-}
+    .where(and(
+      eq(studiesTable.name, name),
+      eq(studiesTable.userId, userId)
+    ))
+    .leftJoin(tasksTable, eq(studiesTable.id, tasksTable.studyId));
+};
 
 export const createUserStudy = async (data: StudyInsert) => {
   return await db.insert(studiesTable).values(data).returning();
