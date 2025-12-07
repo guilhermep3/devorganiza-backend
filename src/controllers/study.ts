@@ -2,6 +2,7 @@ import type { Response } from "express"
 import type { ExtendedRequest } from "../types/request.js"
 import {
   createUserStudy, deleteStudyById, findAllStudies, findUserStudies,
+  findUserStudyById,
   findUserStudyByName, updateStudyById
 } from "../services/study.js";
 import { createStudySchema, updateStudySchema } from "../schemas/study.js";
@@ -46,6 +47,17 @@ export const getStudies = async (req: ExtendedRequest, res: Response) => {
     return;
   } catch (error) {
     res.status(500).json({ error: "Erro ao buscar estudos do usuário", errorDetails: error });
+    return;
+  }
+}
+
+export const getUserStudy = (req: ExtendedRequest, res: Response) => {
+  try {
+    const id = Number(req.params.id);
+
+    const study = findUserStudyById(id);
+  } catch (error) {
+    res.status(500).json({ error: "Erro ao buscar um estudo", errorDetails: error });
     return;
   }
 }

@@ -18,6 +18,11 @@ export const findUserStudies = async (userId: number) => {
     .orderBy(asc(studiesTable.createdAt))
 }
 
+export const findUserStudyById = async (id: number) => {
+  return await db.select().from(studiesTable)
+    .where(eq(studiesTable.id, id)).limit(1)
+}
+
 export const findUserStudyByName = async (name: string, userId: number) => {
   return await db.select().from(studiesTable)
     .where(and(
