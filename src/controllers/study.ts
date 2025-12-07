@@ -31,6 +31,7 @@ export const getAllStudies = async (req: ExtendedRequest, res: Response) => {
     res.status(500).json({ error: "Erro ao buscar todos os estudos", errorDetails: error });
   }
 }
+
 export const getStudies = async (req: ExtendedRequest, res: Response) => {
   try {
     const idLogged = req.idLogged;
@@ -47,11 +48,12 @@ export const getStudies = async (req: ExtendedRequest, res: Response) => {
   }
 }
 
-export const getUserStudy = (req: ExtendedRequest, res: Response) => {
+export const getUserStudy = async (req: ExtendedRequest, res: Response) => {
   try {
     const id = Number(req.params.id);
 
-    const study = findUserStudyById(id);
+    const study = await findUserStudyById(id);
+
     res.json(study);
   } catch (error) {
     res.status(500).json({ error: "Erro ao buscar um estudo", errorDetails: error });
@@ -71,7 +73,7 @@ export const createStudy = async (req: ExtendedRequest, res: Response) => {
       res.status(422).json({ error: safeData.error.flatten().fieldErrors });
       return;
     }
-    
+
     const haveStudy = await findUserStudyByName(safeData.data.name, idLogged);
     if (haveStudy && haveStudy.length > 0) {
       res.status(400).json({ error: "Já existe um estudo com o mesmo nome" });

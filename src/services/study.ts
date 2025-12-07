@@ -4,12 +4,32 @@ import { db } from "../lib/drizzle.js"
 import { StudyInsert } from "../schemas/study.js"
 
 export const findAllStudies = async (userId: number, perPage: number, currentPage: number) => {
-  return await db.select().from(studiesTable)
+  const rows = await db.select().from(studiesTable)
     .where(eq(studiesTable.userId, userId))
     .leftJoin(tasksTable, eq(studiesTable.id, tasksTable.studyId))
     .limit(perPage)
     .offset(currentPage * perPage)
-}
+
+  const map = new Map<number, any>();
+
+  for (const row of rows) {
+    const study = row.studies;
+    const task = row.tasks;
+
+    if (!map.has(study.id)) {
+      map.set(study.id, {
+        study,
+        tasks: []
+      });
+    }
+
+    if (task) {
+      map.get(study.id).tasks.push(task);
+    }
+  }
+
+  return Array.from(map.values());
+};
 
 export const findUserStudies = async (userId: number) => {
   return await db.select().from(studiesTable)
@@ -19,8 +39,20 @@ export const findUserStudies = async (userId: number) => {
 }
 
 export const findUserStudyById = async (id: number) => {
-  return await db.select().from(studiesTable)
-    .where(eq(studiesTable.id, id)).limit(1)
+  const rows = await db.select().from(studiesTable)
+    .where(eq(studiesTable.id, id))
+    .leftJoin(tasksTable, eq(tasksTable.studyId, studiesTable.id))
+
+  if (!rows.length) return null;
+
+  const study = rows[0]?.studies;
+  const tasks = rows
+    .map(r => r.tasks)
+    .filter(t => t !== null);
+
+  return {
+    study, tasks
+  };
 }
 
 export const findUserStudyByName = async (name: string, userId: number) => {
