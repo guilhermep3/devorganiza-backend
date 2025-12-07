@@ -27,10 +27,8 @@ export const getAllStudies = async (req: ExtendedRequest, res: Response) => {
     const studies = await findAllStudies(idLogged, perPage, currentPage);
 
     res.json(studies);
-    return;
   } catch (error) {
     res.status(500).json({ error: "Erro ao buscar todos os estudos", errorDetails: error });
-    return;
   }
 }
 export const getStudies = async (req: ExtendedRequest, res: Response) => {
@@ -44,10 +42,8 @@ export const getStudies = async (req: ExtendedRequest, res: Response) => {
     const studies = await findUserStudies(idLogged as number);
 
     res.json(studies);
-    return;
   } catch (error) {
     res.status(500).json({ error: "Erro ao buscar estudos do usuário", errorDetails: error });
-    return;
   }
 }
 
@@ -56,9 +52,9 @@ export const getUserStudy = (req: ExtendedRequest, res: Response) => {
     const id = Number(req.params.id);
 
     const study = findUserStudyById(id);
+    res.json(study);
   } catch (error) {
     res.status(500).json({ error: "Erro ao buscar um estudo", errorDetails: error });
-    return;
   }
 }
 
@@ -104,10 +100,8 @@ export const createStudy = async (req: ExtendedRequest, res: Response) => {
     } else {
       res.json({ newStudy });
     }
-    return;
   } catch (error) {
     res.status(500).json({ error: "Erro ao criar estudo do usuário", errorDetails: error });
-    return;
   }
 }
 
@@ -133,10 +127,8 @@ export const updateStudy = async (req: ExtendedRequest, res: Response) => {
     const updatedStudy = await updateStudyById(studyId, userId, cleanedData);
 
     res.json({ updatedStudy });
-    return;
   } catch (error) {
     res.status(500).json({ error: "Erro ao atualizar estudo" });
-    return;
   }
 };
 
@@ -152,9 +144,7 @@ export const deleteStudy = async (req: ExtendedRequest, res: Response) => {
     await deleteStudyById(studyId, userId);
 
     res.status(204).send();
-    return;
   } catch (error) {
     res.status(500).json({ error: "Erro ao deletar estudo" });
-    return;
   }
 };
