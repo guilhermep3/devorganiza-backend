@@ -32,10 +32,30 @@ export const findAllStudies = async (userId: number, perPage: number, currentPag
 };
 
 export const findUserStudies = async (userId: number) => {
-  return await db.select().from(studiesTable)
+  const rows = await db.select().from(studiesTable)
     .where(eq(studiesTable.userId, userId))
     .leftJoin(tasksTable, eq(studiesTable.id, tasksTable.studyId))
     .orderBy(asc(studiesTable.createdAt))
+
+  const studiesMap = new Map<number, any>();
+
+  for (const row of rows) {
+    const study = row.studies;
+    const task = row.tasks;
+
+    if (!studiesMap.has(study.id)) {
+      studiesMap.set(study.id, {
+        study,
+        tasks: [],
+      });
+    }
+
+    if (task) {
+      studiesMap.get(study.id).tasks.push(task);
+    }
+  }
+
+  return Array.from(studiesMap.values());
 }
 
 export const findUserStudyById = async (id: number) => {
