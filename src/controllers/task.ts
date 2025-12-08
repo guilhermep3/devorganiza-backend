@@ -71,19 +71,26 @@ export const updateTask = async (req: ExtendedRequest, res: Response) => {
       return;
     }
 
-    const cleanedData = Object.fromEntries(
+    const cleanedData: any = Object.fromEntries(
       Object.entries(safeData.data).filter(([_, v]) => v !== undefined)
     );
+    if ("done" in cleanedData) {
+      if (cleanedData.done === true) {
+        cleanedData.finishedAt = new Date();
+      } else {
+        cleanedData.finishedAt = null;
+      }
+    }
 
     const updatedTask = await updateUserTask(taskId, cleanedData as Parameters<typeof updateUserTask>[1]);
 
     const updatedTaskRecord = Array.isArray(updatedTask) ? updatedTask[0] : updatedTask;
 
-    if ("finishedAt" in cleanedData) {
+    if ("done" in cleanedData) {
       const studyId = (updatedTaskRecord as any).studyId;
       const tasksCount = await findTasksCount(studyId);
       const finishedTasksCount = await findFinishedTasksCount(studyId);
-      const progress = (tasksCount === 0 ? 0 : finishedTasksCount / tasksCount) * 100;
+      const progress = tasksCount === 0 ? 0 : (finishedTasksCount / tasksCount) * 100;
 
       await updateStudyProgress(studyId, progress);
     }

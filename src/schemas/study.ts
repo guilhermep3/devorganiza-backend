@@ -2,6 +2,7 @@ import z from "zod";
 import { studiesTable } from "../db/schema";
 
 export type StudyInsert = typeof studiesTable.$inferInsert;
+export type StudyUpdate = typeof updateStudySchema;
 
 export const createStudySchema: z.ZodType<Omit<StudyInsert, 'userId'>> = z.object({
   name: z.string().min(1, "O título é obrigatório"),
