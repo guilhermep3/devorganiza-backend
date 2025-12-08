@@ -12,6 +12,7 @@ export const createTaskSchema: z.ZodType<Omit<TaskInsert, 'studyId'>> = z.object
 export const updateTaskSchema = z.object({
   title: z.string().min(1, { message: "O título é obrigatório" }).optional(),
   link: z.string().url().optional(),
+  done: z.boolean().optional(),
   finishIn: z.number().optional(),
   finishedAt: z.string().datetime().pipe(z.coerce.date()).optional()
 });
