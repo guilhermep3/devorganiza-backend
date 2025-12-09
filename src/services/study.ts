@@ -103,8 +103,14 @@ export const updateStudyById = async (
 };
 
 export const updateStudyProgress = async (id: number, progress: number) => {
+  const dataUpdated: Record<string, any> = {};
+  dataUpdated.progress = progress
+  if (progress === 100) {
+    dataUpdated.status = "finalizado"
+  }
+
   return await db.update(studiesTable)
-    .set({ progress })
+    .set(dataUpdated)
     .where(eq(studiesTable.id, id))
     .returning();
 }

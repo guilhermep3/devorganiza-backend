@@ -81,7 +81,7 @@ export const updateTask = async (req: ExtendedRequest, res: Response) => {
         cleanedData.finishedAt = null;
       }
     }
-
+    
     const updatedTask = await updateUserTask(taskId, cleanedData as Parameters<typeof updateUserTask>[1]);
 
     const updatedTaskRecord = Array.isArray(updatedTask) ? updatedTask[0] : updatedTask;
