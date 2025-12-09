@@ -1,4 +1,4 @@
-import { eq, desc, and, isNull, inArray } from "drizzle-orm";
+import { eq, desc, and, isNull, inArray, asc } from "drizzle-orm";
 import { db } from "../lib/drizzle.js";
 import {
   quizzesTable,
@@ -82,6 +82,24 @@ export const findUserQuizzes = async (userId: number) => {
   }
 
   return [...map.values()];
+}
+
+export const findAllQuizzes = async () => {
+  return await db.select().from(quizzesTable)
+    .orderBy(asc(quizzesTable.id))
+}
+
+export const findLockedQuizzes = async (userId: number) => {
+  const rows = await db.select()
+    .from(quizzesTable)
+    .leftJoin(userQuizzesTable,
+      and(
+        eq(userQuizzesTable.quizId, quizzesTable.id),
+        eq(userQuizzesTable.userId, userId)
+      ))
+    .where(isNull(userQuizzesTable.id))
+
+  return rows.map(row => row.quizzes);
 }
 
 export const findFullQuiz = async (quizId: number) => {

@@ -10,6 +10,8 @@ import * as alternativeController from "../controllers/alternative.js"
 export const quizRoutes = Router();
 
 quizRoutes.get('/', verifyJWT, quizController.getQuizzes);
+quizRoutes.get('/all', verifyJWT, quizController.getAllQuizzes);
+quizRoutes.get('/locked', verifyJWT, quizController.getLockedQuizzes);
 quizRoutes.post('/', verifyJWT, verifyRole, quizController.createQuiz);
 quizRoutes.post('/many', verifyJWT, verifyRole, quizController.createManyQuiz);
 quizRoutes.get('/:quizId', verifyJWT, validateQuiz, quizController.getQuiz);

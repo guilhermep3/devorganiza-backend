@@ -1,7 +1,8 @@
 import type { Response } from "express";
 import type { ExtendedRequest } from "../types/request.js";
 import {
-  createNewQuiz, createNewQuizzes, deleteQuizById, findCorrectAnswers, findFullQuiz, findLastAttempt,
+  createNewQuiz, createNewQuizzes, deleteQuizById, findAllQuizzes, findCorrectAnswers, findFullQuiz, findLastAttempt,
+  findLockedQuizzes,
   findQuizById, findUserQuiz, findUserQuizzes, finishAttempt,
   startUserQuiz, unlockUserQuiz, updateImageByQuiz, updateQuizById
 } from "../services/quiz.js";
@@ -27,6 +28,43 @@ export const getQuizzes = async (req: ExtendedRequest, res: Response) => {
     return;
   }
 }
+
+export const getAllQuizzes = async (req: ExtendedRequest, res: Response) => {
+  try {
+    const idLogged = req.idLogged as number;
+    if (!idLogged) {
+      res.status(401).json({ error: "Usuário não autenticado." });
+      return;
+    }
+
+    const userQuizzes = await findAllQuizzes();
+
+    res.json(userQuizzes);
+    return;
+  } catch (error) {
+    res.status(500).json({ error: "Erro ao buscar todos os quizzes do usuário", errorDetails: error });
+    return;
+  }
+}
+
+export const getLockedQuizzes = async (req: ExtendedRequest, res: Response) => {
+  try {
+    const idLogged = req.idLogged as number;
+    if (!idLogged) {
+      res.status(401).json({ error: "Usuário não autenticado." });
+      return;
+    }
+
+    const quizzes = await findLockedQuizzes(idLogged);
+
+    res.json(quizzes);
+  } catch (error) {
+    res.status(500).json({
+      error: "Erro ao buscar quizzes não desbloqueados",
+      errorDetails: error
+    });
+  }
+};
 
 export const createQuiz = async (req: ExtendedRequest, res: Response) => {
   try {
