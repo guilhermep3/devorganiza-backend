@@ -2,8 +2,7 @@ import type { Response } from "express";
 import type { ExtendedRequest } from "../types/request.js";
 import {
   createNewQuiz, createNewQuizzes, deleteQuizById, findAllQuizzes, findCorrectAnswers, findFullQuiz, findLastAttempt,
-  findLockedQuizzes,
-  findQuizById, findUserQuiz, findUserQuizzes, finishAttempt,
+  findLockedQuizzes, findQuizById, findUserQuiz, findUserQuizzes, finishAttempt,
   startUserQuiz, unlockUserQuiz, updateImageByQuiz, updateQuizById
 } from "../services/quiz.js";
 import { attemptAnswersSchema, createQuizSchema, createQuizzesSchema, updateQuizSchema } from "../schemas/quiz.js";
@@ -13,7 +12,7 @@ import { calculateDuration } from "../utils/calculateDuration.js";
 
 export const getQuizzes = async (req: ExtendedRequest, res: Response) => {
   try {
-    const idLogged = req.idLogged as number;
+    const idLogged = req.idLogged as string;
     if (!idLogged) {
       res.status(401).json({ error: "Usuário não autenticado." });
       return;
@@ -31,7 +30,7 @@ export const getQuizzes = async (req: ExtendedRequest, res: Response) => {
 
 export const getAllQuizzes = async (req: ExtendedRequest, res: Response) => {
   try {
-    const idLogged = req.idLogged as number;
+    const idLogged = req.idLogged as string;
     if (!idLogged) {
       res.status(401).json({ error: "Usuário não autenticado." });
       return;
@@ -49,7 +48,7 @@ export const getAllQuizzes = async (req: ExtendedRequest, res: Response) => {
 
 export const getLockedQuizzes = async (req: ExtendedRequest, res: Response) => {
   try {
-    const idLogged = req.idLogged as number;
+    const idLogged = req.idLogged as string;
     if (!idLogged) {
       res.status(401).json({ error: "Usuário não autenticado." });
       return;
@@ -104,7 +103,7 @@ export const createManyQuiz = async (req: ExtendedRequest, res: Response) => {
 
 export const getQuiz = async (req: ExtendedRequest, res: Response) => {
   try {
-    const quizId = Number(req.params.quizId);
+    const quizId = req.params.quizId as string;
 
     const fullQuiz = await findFullQuiz(quizId);
 
@@ -119,7 +118,6 @@ export const getQuiz = async (req: ExtendedRequest, res: Response) => {
   }
 }
 
-
 export const updateQuiz = async (req: ExtendedRequest, res: Response) => {
   try {
     const safeData = updateQuizSchema.safeParse(req.body);
@@ -127,12 +125,14 @@ export const updateQuiz = async (req: ExtendedRequest, res: Response) => {
       res.status(400).json({ error: safeData.error.flatten().fieldErrors });
       return;
     }
-    const idLogged = req.idLogged as number;
+
+    const idLogged = req.idLogged as string;
     if (!idLogged) {
       res.status(401).json({ error: "Usuário não autenticado." });
       return;
     }
-    const quizId = Number(req.params.quizId);;
+
+    const quizId = req.params.quizId as string;
 
     const convertedData = {
       ...safeData.data,
@@ -152,7 +152,7 @@ export const updateQuiz = async (req: ExtendedRequest, res: Response) => {
 
 export const deleteQuiz = async (req: ExtendedRequest, res: Response) => {
   try {
-    const quizId = Number(req.params.quizId);;
+    const quizId = req.params.quizId as string;
 
     const haveQuiz = await findQuizById(quizId);
 
@@ -173,12 +173,13 @@ export const deleteQuiz = async (req: ExtendedRequest, res: Response) => {
 
 export const unlockQuiz = async (req: ExtendedRequest, res: Response) => {
   try {
-    const idLogged = req.idLogged as number;
+    const idLogged = req.idLogged as string;
     if (!idLogged) {
       res.status(401).json({ error: "Usuário não autenticado." });
       return;
     }
-    const quizId = Number(req.params.quizId);;
+
+    const quizId = req.params.quizId as string;
 
     const quizUnlocked = await unlockUserQuiz(idLogged, quizId);
 
@@ -192,7 +193,7 @@ export const unlockQuiz = async (req: ExtendedRequest, res: Response) => {
 
 export const updateQuizImage = async (req: ExtendedRequest, res: Response) => {
   try {
-    const quizId = Number(req.params.quizId);
+    const quizId = req.params.quizId as string;
 
     if (!req.file) {
       res.status(400).json({ error: "Nenhum arquivo enviado" });
@@ -230,12 +231,13 @@ export const updateQuizImage = async (req: ExtendedRequest, res: Response) => {
 
 export const startQuizAttempt = async (req: ExtendedRequest, res: Response) => {
   try {
-    const idLogged = req.idLogged as number;
+    const idLogged = req.idLogged as string;
     if (!idLogged) {
       res.status(401).json({ error: "Usuário não autenticado." });
       return;
     }
-    const quizId = Number(req.params.quizId);;
+
+    const quizId = req.params.quizId as string;
 
     const quiz = await findUserQuiz(quizId, idLogged);
     if (!quiz) {
@@ -255,12 +257,14 @@ export const startQuizAttempt = async (req: ExtendedRequest, res: Response) => {
 
 export const finishQuizAttempt = async (req: ExtendedRequest, res: Response) => {
   try {
-    const idLogged = req.idLogged as number;
+    const idLogged = req.idLogged as string;
     if (!idLogged) {
       res.status(401).json({ error: "Usuário não autenticado." });
       return;
     }
-    const quizId = Number(req.params.quizId);
+
+    const quizId = req.params.quizId as string;
+
     const quiz = await findUserQuiz(quizId, idLogged);
     if (!quiz) {
       res.status(400).json({ error: "Quiz não encontrado" });
@@ -294,9 +298,7 @@ export const finishQuizAttempt = async (req: ExtendedRequest, res: Response) => 
 
     const startedAt = lastAttempt.startedAt;
     const currentTime = new Date();
-    const {
-      minutes, seconds, remainingSeconds
-    } = calculateDuration(startedAt, currentTime);
+    const { minutes, seconds, remainingSeconds } = calculateDuration(startedAt, currentTime);
 
     const attemptFinished = await finishAttempt(
       lastAttempt.id,

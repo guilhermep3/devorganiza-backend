@@ -3,14 +3,14 @@ import { studiesTable, tasksTable } from "../db/schema.js"
 import { db } from "../lib/drizzle.js"
 import { StudyInsert } from "../schemas/study.js"
 
-export const findAllStudies = async (userId: number, perPage: number, currentPage: number) => {
+export const findAllStudies = async (userId: string, perPage: number, currentPage: number) => {
   const rows = await db.select().from(studiesTable)
     .where(eq(studiesTable.userId, userId))
     .leftJoin(tasksTable, eq(studiesTable.id, tasksTable.studyId))
     .limit(perPage)
     .offset(currentPage * perPage)
 
-  const map = new Map<number, any>();
+  const map = new Map<string, any>();
 
   for (const row of rows) {
     const study = row.studies;
@@ -31,13 +31,13 @@ export const findAllStudies = async (userId: number, perPage: number, currentPag
   return Array.from(map.values());
 };
 
-export const findUserStudies = async (userId: number) => {
+export const findUserStudies = async (userId: string) => {
   const rows = await db.select().from(studiesTable)
     .where(eq(studiesTable.userId, userId))
     .leftJoin(tasksTable, eq(studiesTable.id, tasksTable.studyId))
     .orderBy(asc(studiesTable.createdAt))
 
-  const studiesMap = new Map<number, any>();
+  const studiesMap = new Map<string, any>();
 
   for (const row of rows) {
     const study = row.studies;
@@ -58,7 +58,7 @@ export const findUserStudies = async (userId: number) => {
   return Array.from(studiesMap.values());
 }
 
-export const findUserStudyById = async (id: number) => {
+export const findUserStudyById = async (id: string) => {
   const rows = await db.select().from(studiesTable)
     .where(eq(studiesTable.id, id))
     .leftJoin(tasksTable, eq(tasksTable.studyId, studiesTable.id))
@@ -75,7 +75,7 @@ export const findUserStudyById = async (id: number) => {
   };
 }
 
-export const findUserStudyByName = async (name: string, userId: number) => {
+export const findUserStudyByName = async (name: string, userId: string) => {
   return await db.select().from(studiesTable)
     .where(and(
       eq(studiesTable.name, name),
@@ -89,7 +89,7 @@ export const createUserStudy = async (data: StudyInsert) => {
 }
 
 export const updateStudyById = async (
-  studyId: number, userId: number, data: Partial<StudyInsert>
+  studyId: string, userId: string, data: Partial<StudyInsert>
 ) => {
   const updatedStudy = await db.update(studiesTable)
     .set(data)
@@ -102,7 +102,7 @@ export const updateStudyById = async (
   return updatedStudy;
 };
 
-export const updateStudyProgress = async (id: number, progress: number) => {
+export const updateStudyProgress = async (id: string, progress: number) => {
   const dataUpdated: Record<string, any> = {};
   dataUpdated.progress = progress
   if (progress === 100) {
@@ -115,7 +115,7 @@ export const updateStudyProgress = async (id: number, progress: number) => {
     .returning();
 }
 
-export const deleteStudyById = async (studyId: number, userId: number) => {
+export const deleteStudyById = async (studyId: string, userId: string) => {
   return await db.delete(studiesTable)
     .where(and(
       eq(studiesTable.id, studyId),

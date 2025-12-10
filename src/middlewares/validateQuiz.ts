@@ -3,7 +3,7 @@ import type { ExtendedRequest } from "../types/request.js";
 import { findQuizById } from "../services/quiz.js";
 
 export const validateQuiz = async ( req: ExtendedRequest, res: Response, next: NextFunction ) => {
-  const quizId = Number(req.params.quizId);
+  const quizId = req.params.quizId as string;
 
   if (!quizId) {
     return res.status(400).json({ error: "Quiz inválido." });

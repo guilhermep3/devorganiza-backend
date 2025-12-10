@@ -1,14 +1,14 @@
 import { createAlternativeSchema, createManyAlternativeSchema, updateAlternativeSchema } from "../schemas/alternative.js";
 import {
-  createNewAlternative, createNewAlternatives, deleteAlternativeById,
-  findAlternatives, updateAlternativeById
+  createNewAlternative, createNewAlternatives, deleteAlternativeById, findAlternatives, updateAlternativeById
 } from "../services/question.js";
 import type { ExtendedRequest } from "../types/request.js";
 import type { Response } from "express";
 
 export const getAlternatives = async (req: ExtendedRequest, res: Response) => {
   try {
-    const questionId = Number(req.params.questionId);
+    const questionId = req.params.questionId as string;
+
     if (!questionId) {
       res.status(400).json({ error: "Acesso negado" });
       return;
@@ -24,7 +24,12 @@ export const getAlternatives = async (req: ExtendedRequest, res: Response) => {
 
 export const createAlternatives = async (req: ExtendedRequest, res: Response) => {
   try {
-    const questionId = Number(req.params.questionId);
+    const questionId = req.params.questionId as string;
+
+    if (!questionId) {
+      res.status(400).json({ error: "Acesso negado" });
+      return;
+    }
 
     const safeData = createAlternativeSchema.safeParse(req.body);
     if (!safeData.success) {
@@ -32,7 +37,10 @@ export const createAlternatives = async (req: ExtendedRequest, res: Response) =>
       return;
     }
 
-    const newAlternative = await createNewAlternative(safeData.data);
+    const newAlternative = await createNewAlternative({
+      ...safeData.data,
+      questionId
+    });
 
     res.status(201).json(newAlternative);
   } catch (error) {
@@ -51,7 +59,7 @@ export const createManyAlternatives = async (req: ExtendedRequest, res: Response
     const alternatives = safeData.data.map((a: any) => ({
       text: a.text,
       isCorrect: a.isCorrect,
-      questionId: a.questionId
+      questionId: a.questionId as string
     }))
 
     const newAlternative = await createNewAlternatives(alternatives);
@@ -64,7 +72,12 @@ export const createManyAlternatives = async (req: ExtendedRequest, res: Response
 
 export const updateAlternative = async (req: ExtendedRequest, res: Response) => {
   try {
-    const alternativeId = Number(req.params.alternativeId);
+    const alternativeId = req.params.alternativeId as string;
+
+    if (!alternativeId) {
+      res.status(400).json({ error: "Acesso negado" });
+      return;
+    }
 
     const safeData = updateAlternativeSchema.safeParse(req.body);
     if (!safeData.success) {
@@ -88,7 +101,12 @@ export const updateAlternative = async (req: ExtendedRequest, res: Response) => 
 
 export const deleteAlternative = async (req: ExtendedRequest, res: Response) => {
   try {
-    const alternativeId = Number(req.params.alternativeId);
+    const alternativeId = req.params.alternativeId as string;
+
+    if (!alternativeId) {
+      res.status(400).json({ error: "Acesso negado" });
+      return;
+    }
 
     await deleteAlternativeById(alternativeId);
 

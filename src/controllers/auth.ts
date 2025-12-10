@@ -42,7 +42,7 @@ export const signup = async (req: Request, res: Response) => {
     const newUser = await createUser(userData);
     res.status(201).json(newUser);
   } catch (error) {
-    res.status(500).json({ error: "Erro ao criar conta de usuário", errorDetails: error })
+    res.status(500).json({ error: "Erro ao criar conta de usuário", errorDetails: error });
   }
 }
 
@@ -60,13 +60,20 @@ export const signin = async (req: Request, res: Response) => {
       return;
     }
 
-    const verifyPassword = await compare(safeData.data.password, account.password);
+    const verifyPassword = await compare(
+      safeData.data.password,
+      account.password
+    );
+
     if (!verifyPassword) {
       res.status(400).json({ error: 'Acesso negado' });
       return;
     }
 
-    const token = await createJWT(account.id, account.role);
+    const token = await createJWT(
+      account.id as string,
+      account.role
+    );
 
     const { password: _, ...userWithoutPassword } = account;
 
@@ -76,6 +83,6 @@ export const signin = async (req: Request, res: Response) => {
       user: userWithoutPassword
     });
   } catch (error) {
-    res.status(500).json({ error: "Erro ao criar conta de usuário", errorDetails: error })
+    res.status(500).json({ error: "Erro ao criar conta de usuário", errorDetails: error });
   }
 }

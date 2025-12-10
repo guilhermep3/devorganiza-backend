@@ -7,7 +7,7 @@ import { createQuestionSchema, manyQuestionSchema, updateQuestionSchema } from "
 
 export const getQuestions = async (req: ExtendedRequest, res: Response) => {
   try {
-    const quizId = Number(req.params.quizId);
+    const quizId = req.params.quizId as string;
 
     const question = await findQuestions(quizId);
 
@@ -21,7 +21,7 @@ export const getQuestions = async (req: ExtendedRequest, res: Response) => {
 
 export const createQuestion = async (req: ExtendedRequest, res: Response) => {
   try {
-    const quizId = Number(req.params.quizId);
+    const quizId = req.params.quizId as string;
 
     const safeData = createQuestionSchema.safeParse(req.body);
     if (!safeData.success) {
@@ -47,7 +47,7 @@ export const createManyQuestion = async (req: ExtendedRequest, res: Response) =>
       return;
     }
 
-    const quizId = Number(req.params.quizId);
+    const quizId = req.params.quizId as string;
     const questions = safeData.data.map(q => ({
       question: q.question,
       quizId
@@ -65,7 +65,7 @@ export const createManyQuestion = async (req: ExtendedRequest, res: Response) =>
 
 export const updateQuestion = async (req: ExtendedRequest, res: Response) => {
   try {
-    const questionId = Number(req.params.questionId);
+    const questionId = req.params.questionId as string;
 
     const safeData = updateQuestionSchema.safeParse(req.body);
     if (!safeData.success) {
@@ -85,7 +85,7 @@ export const updateQuestion = async (req: ExtendedRequest, res: Response) => {
 
 export const deleteQuestion = async (req: ExtendedRequest, res: Response) => {
   try {
-    const questionId = Number(req.params.questionId);
+    const questionId = req.params.questionId as string;
 
     await deleteQuestionById(questionId);
 

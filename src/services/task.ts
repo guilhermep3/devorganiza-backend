@@ -3,36 +3,43 @@ import { tasksTable } from "../db/schema.js";
 import { db } from "../lib/drizzle.js";
 import { TaskInsert } from "../schemas/task.js";
 
-export const findUserTasks = async (studyId: number) => {
-  return await db.select()
+export const findUserTasks = async (studyId: string) => {
+  return await db
+    .select()
     .from(tasksTable)
     .where(eq(tasksTable.studyId, studyId))
     .orderBy(asc(tasksTable.id));
 };
 
 export const createUserTask = async (data: TaskInsert) => {
-  return await db.insert(tasksTable)
+  return await db
+    .insert(tasksTable)
     .values(data)
-    .returning();
+    .returning()
+    .then(res => res[0]);
 };
 
-export const updateUserTask = async (taskId: number, data: TaskInsert) => {
-  return await db.update(tasksTable)
+export const updateUserTask = async (taskId: string, data: TaskInsert) => {
+  return await db
+    .update(tasksTable)
     .set(data)
     .where(eq(tasksTable.id, taskId))
-    .returning();
+    .returning()
+    .then(res => res[0]);
 };
 
-export const findTasksCount = async (studyId: number) => {
-  const tasks = await db.select()
+export const findTasksCount = async (studyId: string) => {
+  const tasks = await db
+    .select()
     .from(tasksTable)
     .where(eq(tasksTable.studyId, studyId));
 
   return tasks.length;
 };
 
-export const findFinishedTasksCount = async (studyId: number) => {
-  const tasks = await db.select()
+export const findFinishedTasksCount = async (studyId: string) => {
+  const tasks = await db
+    .select()
     .from(tasksTable)
     .where(
       and(
@@ -44,7 +51,8 @@ export const findFinishedTasksCount = async (studyId: number) => {
   return tasks.length;
 };
 
-export const deleteUserTask = async (taskId: number) => {
-  return await db.delete(tasksTable)
+export const deleteUserTask = async (taskId: string) => {
+  return await db
+    .delete(tasksTable)
     .where(eq(tasksTable.id, taskId));
 };

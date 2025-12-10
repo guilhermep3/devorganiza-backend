@@ -9,7 +9,7 @@ export const findAllUsers = async (perPage: number, currentPage: number) => {
     .orderBy(desc(usersTable.createdAt))
 }
 
-export const findUserById = async (id: number) => {
+export const findUserById = async (id: string) => {
   return await db.select().from(usersTable)
     .where(eq(usersTable.id, id)).limit(1).then(res => res[0])
 }
@@ -25,46 +25,46 @@ export const findUserByUsername = async (username: string) => {
 }
 
 export const createUser = async (data: typeof usersTable.$inferInsert) => {
-  return await db.insert(usersTable).values(data).returning();
+  return await db.insert(usersTable).values(data).returning()
 }
 
-export const getUserStudiesCount = async (id: number) => {
+export const getUserStudiesCount = async (id: string) => {
   return await db.select().from(studiesTable)
     .where(eq(studiesTable.userId, id)).then(res => res.length)
 }
 
-export const getUserTasksCount = async (id: number) => {
+export const getUserTasksCount = async (id: string) => {
   return await db.select().from(tasksTable)
     .leftJoin(studiesTable, eq(studiesTable.id, tasksTable.studyId))
     .where(eq(studiesTable.userId, id)).then(res => res.length)
 }
 
-export const getUserStudiesPercentage = async (id: number) => {
+export const getUserStudiesPercentage = async (id: string) => {
   const studies = await db.select().from(studiesTable)
     .where(eq(studiesTable.userId, id))
 
-  if (studies.length === 0) return 0;
+  if (studies.length === 0) return 0
+  const totalProgress = studies.reduce((acc, study) => acc + study.progress, 0)
+  const percentage = totalProgress / studies.length
 
-  const totalProgress = studies.reduce((acc, study) => acc + study.progress, 0);
-
-  const percentage = totalProgress / studies.length;
-
-  return percentage;
+  return percentage
 }
 
-export const findUserStudies = async (id: number) => {
+export const findUserStudies = async (id: string) => {
   return await db.select().from(studiesTable)
     .where(eq(studiesTable.userId, id))
 }
 
-export const updateUserById = async (id: number, data: UpdateUserType) => {
+export const updateUserById = async (id: string, data: UpdateUserType) => {
   return await db.update(usersTable).set(data)
+    .where(eq(usersTable.id, id))
 }
 
-export const deleteUserById = async (id: number) => {
+export const deleteUserById = async (id: string) => {
   return await db.delete(usersTable).where(eq(usersTable.id, id))
 }
 
-export const updateImageByUser = async (id: number, imageUrl: string) => {
-  return await db.update(usersTable).set({ profileImage: imageUrl }).where(eq(usersTable.id, id))
+export const updateImageByUser = async (id: string, imageUrl: string) => {
+  return await db.update(usersTable).set({ profileImage: imageUrl })
+    .where(eq(usersTable.id, id))
 }

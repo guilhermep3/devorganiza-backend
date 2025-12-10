@@ -6,14 +6,14 @@ import {
 } from "../services/user.js";
 import cloudinary from "../utils/cloudinary.js";
 import { uploadToCloudinary } from "../utils/uploadToCloudinary.js";
-import { updateUserSchema, UpdateUserType } from "../schemas/auth.js";
+import { updateUserSchema } from "../schemas/auth.js";
 
 export const getAllUsers = async (req: ExtendedRequest, res: Response) => {
   try {
     const page = req.query.page ? Number(req.query.page) : 0;
 
-    let perPage = 10;
-    let currentPage = page ?? 0;
+    const perPage = 10;
+    const currentPage = page ?? 0;
 
     const users = await findAllUsers(perPage, currentPage);
 
@@ -21,11 +21,11 @@ export const getAllUsers = async (req: ExtendedRequest, res: Response) => {
   } catch (error) {
     res.status(500).json({ error: "Erro ao buscar todos os usuários", errorDetails: error });
   }
-}
+};
 
 export const getUser = async (req: ExtendedRequest, res: Response) => {
   try {
-    const idLogged = req.idLogged as number;
+    const idLogged = req.idLogged as string;
 
     const user = await findUserById(idLogged);
     if (!user) {
@@ -45,7 +45,8 @@ export const getUser = async (req: ExtendedRequest, res: Response) => {
 
 export const getStudies = async (req: ExtendedRequest, res: Response) => {
   try {
-    const idLogged = req.idLogged as number;
+    const idLogged = req.idLogged as string;
+
     if (!idLogged) {
       res.status(401).json({ error: "Acesso negado" });
       return;
@@ -61,7 +62,8 @@ export const getStudies = async (req: ExtendedRequest, res: Response) => {
 
 export const updateUser = async (req: ExtendedRequest, res: Response) => {
   try {
-    const idLogged = req.idLogged as number;
+    const idLogged = req.idLogged as string;
+
     const data = updateUserSchema.safeParse(req.body);
     if (!data.success || !data.data) {
       res.status(422).json({ error: data.error.flatten() });
@@ -82,7 +84,8 @@ export const updateUser = async (req: ExtendedRequest, res: Response) => {
 
 export const updateUserImage = async (req: ExtendedRequest, res: Response) => {
   try {
-    const userId = Number(req.idLogged);
+    const userId = req.idLogged as string;
+
     if (!userId) {
       res.status(401).json({ error: "Usuário não autenticado." });
       return;
@@ -99,9 +102,9 @@ export const updateUserImage = async (req: ExtendedRequest, res: Response) => {
       return;
     }
 
-    const imageUrl = await uploadToCloudinary(req.file!.buffer, "Users");
+    const imageUrl = await uploadToCloudinary(req.file.buffer, "Users");
 
-    if (user?.profileImage) {
+    if (user.profileImage) {
       const publicId = user.profileImage.split("/").pop()?.split(".")[0];
       if (publicId) {
         await cloudinary.uploader.destroy(`Users/${publicId}`);
@@ -111,7 +114,7 @@ export const updateUserImage = async (req: ExtendedRequest, res: Response) => {
     const updatedUser = await updateImageByUser(userId, imageUrl);
 
     res.status(200).json({
-      message: `Imagem ${user?.profileImage ? "atualizada" : "adicionada"} com sucesso!`,
+      message: `Imagem ${user.profileImage ? "atualizada" : "adicionada"} com sucesso!`,
       imageUrl,
       user: updatedUser,
     });
@@ -125,7 +128,7 @@ export const updateUserImage = async (req: ExtendedRequest, res: Response) => {
 
 export const deleteUser = async (req: ExtendedRequest, res: Response) => {
   try {
-    const userId = req.idLogged as number;
+    const userId = req.idLogged as string;
 
     await deleteUserById(userId);
 

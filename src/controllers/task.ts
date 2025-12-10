@@ -9,7 +9,7 @@ import { updateStudyProgress } from "../services/study.js";
 
 export const getTasks = async (req: ExtendedRequest, res: Response) => {
   try {
-    const studyId = Number(req.params.studyId);
+    const studyId = req.params.studyId as string;
     if (!studyId) {
       res.status(400).json({ error: "Id do estudo inválido" });
       return;
@@ -25,7 +25,7 @@ export const getTasks = async (req: ExtendedRequest, res: Response) => {
 
 export const createTask = async (req: ExtendedRequest, res: Response) => {
   try {
-    const studyId = Number(req.params.studyId);
+    const studyId = req.params.studyId as string;
     if (!studyId) {
       res.status(400).json({ error: "Id do estudo inválido" });
       return;
@@ -59,7 +59,7 @@ export const createTask = async (req: ExtendedRequest, res: Response) => {
 
 export const updateTask = async (req: ExtendedRequest, res: Response) => {
   try {
-    const taskId = Number(req.params.taskId);
+    const taskId = req.params.taskId as string;
     if (!taskId) {
       res.status(400).json({ error: "Id da tarefa inválida" });
       return;
@@ -106,7 +106,7 @@ export const updateTask = async (req: ExtendedRequest, res: Response) => {
 
 export const deleteTask = async (req: ExtendedRequest, res: Response) => {
   try {
-    const taskId = Number(req.params.taskId);
+    const taskId = req.params.taskId as string;
     if (!taskId) {
       res.status(400).json({ error: "Id da tarefa inválida" });
       return;
