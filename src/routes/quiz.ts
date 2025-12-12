@@ -9,12 +9,12 @@ import * as alternativeController from "../controllers/alternative.js"
 
 export const quizRoutes = Router();
 
-quizRoutes.get('/', verifyJWT, quizController.getQuizzes);
 quizRoutes.get('/all', verifyJWT, quizController.getAllQuizzes);
 quizRoutes.get('/locked', verifyJWT, quizController.getLockedQuizzes);
+quizRoutes.get('/:quizId', verifyJWT, validateQuiz, quizController.getQuiz);
+quizRoutes.get('/', verifyJWT, quizController.getQuizzes);
 quizRoutes.post('/', verifyJWT, verifyRole, quizController.createQuiz);
 quizRoutes.post('/many', verifyJWT, verifyRole, quizController.createManyQuiz);
-quizRoutes.get('/:quizId', verifyJWT, validateQuiz, quizController.getQuiz);
 quizRoutes.put('/:quizId', verifyJWT, verifyRole, validateQuiz, quizController.updateQuiz);
 quizRoutes.delete('/:quizId', verifyJWT, validateQuiz, verifyRole, quizController.deleteQuiz);
 quizRoutes.put('/:quizId/unlock', verifyJWT, validateQuiz, quizController.unlockQuiz);

@@ -90,7 +90,7 @@ export const updateTask = async (req: ExtendedRequest, res: Response) => {
       const studyId = (updatedTaskRecord as any).studyId;
       const tasksCount = await findTasksCount(studyId);
       const finishedTasksCount = await findFinishedTasksCount(studyId);
-      const progress = tasksCount === 0 ? 0 : (finishedTasksCount / tasksCount) * 100;
+      const progress = tasksCount === 0 ? 0 : Math.round((finishedTasksCount / tasksCount) * 100);
 
       await updateStudyProgress(studyId, progress);
     }
