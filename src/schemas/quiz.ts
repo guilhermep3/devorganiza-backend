@@ -20,7 +20,7 @@ export const updateQuizSchema = z.object({
 
 export const attemptAnswersSchema = z.array(
   z.object({
-    questionId: z.number(),
-    answerId: z.number()
+    questionId: z.string(),
+    answerId: z.string()
   })
 );
