@@ -1,8 +1,8 @@
 import type { Response } from "express";
 import type { ExtendedRequest } from "../types/request.js";
 import {
-  createNewQuiz, createNewQuizzes, deleteQuizById, findAllQuizzes, findCorrectAnswers, findFullQuiz, findLastAttempt,
-  findLockedQuizzes, findQuizById, findUserQuiz, findUserQuizzes, finishAttempt,
+  createNewQuiz, createNewQuizzes, deleteQuizAttemptById, deleteQuizById, findAllQuizzes, findCorrectAnswers, findFullQuiz, findLastAttempt,
+  findLockedQuizzes, findQuizById, findUserAttemtps, findUserQuiz, findUserQuizzes, finishAttempt,
   startUserQuiz, unlockUserQuiz, updateImageByQuiz, updateQuizById
 } from "../services/quiz.js";
 import { attemptAnswersSchema, createQuizSchema, createQuizzesSchema, updateQuizSchema } from "../schemas/quiz.js";
@@ -64,6 +64,26 @@ export const getLockedQuizzes = async (req: ExtendedRequest, res: Response) => {
     });
   }
 };
+
+export const getUserAttempts = async (req: ExtendedRequest, res: Response) => {
+  try {
+    const idLogged = req.idLogged as string;
+    if (!idLogged) {
+      res.status(401).json({ error: "Usuário não autenticado." });
+      return;
+    }
+
+    const attempts = await findUserAttemtps(idLogged);
+
+    res.json(attempts);
+    return;
+  } catch (error) {
+    res.status(500).json({
+      error: "Erro ao buscas tentativas de quiz do usuário",
+      errorDetails: error
+    })
+  }
+}
 
 export const createQuiz = async (req: ExtendedRequest, res: Response) => {
   try {
@@ -229,6 +249,44 @@ export const updateQuizImage = async (req: ExtendedRequest, res: Response) => {
   }
 }
 
+export const getLastQuizAttempt = async (req: ExtendedRequest, res: Response) => {
+  try {
+    const idLogged = req.idLogged as string;
+    if (!idLogged) {
+      res.status(401).json({ error: "Usuário não autenticado." });
+      return;
+    }
+
+    const quizId = req.params.quizId as string;
+    if (!quizId) {
+      res.status(400).json({ error: "Quiz não informado." });
+      return;
+    }
+
+    const quiz = await findUserQuiz(quizId, idLogged);
+    if (!quiz) {
+      res.status(404).json({ error: "Quiz não encontrado." });
+      return;
+    }
+
+    const lastAttempt = await findLastAttempt(idLogged, quizId);
+
+    if (!lastAttempt) {
+      res.status(404).json({ error: "Nenhuma tentativa encontrada para este quiz." });
+      return;
+    }
+
+    res.status(200).json(lastAttempt);
+    return;
+  } catch (error) {
+    res.status(500).json({
+      error: "Erro ao buscar última tentativa do quiz",
+      errorDetails: error,
+    });
+    return;
+  }
+};
+
 export const startQuizAttempt = async (req: ExtendedRequest, res: Response) => {
   try {
     const idLogged = req.idLogged as string;
@@ -318,3 +376,45 @@ export const finishQuizAttempt = async (req: ExtendedRequest, res: Response) => 
     return;
   }
 }
+
+export const deleteQuizAttempt = async (req: ExtendedRequest, res: Response) => {
+  try {
+    const idLogged = req.idLogged as string;
+    if (!idLogged) {
+      res.status(401).json({ error: "Usuário não autenticado." });
+      return;
+    }
+
+    const quizId = req.params.quizId as string;
+
+    const quiz = await findUserQuiz(quizId, idLogged);
+    if (!quiz) {
+      res.status(400).json({ error: "Quiz não encontrado." });
+      return;
+    }
+
+    const lastAttempt = await findLastAttempt(idLogged, quizId);
+    if (!lastAttempt) {
+      res.status(404).json({ error: "Tentativa não encontrada." });
+      return;
+    }
+
+    if (lastAttempt.finishedAt) {
+      res.status(400).json({ error: "Esta tentativa já foi finalizada." });
+      return;
+    }
+
+    await deleteQuizAttemptById(lastAttempt.id);
+
+    res.status(200).json({
+      message: "Tentativa do quiz cancelada com sucesso.",
+    });
+    return;
+  } catch (error) {
+    res.status(500).json({
+      error: "Erro ao cancelar tentativa do quiz",
+      errorDetails: error,
+    });
+    return;
+  }
+};

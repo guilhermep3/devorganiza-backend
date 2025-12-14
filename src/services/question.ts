@@ -30,16 +30,6 @@ export const deleteQuestionById = async (id: string) => {
     .where(eq(questionsTable.id, id));
 };
 
-export const findAlternatives = async (questionId: string) => {
-  return await db.select().from(alternativesTable)
-    .where(eq(alternativesTable.questionId, questionId));
-};
-
-export const createNewAlternative = async (data: typeof alternativesTable.$inferInsert) => {
-  return await db.insert(alternativesTable).values(data)
-    .returning().then(res => res[0]);
-};
-
 export const createNewAlternatives = async (data: typeof alternativesTable.$inferInsert[]) => {
   return await db.insert(alternativesTable).values(data).returning();
 };

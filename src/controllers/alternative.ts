@@ -1,52 +1,10 @@
-import { createAlternativeSchema, createManyAlternativeSchema, updateAlternativeSchema } from "../schemas/alternative.js";
+import { createManyAlternativeSchema, updateAlternativeSchema } from "../schemas/alternative.js";
 import {
-  createNewAlternative, createNewAlternatives, deleteAlternativeById, findAlternatives, updateAlternativeById
+  createNewAlternatives, deleteAlternativeById, updateAlternativeById
 } from "../services/question.js";
 import type { ExtendedRequest } from "../types/request.js";
 import type { Response } from "express";
 
-export const getAlternatives = async (req: ExtendedRequest, res: Response) => {
-  try {
-    const questionId = req.params.questionId as string;
-
-    if (!questionId) {
-      res.status(400).json({ error: "Acesso negado" });
-      return;
-    }
-
-    const alternatives = await findAlternatives(questionId);
-
-    res.json(alternatives)
-  } catch (error) {
-    res.status(500).json({ error: "Erro ao pegar todas as alternativas do quiz", errorDetails: error });
-  }
-}
-
-export const createAlternatives = async (req: ExtendedRequest, res: Response) => {
-  try {
-    const questionId = req.params.questionId as string;
-
-    if (!questionId) {
-      res.status(400).json({ error: "Acesso negado" });
-      return;
-    }
-
-    const safeData = createAlternativeSchema.safeParse(req.body);
-    if (!safeData.success) {
-      res.status(422).json({ error: safeData.error.flatten().fieldErrors });
-      return;
-    }
-
-    const newAlternative = await createNewAlternative({
-      ...safeData.data,
-      questionId
-    });
-
-    res.status(201).json(newAlternative);
-  } catch (error) {
-    res.status(500).json({ error: "Erro ao adicionar pergunta do quiz", errorDetails: error });
-  }
-}
 
 export const createManyAlternatives = async (req: ExtendedRequest, res: Response) => {
   try {

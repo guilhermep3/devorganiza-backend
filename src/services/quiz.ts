@@ -9,57 +9,47 @@ export const createNewQuiz = async (
 ) => {
   return await db.insert(quizzesTable)
     .values(data)
-    .returning()
-    .then(res => res[0]);
+    .returning().then(res => res[0]);
 };
 
 export const createNewQuizzes = async (
   data: { title: string; description?: string }[]
 ) => {
   return await db.insert(quizzesTable)
-    .values(data)
-    .onConflictDoNothing()
-    .returning();
+    .values(data).onConflictDoNothing().returning();
 };
 
 export const updateImageByQuiz = async (quizId: string, imageUrl: string) => {
   return await db.update(quizzesTable)
     .set({ imageUrl })
     .where(eq(quizzesTable.id, quizId))
-    .returning()
-    .then(res => res[0]);
+    .returning().then(res => res[0]);
 };
 
 export const findQuiz = async (name: string) => {
   return await db.select().from(quizzesTable)
     .where(eq(quizzesTable.title, name))
-    .limit(1)
-    .then(res => res[0]);
+    .limit(1).then(res => res[0]);
 };
 
 export const findQuizById = async (id: string) => {
-  return await db.select()
-    .from(quizzesTable)
+  return await db.select().from(quizzesTable)
     .where(eq(quizzesTable.id, id))
-    .limit(1)
-    .then(res => res[0]);
+    .limit(1).then(res => res[0]);
 };
 
 export const unlockUserQuiz = async (userId: string, quizId: string) => {
   return await db.insert(userQuizzesTable)
     .values({ userId, quizId })
-    .returning()
-    .then(res => res[0]);
+    .returning().then(res => res[0]);
 };
 
 export const findUserQuizzes = async (userId: string) => {
-  const rows = await db
-    .select({
+  const rows = await db.select({
       quiz: quizzesTable,
       unlockedAt: userQuizzesTable.unlockedAt,
       attempt: quizAttemptsTable
-    })
-    .from(userQuizzesTable)
+    }).from(userQuizzesTable)
     .leftJoin(quizzesTable, eq(quizzesTable.id, userQuizzesTable.quizId))
     .leftJoin(
       quizAttemptsTable,
@@ -91,17 +81,14 @@ export const findUserQuizzes = async (userId: string) => {
 };
 
 export const findAllQuizzes = async () => {
-  return await db.select()
-    .from(quizzesTable)
+  return await db.select().from(quizzesTable)
     .orderBy(asc(quizzesTable.id));
 };
 
 export const findLockedQuizzes = async (userId: string) => {
-  const rows = await db
-    .select({
+  const rows = await db.select({
       quiz: quizzesTable
-    })
-    .from(quizzesTable)
+    }).from(quizzesTable)
     .leftJoin(
       userQuizzesTable,
       and(
@@ -114,32 +101,30 @@ export const findLockedQuizzes = async (userId: string) => {
   return rows.map(row => row.quiz);
 };
 
+export const findUserAttemtps = async (userId: string) => {
+  return await db.select().from(quizAttemptsTable)
+    .where(eq(quizAttemptsTable.userId, userId))
+    .orderBy(asc(quizAttemptsTable.startedAt))
+}
+
 export const findFullQuiz = async (quizId: string) => {
-  const quiz = await db
-    .select()
-    .from(quizzesTable)
+  const quiz = await db.select().from(quizzesTable)
     .where(eq(quizzesTable.id, quizId))
-    .limit(1)
-    .then(res => res[0]);
+    .limit(1).then(res => res[0]);
 
   if (!quiz) return null;
 
-  const questions = await db.select()
-    .from(questionsTable)
+  const questions = await db.select().from(questionsTable)
     .where(eq(questionsTable.quizId, quizId));
 
   const questionIds = questions.map(q => q.id);
 
   const alternatives = questionIds.length
-    ? await db
-        .select()
-        .from(alternativesTable)
+    ? await db.select().from(alternativesTable)
         .where(inArray(alternativesTable.questionId, questionIds))
     : [];
 
-  const activeAttempt = await db
-    .select()
-    .from(quizAttemptsTable)
+  const activeAttempt = await db.select().from(quizAttemptsTable)
     .where(
       and(
         eq(quizAttemptsTable.quizId, quizId),
@@ -147,8 +132,7 @@ export const findFullQuiz = async (quizId: string) => {
       )
     )
     .orderBy(desc(quizAttemptsTable.startedAt))
-    .limit(1)
-    .then(res => res[0] ?? null);
+    .limit(1).then(res => res[0] ?? null);
 
   return {
     ...quiz,
@@ -170,8 +154,7 @@ export const findUserQuiz = async (quizId: string, userId: string) => {
   const quiz = await findFullQuiz(quizId);
   if (!quiz) return null;
 
-  const lastAttempt = await db.select()
-    .from(quizAttemptsTable)
+  const lastAttempt = await db.select().from(quizAttemptsTable)
     .where(
       and(
         eq(quizAttemptsTable.quizId, quizId),
@@ -179,8 +162,7 @@ export const findUserQuiz = async (quizId: string, userId: string) => {
       )
     )
     .orderBy(desc(quizAttemptsTable.finishedAt))
-    .limit(1)
-    .then(res => res[0] ?? null);
+    .limit(1).then(res => res[0] ?? null);
 
   return {
     ...quiz,
@@ -195,20 +177,17 @@ export const updateQuizById = async (
   return await db.update(quizzesTable)
     .set(data)
     .where(eq(quizzesTable.id, quizId))
-    .returning()
-    .then(res => res[0]);
+    .returning().then(res => res[0]);
 };
 
 export const startUserQuiz = async (userId: string, quizId: string) => {
   return await db.insert(quizAttemptsTable)
     .values({ userId, quizId })
-    .returning()
-    .then(res => res[0]);
+    .returning().then(res => res[0]);
 };
 
 export const findLastAttempt = async (userId: string, quizId: string) => {
-  return await db.select()
-    .from(quizAttemptsTable)
+  return await db.select().from(quizAttemptsTable)
     .where(
       and(
         eq(quizAttemptsTable.userId, userId),
@@ -216,20 +195,17 @@ export const findLastAttempt = async (userId: string, quizId: string) => {
       )
     )
     .orderBy(desc(quizAttemptsTable.startedAt))
-    .limit(1)
-    .then(res => res[0]);
+    .limit(1).then(res => res[0]);
 };
 
 export const findCorrectAnswers = async (quizId: string) => {
-  const questions = await db.select()
-    .from(questionsTable)
+  const questions = await db.select().from(questionsTable)
     .where(eq(questionsTable.quizId, quizId));
 
   const questionIds = questions.map(q => q.id);
   if (questionIds.length === 0) return [];
 
-  return await db.select()
-    .from(alternativesTable)
+  return await db.select().from(alternativesTable)
     .where(
       and(
         eq(alternativesTable.isCorrect, true),
@@ -250,9 +226,13 @@ export const finishAttempt = async (
       finishedAt: new Date()
     })
     .where(eq(quizAttemptsTable.id, attemptId))
-    .returning()
-    .then(res => res[0]);
+    .returning().then(res => res[0]);
 };
+
+export const deleteQuizAttemptById = async (id: string) => {
+  return await db.delete(quizAttemptsTable)
+    .where(eq(quizAttemptsTable.id, id))
+}
 
 export const deleteQuizById = async (id: string) => {
   return await db.delete(quizzesTable)
