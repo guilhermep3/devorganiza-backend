@@ -69,7 +69,7 @@ export const findUserQuizzes = async (userId: string) => {
       )
     )
     .where(eq(userQuizzesTable.userId, userId))
-    .orderBy(desc(quizAttemptsTable.finishedAt));
+    .orderBy(asc(quizAttemptsTable.finishedAt));
 
   const map = new Map<string, any>();
 

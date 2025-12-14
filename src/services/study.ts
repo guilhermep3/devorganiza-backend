@@ -62,6 +62,7 @@ export const findUserStudyById = async (id: string) => {
   const rows = await db.select().from(studiesTable)
     .where(eq(studiesTable.id, id))
     .leftJoin(tasksTable, eq(tasksTable.studyId, studiesTable.id))
+    .orderBy(asc(studiesTable.createdAt), asc(tasksTable.createdAt))
 
   if (!rows.length) return null;
 
