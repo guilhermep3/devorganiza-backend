@@ -46,10 +46,10 @@ export const unlockUserQuiz = async (userId: string, quizId: string) => {
 
 export const findUserQuizzes = async (userId: string) => {
   const rows = await db.select({
-      quiz: quizzesTable,
-      unlockedAt: userQuizzesTable.unlockedAt,
-      attempt: quizAttemptsTable
-    }).from(userQuizzesTable)
+    quiz: quizzesTable,
+    unlockedAt: userQuizzesTable.unlockedAt,
+    attempt: quizAttemptsTable
+  }).from(userQuizzesTable)
     .leftJoin(quizzesTable, eq(quizzesTable.id, userQuizzesTable.quizId))
     .leftJoin(
       quizAttemptsTable,
@@ -87,8 +87,8 @@ export const findAllQuizzes = async () => {
 
 export const findLockedQuizzes = async (userId: string) => {
   const rows = await db.select({
-      quiz: quizzesTable
-    }).from(quizzesTable)
+    quiz: quizzesTable
+  }).from(quizzesTable)
     .leftJoin(
       userQuizzesTable,
       and(
@@ -102,10 +102,24 @@ export const findLockedQuizzes = async (userId: string) => {
 };
 
 export const findUserAttemtps = async (userId: string) => {
-  return await db.select().from(quizAttemptsTable)
+  return await db
+    .select({
+      id: quizAttemptsTable.id,
+      quizId: quizAttemptsTable.quizId,
+      quizTitle: quizzesTable.title,
+      startedAt: quizAttemptsTable.startedAt,
+      finishedAt: quizAttemptsTable.finishedAt,
+      score: quizAttemptsTable.score,
+      durationSec: quizAttemptsTable.durationSec,
+    })
+    .from(quizAttemptsTable)
+    .leftJoin(
+      quizzesTable,
+      eq(quizAttemptsTable.quizId, quizzesTable.id)
+    )
     .where(eq(quizAttemptsTable.userId, userId))
-    .orderBy(asc(quizAttemptsTable.startedAt))
-}
+    .orderBy(asc(quizAttemptsTable.startedAt));
+};
 
 export const findFullQuiz = async (quizId: string) => {
   const quiz = await db.select().from(quizzesTable)
@@ -121,7 +135,7 @@ export const findFullQuiz = async (quizId: string) => {
 
   const alternatives = questionIds.length
     ? await db.select().from(alternativesTable)
-        .where(inArray(alternativesTable.questionId, questionIds))
+      .where(inArray(alternativesTable.questionId, questionIds))
     : [];
 
   const activeAttempt = await db.select().from(quizAttemptsTable)
