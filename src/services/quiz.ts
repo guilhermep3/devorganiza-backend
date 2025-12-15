@@ -195,9 +195,23 @@ export const updateQuizById = async (
 };
 
 export const startUserQuiz = async (userId: string, quizId: string) => {
-  return await db.insert(quizAttemptsTable)
+  const existingAttempt = await db.select().from(quizAttemptsTable)
+    .where(and(
+      eq(quizAttemptsTable.userId, userId),
+      eq(quizAttemptsTable.quizId, quizId),
+      isNull(quizAttemptsTable.finishedAt)
+    )).limit(1)
+    .then(res => res[0] ?? null);
+
+  if (existingAttempt) {
+    return existingAttempt;
+  }
+
+  const newAttempt = await db.insert(quizAttemptsTable)
     .values({ userId, quizId })
     .returning().then(res => res[0]);
+
+  return newAttempt;
 };
 
 export const findLastAttempt = async (userId: string, quizId: string) => {
