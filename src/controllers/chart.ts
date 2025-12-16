@@ -1,6 +1,8 @@
 import { Response } from "express";
-import { findAverageScore, findFasterAttempts, findFinishedTasksByMonth, findTasksByType, findWeeklyProductivity } from "../services/chart"
-import { ExtendedRequest } from "../types/request";
+import {
+  findAverageScore, findFasterAttempts, findFinishedTasksByMonth, findTasksByType, findWeeklyProductivity
+} from "../services/chart.js"
+import { ExtendedRequest } from "../types/request.js";
 
 export const getWeeklyProductivity = async (req: ExtendedRequest, res: Response) => {
   try {

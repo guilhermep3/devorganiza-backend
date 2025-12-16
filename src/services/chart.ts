@@ -1,6 +1,6 @@
-import { db } from "../lib/drizzle";
-import { quizAttemptsTable, quizzesTable, studiesTable, tasksTable } from "../db/schema";
-import { and, asc, desc, eq, sql } from "drizzle-orm";
+import { db } from "../lib/drizzle.js";
+import { quizAttemptsTable, quizzesTable, studiesTable, tasksTable } from "../db/schema.js";
+import { and, asc, eq, sql } from "drizzle-orm";
 
 export const findWeeklyProductivity = async (userId: string) => {
   const weekDay = sql<number>`EXTRACT(DOW FROM ${tasksTable.createdAt})`;
