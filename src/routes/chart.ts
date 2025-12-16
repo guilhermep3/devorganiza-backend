@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { verifyJWT } from "../middlewares/jwt";
+import { verifyJWT } from "../middlewares/jwt.js";
 import * as chartController from "../controllers/chart"
 export const chartRoutes = Router();
 

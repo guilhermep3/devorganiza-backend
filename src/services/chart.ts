@@ -73,8 +73,6 @@ export const findFasterAttempts = async (userId: string) => {
   const durationSeconds =
     sql<number>`EXTRACT(EPOCH FROM (${quizAttemptsTable.finishedAt} - ${quizAttemptsTable.startedAt}))`;
 
-
-
   return db.select({
     quiz: quizzesTable.title,
     duracao: durationSeconds
