@@ -13,55 +13,39 @@ quizRoutes.get('/all', verifyJWT, quizController.getAllQuizzes);
 quizRoutes.get('/locked', verifyJWT, quizController.getLockedQuizzes);
 quizRoutes.get('/attempts', verifyJWT, quizController.getUserAttempts);
 quizRoutes.get('/', verifyJWT, quizController.getQuizzes);
-
-quizRoutes.post('/', verifyJWT, verifyRole, quizController.createQuiz);
 quizRoutes.post('/many', verifyJWT, verifyRole, quizController.createManyQuiz);
+quizRoutes.post('/', verifyJWT, verifyRole, quizController.createQuiz);
 
 // attempts
 quizRoutes.get('/:quizId/attempts/last', verifyJWT, validateQuiz, quizController.getLastQuizAttempt);
 quizRoutes.post('/:quizId/attempts/start', verifyJWT, validateQuiz, quizController.startQuizAttempt);
 quizRoutes.put('/:quizId/attempts/finish', verifyJWT, validateQuiz, quizController.finishQuizAttempt);
 quizRoutes.delete('/:quizId/attempts/delete', verifyJWT, validateQuiz, quizController.deleteQuizAttempt);
+quizRoutes.put('/:quizId/unlock', verifyJWT, validateQuiz, quizController.unlockQuiz);
 
 quizRoutes.post('/:quizId/image',
-  verifyJWT, validateQuiz, verifyRole, upload.single("image"), quizController.updateQuizImage
-);
+  verifyJWT, validateQuiz, verifyRole, upload.single("image"), quizController.updateQuizImage);
 
 // questions
 quizRoutes.get('/:quizId/questions',
-  verifyJWT, validateQuiz, questionsController.getQuestions
-);
-
+  verifyJWT, validateQuiz, questionsController.getQuestions);
 quizRoutes.post('/:quizId/questions',
-  verifyJWT, validateQuiz, verifyRole, questionsController.createQuestion
-);
-
+  verifyJWT, validateQuiz, verifyRole, questionsController.createQuestion);
 quizRoutes.post('/:quizId/questions/many',
-  verifyJWT, validateQuiz, verifyRole, questionsController.createManyQuestion
-);
-
+  verifyJWT, validateQuiz, verifyRole, questionsController.createManyQuestion);
 quizRoutes.put('/:quizId/questions/:questionId',
-  verifyJWT, verifyRole, questionsController.updateQuestion
-);
-
+  verifyJWT, verifyRole, questionsController.updateQuestion);
 quizRoutes.delete('/:quizId/questions/:questionId',
-  verifyJWT, verifyRole, questionsController.deleteQuestion
-);
+  verifyJWT, verifyRole, questionsController.deleteQuestion);
 
 // alternatives
 quizRoutes.post('/:quizId/questions/alternatives',
-  verifyJWT, verifyRole, alternativeController.createManyAlternatives
-);
-
+  verifyJWT, verifyRole, alternativeController.createManyAlternatives);
 quizRoutes.put('/:quizId/questions/:questionId/alternatives/:alternativeId',
-  verifyJWT, verifyRole, alternativeController.updateAlternative
-);
-
+  verifyJWT, verifyRole, alternativeController.updateAlternative);
 quizRoutes.delete('/:quizId/questions/:questionId/alternatives/:alternativeId',
-  verifyJWT, verifyRole, alternativeController.deleteAlternative
-);
+  verifyJWT, verifyRole, alternativeController.deleteAlternative);
 
 quizRoutes.get('/:quizId', verifyJWT, validateQuiz, quizController.getQuiz);
 quizRoutes.put('/:quizId', verifyJWT, verifyRole, validateQuiz, quizController.updateQuiz);
 quizRoutes.delete('/:quizId', verifyJWT, validateQuiz, verifyRole, quizController.deleteQuiz);
-quizRoutes.put('/:quizId/unlock', verifyJWT, validateQuiz, quizController.unlockQuiz);

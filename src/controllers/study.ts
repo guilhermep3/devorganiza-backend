@@ -58,7 +58,7 @@ export const getStudies = async (req: ExtendedRequest, res: Response) => {
 
 export const getUserStudy = async (req: ExtendedRequest, res: Response) => {
   try {
-    const studyId = req.params.id as string;
+    const studyId = req.params.studyId as string;
 
     const study = await findUserStudyById(studyId);
 

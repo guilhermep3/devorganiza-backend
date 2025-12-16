@@ -8,6 +8,6 @@ export const userRoutes = Router();
 
 userRoutes.get('/all', verifyJWT, verifyRole, userController.getAllUsers);
 userRoutes.get('/', verifyJWT, userController.getUser);
-userRoutes.put('/', verifyJWT, userController.updateUser);
 userRoutes.put('/image', verifyJWT, upload.single("image"), userController.updateUserImage);
+userRoutes.put('/', verifyJWT, userController.updateUser);
 userRoutes.delete('/', verifyJWT, userController.deleteUser);

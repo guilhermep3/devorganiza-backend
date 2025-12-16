@@ -5,6 +5,7 @@ import { studiesRoutes } from './study.js';
 import { taskRoutes } from './task.js';
 import { quizRoutes } from './quiz.js';
 import { pingRoutes } from './ping.js';
+import { chartRoutes } from './chart.js';
 
 const mainRouter = Router();
 
@@ -17,5 +18,6 @@ mainRouter.use('/users', userRoutes);
 mainRouter.use('/studies', studiesRoutes);
 mainRouter.use('/tasks', taskRoutes);
 mainRouter.use('/quizzes', quizRoutes);
+mainRouter.use('/charts', chartRoutes);
 
 export default mainRouter;

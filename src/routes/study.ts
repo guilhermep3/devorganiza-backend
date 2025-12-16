@@ -7,7 +7,7 @@ export const studiesRoutes = Router();
 
 studiesRoutes.get('/all', verifyJWT, verifyRole, studyController.getAllStudies);
 studiesRoutes.get('/', verifyJWT, studyController.getStudies);
-studiesRoutes.get('/:id', verifyJWT, studyController.getUserStudy);
+studiesRoutes.get('/:studyId', verifyJWT, studyController.getUserStudy);
 studiesRoutes.post('/', verifyJWT, studyController.createStudy);
 studiesRoutes.put('/:studyId', verifyJWT, studyController.updateStudy);
 studiesRoutes.delete('/:studyId', verifyJWT, studyController.deleteStudy);
