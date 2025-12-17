@@ -1,6 +1,6 @@
 import { Response } from "express";
 import {
-  findAverageScore, findFasterAttempts, findFinishedTasksByMonth, findTasksByType, findWeeklyProductivity
+  findAverageScore, findAverageTimeFinish, findFasterAttempts, findFinishedTasksByMonth, findTasksByType, findWeeklyProductivity
 } from "../services/chart.js"
 import { ExtendedRequest } from "../types/request.js";
 
@@ -56,6 +56,25 @@ export const getFinishedTasksByMonth = async (req: ExtendedRequest, res: Respons
   } catch (error) {
     res.status(500).json({
       error: "Erro ao buscar finished-tasks-by-month",
+      errorDetails: error,
+    });
+  }
+}
+
+export const getAverageTimeFinishTask = async (req: ExtendedRequest, res: Response) => {
+  try {
+    const idLogged = req.idLogged as string;
+    if (!idLogged) {
+      res.status(401).json({ error: "Usuário não autenticado." });
+      return;
+    }
+
+    const averageTimeFinish = await findAverageTimeFinish(idLogged);
+
+    res.json(averageTimeFinish);
+  } catch (error) {
+    res.status(500).json({
+      error: "Erro ao buscar average-time-finish-task",
       errorDetails: error,
     });
   }

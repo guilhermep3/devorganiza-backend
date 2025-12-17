@@ -1,6 +1,6 @@
 import { db } from "../lib/drizzle.js";
 import { quizAttemptsTable, quizzesTable, studiesTable, tasksTable } from "../db/schema.js";
-import { and, asc, eq, sql } from "drizzle-orm";
+import { and, asc, eq, isNotNull, sql } from "drizzle-orm";
 
 export const findWeeklyProductivity = async (userId: string) => {
   const weekDay = sql<number>`EXTRACT(DOW FROM ${tasksTable.createdAt})`;
@@ -49,6 +49,23 @@ export const findFinishedTasksByMonth = async (userId: string) => {
       eq(studiesTable.userId, userId)
     ))
     .groupBy(month)
+};
+
+export const findAverageTimeFinish = async (userId: string) => {
+  return db.select({
+    estudo: studiesTable.name,
+    media: sql<number>`ROUND(
+      AVG(EXTRACT(EPOCH FROM (${tasksTable.finishedAt} - ${tasksTable.createdAt})) / 60)
+    )`
+  }).from(studiesTable)
+    .leftJoin(tasksTable,
+      eq(tasksTable.studyId, studiesTable.id),
+    )
+    .where(and(
+      eq(studiesTable.userId, userId),
+      isNotNull(tasksTable.finishedAt)
+    ))
+    .groupBy(studiesTable.name)
 };
 
 export const findAverageScore = async (userId: string) => {
