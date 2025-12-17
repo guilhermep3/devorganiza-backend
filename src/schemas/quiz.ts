@@ -10,6 +10,7 @@ export const createQuizzesSchema = z.array(
   z.object({
     title: z.string(),
     description: z.string(),
+    type: z.string()
   })
 )
 

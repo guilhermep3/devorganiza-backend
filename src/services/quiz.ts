@@ -13,7 +13,7 @@ export const createNewQuiz = async (
 };
 
 export const createNewQuizzes = async (
-  data: { title: string; description?: string }[]
+  data: { title: string; description?: string, type: string }[]
 ) => {
   return await db.insert(quizzesTable)
     .values(data).onConflictDoNothing().returning();
