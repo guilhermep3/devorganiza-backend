@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 import type { ExtendedRequest } from "../types/request.js";
 
 export const createJWT = (id: string, role: string) => {
-  return jwt.sign({ id, role }, process.env.JWT_SECRET as string)
+  return jwt.sign({ id, role }, process.env.JWT_SECRET as string, { expiresIn: 86400 }) // 86400 = 1 day
 }
 
 export const verifyJWT = (req: ExtendedRequest, res: Response, next: NextFunction) => {

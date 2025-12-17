@@ -3,6 +3,7 @@ import z from "zod";
 export const createQuizSchema = z.object({
   title: z.string(),
   description: z.string(),
+  type: z.string()
 })
 
 export const createQuizzesSchema = z.array(

@@ -41,6 +41,7 @@ export const quizzesTable = pgTable("quizzes", {
   id: uuid("id").primaryKey().defaultRandom(),
   title: varchar({ length: 255 }).notNull().unique(),
   description: varchar({ length: 1000 }),
+  type: varchar({ length: 255 }).notNull(),
   imageUrl: varchar({ length: 500 }),
   createdAt: timestamp().defaultNow().notNull(),
   updatedAt: timestamp().defaultNow().notNull().$onUpdate(() => new Date()),
