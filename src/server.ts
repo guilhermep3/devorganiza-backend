@@ -7,7 +7,8 @@ export const server = express();
 
 const allowedOrigins = [
   'http://localhost:3000',
-  'https://devorganiza.vercel.app'
+  'https://devorganiza.vercel.app',
+  'https://devorganiza-frontend.vercel.app'
 ];
 
 server.use(cors({

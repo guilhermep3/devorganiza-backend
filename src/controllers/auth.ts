@@ -83,6 +83,6 @@ export const signin = async (req: Request, res: Response) => {
       user: userWithoutPassword
     });
   } catch (error) {
-    res.status(500).json({ error: "Erro ao criar conta de usuário", errorDetails: error });
+    res.status(500).json({ error: "Erro ao fazer login", errorDetails: error });
   }
 }
