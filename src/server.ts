@@ -5,10 +5,22 @@ import mainRouter from './routes/main.js';
 
 export const server = express();
 
+const allowedOrigins = [
+  'http://localhost:3000',
+  'https://devorganiza.vercel.app'
+];
+
 server.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true
 }));
+
 server.use(helmet({ contentSecurityPolicy: false }));
 server.use(express.json());
 server.use(express.urlencoded({ extended: true }));
