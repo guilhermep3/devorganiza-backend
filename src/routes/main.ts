@@ -12,6 +12,9 @@ const mainRouter = Router();
 mainRouter.get("/", (req, res) => {
   res.status(200).json({ status: "ok" });
 });
+mainRouter.get("/health", (req, res) => {
+  res.status(200).json({ status: "ok" });
+});
 mainRouter.use(pingRoutes);
 mainRouter.use('/auth', authRoutes);
 mainRouter.use('/users', userRoutes);
