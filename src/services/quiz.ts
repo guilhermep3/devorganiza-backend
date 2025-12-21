@@ -107,6 +107,7 @@ export const findUserAttemtps = async (userId: string) => {
       id: quizAttemptsTable.id,
       quizId: quizAttemptsTable.quizId,
       quizTitle: quizzesTable.title,
+      quizImage: quizzesTable.imageUrl,
       startedAt: quizAttemptsTable.startedAt,
       finishedAt: quizAttemptsTable.finishedAt,
       score: quizAttemptsTable.score,
@@ -118,7 +119,7 @@ export const findUserAttemtps = async (userId: string) => {
       eq(quizAttemptsTable.quizId, quizzesTable.id)
     )
     .where(eq(quizAttemptsTable.userId, userId))
-    .orderBy(asc(quizAttemptsTable.startedAt));
+    .orderBy(desc(quizAttemptsTable.startedAt));
 };
 
 export const findFullQuiz = async (quizId: string) => {
