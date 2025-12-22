@@ -2,11 +2,6 @@ import { eq } from "drizzle-orm";
 import { db } from "../lib/drizzle.js";
 import { questionsTable, alternativesTable } from "../db/schema.js";
 
-export const findQuestions = async (quizId: string) => {
-  return await db.select().from(questionsTable)
-    .where(eq(questionsTable.quizId, quizId));
-};
-
 export const createNewQuestion = async (question: string, quizId: string) => {
   return await db.insert(questionsTable)
     .values({ question, quizId })

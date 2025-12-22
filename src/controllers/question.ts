@@ -1,23 +1,9 @@
 import type { Response } from "express"
 import type { ExtendedRequest } from "../types/request.js"
 import {
-  createNewQuestion, createNewQuestions, deleteQuestionById, findQuestions, updateQuestionById
+  createNewQuestion, createNewQuestions, deleteQuestionById, updateQuestionById
 } from "../services/question.js";
 import { createQuestionSchema, manyQuestionSchema, updateQuestionSchema } from "../schemas/question.js";
-
-export const getQuestions = async (req: ExtendedRequest, res: Response) => {
-  try {
-    const quizId = req.params.quizId as string;
-
-    const question = await findQuestions(quizId);
-
-    res.json(question);
-    return;
-  } catch (error) {
-    res.status(500).json({ error: "Erro ao pegar todas as perguntas do quiz", errorDetails: error });
-    return;
-  }
-}
 
 export const createQuestion = async (req: ExtendedRequest, res: Response) => {
   try {

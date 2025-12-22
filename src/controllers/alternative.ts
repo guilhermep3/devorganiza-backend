@@ -5,7 +5,6 @@ import {
 import type { ExtendedRequest } from "../types/request.js";
 import type { Response } from "express";
 
-
 export const createManyAlternatives = async (req: ExtendedRequest, res: Response) => {
   try {
     const safeData = createManyAlternativeSchema.safeParse(req.body);

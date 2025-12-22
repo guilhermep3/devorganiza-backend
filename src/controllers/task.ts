@@ -1,27 +1,10 @@
 import type { Response } from "express";
 import type { ExtendedRequest } from "../types/request.js";
 import {
-  createUserTask, deleteUserTask, findFinishedTasksCount, findTasksCount,
-  findUserTasks, updateUserTask
+  createUserTask, deleteUserTask, findFinishedTasksCount, findTasksCount, updateUserTask
 } from "../services/task.js";
 import { createTaskSchema, updateTaskSchema } from "../schemas/task.js";
 import { updateStudyProgress } from "../services/study.js";
-
-export const getTasks = async (req: ExtendedRequest, res: Response) => {
-  try {
-    const studyId = req.params.studyId as string;
-    if (!studyId) {
-      res.status(400).json({ error: "Id do estudo inválido" });
-      return;
-    }
-
-    const tasks = await findUserTasks(studyId);
-
-    res.json(tasks);
-  } catch (error) {
-    res.status(500).json({ error: "Erro ao buscar as tarefas", errorDetails: error });
-  }
-}
 
 export const createTask = async (req: ExtendedRequest, res: Response) => {
   try {
@@ -81,7 +64,7 @@ export const updateTask = async (req: ExtendedRequest, res: Response) => {
         cleanedData.finishedAt = null;
       }
     }
-    
+
     const updatedTask = await updateUserTask(taskId, cleanedData as Parameters<typeof updateUserTask>[1]);
 
     const updatedTaskRecord = Array.isArray(updatedTask) ? updatedTask[0] : updatedTask;

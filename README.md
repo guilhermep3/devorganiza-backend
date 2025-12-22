@@ -50,23 +50,24 @@ O  PlanejaEstudos tem o objetivo de organizar e facilitar os estudos dos desenvo
 | `POST`   | `/auth/signin` | Faz login do usuário               | ❌         |
 | `GET`    | `/users/all`   | Retorna todos os usuários          | ✔️ (dev)   |
 | `GET`    | `/users`       | Retorna os dados do usuário logado | ✔️         |
-| `PUT`    | `/users`       | Atualiza os dados do usuário       | ✔️         |
 | `PUT`    | `/users/image` | Atualiza a imagem de perfil        | ✔️         |
+| `PUT`    | `/users`       | Atualiza os dados do usuário       | ✔️         |
 | `DELETE` | `/users`       | Deleta a conta do usuário          | ✔️         |
 
 ### Rotas studies e tasks
 
-| Método   | Rota                | Descrição                       | Auth?      |
-| -------- | ------------------- | ------------------------------- | ---------- |
-| `GET`    | `/studies/all`      | Retorna todos os estudos (DEV)         | ✔️ (dev) |
-| `GET`    | `/studies`          | Retorna os estudos do usuário e tarefas| ✔️       |
-| `POST`   | `/studies`          | Cria um estudo                         | ✔️       |
-| `PUT`    | `/studies/:studyId` | Atualiza um estudo                     | ✔️       |
-| `DELETE` | `/studies/:studyId` | Deleta um estudo                       | ✔️       |
-| `GET`    | `/tasks/:studyId`   | Retorna as tarefas de um estudo        | ✔️       |
-| `POST`   | `/tasks/:studyId`   | Cria uma tarefa                        | ✔️       |
-| `PUT`    | `/tasks/:taskId`    | Atualiza uma tarefa                    | ✔️       |
-| `DELETE` | `/tasks/:taskId`    | Deleta uma tarefa                      | ✔️       |
+| Método   | Rota                | Descrição                               | Auth?      |
+| -------- | ------------------- | --------------------------------------- | ---------- |
+| `GET`    | `/studies/all`      | Retorna todos os estudos (DEV)          | ✔️ (dev) |
+| `GET`    | `/studies/:studyId` | Retorna um estudo do usuário e tarefas  | ✔️       |
+| `GET`    | `/studies`          | Retorna os estudos do usuário e tarefas | ✔️       |
+| `GET`    | `/tasks/:studyId`   | Retorna as tarefas de um estudo         | ✔️       |
+| `POST`   | `/studies`          | Cria um estudo                          | ✔️       |
+| `PUT`    | `/studies/:studyId` | Atualiza um estudo                      | ✔️       |
+| `DELETE` | `/studies/:studyId` | Deleta um estudo                        | ✔️       |
+| `POST`   | `/tasks/:studyId`   | Cria uma tarefa                         | ✔️       |
+| `PUT`    | `/tasks/:taskId`    | Atualiza uma tarefa                     | ✔️       |
+| `DELETE` | `/tasks/:taskId`    | Deleta uma tarefa                       | ✔️       |
 
 
 ### Rotas quizzes
@@ -88,7 +89,6 @@ O  PlanejaEstudos tem o objetivo de organizar e facilitar os estudos dos desenvo
 
 | Método   | Rota                                     | Descrição                       | Auth?      |
 | -------- | ---------------------------------------- | ------------------------------- | ---------- |
-| `GET`    | `/quizzes/:quizId/questions`             | Retorna as perguntas de um quiz | ✔️         |
 | `POST`   | `/quizzes/:quizId/questions`             | Cria uma pergunta               | ✔️ (dev) |
 | `POST`   | `/quizzes/:quizId/questions/many`        | Cria várias perguntas           | ✔️ (dev) |
 | `PUT`    | `/quizzes/:quizId/questions/:questionId` | Atualiza uma pergunta           | ✔️ (dev) |
@@ -98,11 +98,22 @@ O  PlanejaEstudos tem o objetivo de organizar e facilitar os estudos dos desenvo
 
 | Método   | Rota                                     | Descrição                       | Auth?      |
 | -------- | ---------------------------------------- | ------------------------------- | ---------- |
-| `GET`    | `/quizzes/:quizId/questions/:questionId/alternatives` | Retorna as alternativas de uma pergunta | ✔️ |
 | `POST`   | `/quizzes/:quizId/questions/:questionId/alternatives` | Cria alternativas | ✔️ (dev) |
 | `POST`   | `/quizzes/:quizId/questions/:questionId/alternatives/many` | Cria várias alternativas | ✔️ (dev) |
 | `PUT`    | `/quizzes/:quizId/questions/:questionId/alternatives/:alternativeId` | Atualiza uma alternativa | ✔️ (dev) |
 | `DELETE` | `/quizzes/:quizId/questions/:questionId/alternatives/:alternativeId` | Deleta uma alternativa | ✔️ (dev) |
+
+
+### Rotas charts
+
+| Método   | Rota                        | Descrição           | Auth?    |
+|----------|-----------------------------|---------------------|----------|
+| `GET`    | `/weekly-productivity`      | Retorna as tarefas criadas e finalizadas em cada dia da semana | ✔️      |
+| `GET`    | `/tasks-by-type`            | Retorna a quantidade de tarefas por setor (frontent, backend e ferramentas) | ✔️      |
+| `GET`    | `/finished-tasks-by-month`  | Retorna a quantidade de tarefas finalizadas por mês | ✔️      |
+| `GET`    | `/average-time-finish-task` | Retorna o tempo médio para finalizar tarefas de cada estudo  | ✔️      |
+| `GET`    | `/average-score`            | Retorna a pontuação média por quiz | ✔️      |
+| `GET`    | `/faster-attempts`          | Retorna as tentativas de quizzes mais rápidas  | ✔️      |
 
 
 ## Exemplos de request body
@@ -150,7 +161,8 @@ O  PlanejaEstudos tem o objetivo de organizar e facilitar os estudos dos desenvo
 ``` bash
 {
   "title": "HTML",
-  "description": "Pratique seus estudos com o quiz de HTML"
+  "description": "Pratique seus estudos com o quiz de HTML",
+  "type": "frontend"
 }
 ```
 
