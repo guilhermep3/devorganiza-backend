@@ -116,24 +116,22 @@ O  PlanejaEstudos tem o objetivo de organizar e facilitar os estudos dos desenvo
 | `GET`    | `/faster-attempts`          | Retorna as tentativas de quizzes mais rápidas  | ✔️      |
 
 
-## Exemplos de request body
+## Exemplos de retorno das rotas
 
 - **/auth/signup**
 ``` bash
-{
-  "name": "Usuario Teste",
-  "username": "usuarioteste",
-  "email": "teste@exemplo.com",
-  "password": "1234"
-}
-```
-
-- **/auth/signin**
-``` bash
-{
-  "email": "teste@exemplo.com",
-  "password": "1234"
-}
+[
+  {
+    "id": "userid",
+    "name": "nome",
+    "username": "username",
+    "email": "email@gmail.com",
+    "password": "hashdasenha",
+    "profileImage": null,
+    "role": "user",
+    "createdAt": "2025-12-22T19:11:24.801Z"
+  }
+]
 ```
 
 - **/studies**
@@ -159,28 +157,76 @@ O  PlanejaEstudos tem o objetivo de organizar e facilitar os estudos dos desenvo
 
 - **/quizzes**
 ``` bash
-{
-  "title": "HTML",
-  "description": "Pratique seus estudos com o quiz de HTML",
-  "type": "frontend"
-}
-```
-
-- **/quizzes/many**
-``` bash
 [
   {
+    "id": "0e35b57e-b8dc-4822-bedd-03eda0a3827e",
     "title": "HTML",
-    "description": "Pratique seus estudos com o quiz de HTML"
+    "description": "Pratique seus estudos com o quiz de HTML da DevOrganiza",
+    "type": "frontend",
+    "imageUrl": "https://res.cloudinary.com/dvuxplf3j/image/upload/v1764444330/Quizzes/zvhoqjhiidbiylw5bggu.png",
+    "createdAt": "2025-12-11T16:54:40.488Z",
+    "updatedAt": "2025-12-11T16:54:40.488Z",
+    "unlockedAt": "2025-12-11T19:14:35.905Z",
+    "lastAttempt": {
+        "id": "e05d046f-c990-4a54-b124-f09411d1fc04",
+        "userId": "123",
+        "quizId": "0e35b57e-b8dc-4822-bedd-03eda0a3827e",
+        "startedAt": "2025-12-14T12:12:34.449Z",
+        "finishedAt": "2025-12-14T12:14:29.335Z",
+        "score": 0,
+        "durationSec": 114
+    }
   },
-  {
-    "title": "CSS",
-    "description": "Pratique seus estudos com o quiz de CSS"
-  }
 ]
 ```
 
-- **/quizzes/:quizId/finish**
+- **/quizzes/all**
+``` bash
+[
+  {
+    "id": "0e35b57e-b8dc-4822-bedd-03eda0a3827e",
+    "title": "HTML",
+    "description": "Pratique seus estudos com o quiz de HTML da DevOrganiza",
+    "type": "frontend",
+    "imageUrl": "https://res.cloudinary.com/dvuxplf3j/image/upload/v1764444330/Quizzes/zvhoqjhiidbiylw5bggu.png",
+    "createdAt": "2025-12-11T16:54:40.488Z",
+    "updatedAt": "2025-12-11T16:54:40.488Z"
+  },
+]
+```
+
+- **/quizzes/attempts**
+``` bash
+[
+  {
+    "id": "d5d5964f-a7eb-44d9-bdf4-1126b8556484",
+    "quizId": "4df5cdeb-3e56-4cf5-ae6f-de5a997fbc2c",
+    "quizTitle": "Javascript",
+    "quizImage": "https://res.cloudinary.com/dvuxplf3j/image/upload/v1764700935/Quizzes/pjvto2ofgpqthc4xo5yx.png",
+    "startedAt": "2025-12-22T13:11:28.021Z",
+    "finishedAt": "2025-12-22T13:12:28.688Z",
+    "score": 12,
+    "durationSec": 60
+  },
+]
+```
+
+- **/quizzes/locked**
+``` bash
+[
+  {
+    "id": "50a922ee-64b4-4c3e-9c39-e9f865242a7d",
+    "title": "Next",
+    "description": "Pratique seus estudos com o quiz de Next da DevOrganiza",
+    "type": "frontend",
+    "imageUrl": "https://res.cloudinary.com/dvuxplf3j/image/upload/v1764805626/Quizzes/sdum6n1yq8e4ubtkpxp2.jpg",
+    "createdAt": "2025-12-11T16:54:40.488Z",
+    "updatedAt": "2025-12-11T16:54:40.488Z"
+  },
+]
+```
+
+- **/quizzes/:quizId/attempts/finish**
 ``` bash
 [
   {
@@ -194,7 +240,7 @@ O  PlanejaEstudos tem o objetivo de organizar e facilitar os estudos dos desenvo
 ]
 ```
 
-- **/quizzes/:quizId/questions**
+- **/quizzes/:quizId/attempts/questions**
 ``` bash
 {
   "question": "Qual tag é usada para indicar o início de um documento HTML?"
