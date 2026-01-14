@@ -10,14 +10,23 @@ O objetivo da DevOrganiza é organizar e facilitar os estudos dos desenvolvedore
 
 DevOrganiza é uma aplicação web fullstack voltada para desenvolvedores que desejam organizar estudos, tarefas e acompanhar sua evolução por meio de quizzes e métricas de desempenho.
 
-## Tecnologias utilizadas
+## 🎯 Objetivo do projeto
+
+- Demonstrar domínio em Node.js + TypeScript
+- Simular um ambiente próximo ao mundo real / produção
+- Criar uma API REST robusta, validada e documentada
+- Aplicar arquitetura em camadas
+- Implementar autenticação segura
+- Trabalhar com ORM moderno e tipado
+
+## 🧩 Tecnologias utilizadas
 
 - **Node.js**: Ambiente de execução JavaScript server-side
 - **Express**: Framework web minimalista para Node.js
 - **Typescript**: Superset do JavaScript com tipagem estática
 - **PostgreSQL**: Banco de dados relacional
 
-## Bibliotecas
+## 🧩 Bibliotecas
 
 - **Drizzle ORM**: ORM TypeScript-first para acesso ao banco de dados
 - **Drizzle Kit**: Ferramenta CLI para migrações e geração de schemas
@@ -29,7 +38,23 @@ DevOrganiza é uma aplicação web fullstack voltada para desenvolvedores que de
 - **Multer**: Upload de arquivos multipart/form-data
 - **Cloudinary**: Armazenamento de mídia em nuvem
 
-## Funcionalidades
+## 🏗️ Arquitetura
+
+- **Arquitetura baseada em camadas (Layered Architecture)**:
+  - **Routes**: definição das rotas e versionamento da API
+  - **Controllers**: responsabilidade de lidar com HTTP (req/res)
+  - **Services**: regras de negócio e orquestração
+  - **DB/Repositories**: acesso e persistência de dados
+- **Fluxo de requisição**:
+  1. Requisição chega pela rota
+  2. Middlewares executam autenticação e validações
+  3. Controller recebe a requisição
+  4. Schema valida os dados enviados com Zod
+  5. Service executa a regra de negócio
+  6. Drizzle ORM interage com o banco de dados
+  7. Controller retorna a resposta HTTP
+
+## 🚀 Funcionalidades Principais
 
 - Sistema de cadastro e login com upload de imagem de perfil via Cloudinary
 - Autenticação de usuários com JWT
@@ -40,7 +65,7 @@ DevOrganiza é uma aplicação web fullstack voltada para desenvolvedores que de
 - Controle de acesso por tipo de usuário (user/admin) com rotas protegidas
 - Rotas que retornam dados de desempenho para Dashboard
 
-## Rotas da API
+## 🛣️ Rotas da API
 
 ### Rotas auth e users
 
@@ -127,7 +152,7 @@ DevOrganiza é uma aplicação web fullstack voltada para desenvolvedores que de
 | `GET`    | `/faster-attempts`          | Retorna as tentativas de quizzes mais rápidas  | ✔️      |
 
 
-## Exemplos de retorno das rotas GET
+## 🛣️ Exemplos de retorno das rotas GET
 
 - **/auth/signup**
 ``` bash
@@ -301,8 +326,8 @@ src/
 
 Clone o repositório
 ``` bash
-git clone https://github.com/seu-usuario/studyflow-api.git
-cd studyflow-api
+git clone https://github.com/guilhermep3/devorganiza-backend
+cd devorganiza-backend
 ```
 
 Instale as dependências
