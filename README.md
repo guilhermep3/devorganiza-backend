@@ -1,48 +1,48 @@
-# PlanejaEstudos - Backend
+# DevOrganiza
 
-O  PlanejaEstudos tem o objetivo de organizar e facilitar os estudos dos desenvolvedores, tornando mais visível as suas metas e encurtando o tempo de alcançá-las.
+<img width="1351" height="760" alt="Image" src="https://github.com/user-attachments/assets/c64811c7-cc49-4740-9e3e-0fd9dd0986fe" />
 
-## Status do projeto
+A DevOrganiza é um web-app Full-stack onde o usuário pode organizar seus estudos e tarefas, além de desbloquear quizzes relacionados aos conteúdos cadastrados para praticar o aprendizado.
+O objetivo da DevOrganiza é organizar e facilitar os estudos dos desenvolvedores, tornando mais visível as suas metas e encurtando o tempo de alcançá-las.
 
-🚧 <strong>EM DESENVOLVIMENTO</strong> 🚧
 
-## Funcionalidades
+## 📌 Visão Geral
 
-- Sistema de usuários com perfil
-- CRUD de estudos com progresso
-- Gestão de tarefas por estudo
-- Sistema de quizzes baseado nos estudos do usuário (em desenvolvimento)
-- Log de atividades (em desenvolvimento)
-- Autenticação JWT
+DevOrganiza é uma aplicação web fullstack voltada para desenvolvedores que desejam organizar estudos, tarefas e acompanhar sua evolução por meio de quizzes e métricas de desempenho.
 
-## Tecnologias
+## Tecnologias utilizadas
 
-- **Node.js** (Ambiente de execução JavaScript server-side)
-- **Express** (Framework web minimalista para Node.js)
-- **Typescript** (Superset do JavaScript com tipagem estática)
-- **PostgreSQL** (Banco de dados relacional)
+- **Node.js**: Ambiente de execução JavaScript server-side
+- **Express**: Framework web minimalista para Node.js
+- **Typescript**: Superset do JavaScript com tipagem estática
+- **PostgreSQL**: Banco de dados relacional
 
 ## Bibliotecas
 
-- **Drizzle ORM** (ORM TypeScript-first para acesso ao banco de dados)
-- **Drizzle Kit** (Ferramenta CLI para migrações e geração de schemas)
-- **Helmet** (Segurança de headers HTTP)
-- **Jsonwebtoken** (Autenticação JWT)
-- **bcrypt-ts** (Hash seguro de senhas)
-- **Slug** (Geração de username único)
-- **Zod** (Validação de dados)
-- **Multer** (Upload de arquivos multipart/form-data)
-- **Cloudinary** (Armazenamento de mídia em nuvem)
+- **Drizzle ORM**: ORM TypeScript-first para acesso ao banco de dados
+- **Drizzle Kit**: Ferramenta CLI para migrações e geração de schemas
+- **Helmet**: Segurança de headers HTTP
+- **Jsonwebtoken**: Autenticação JWT
+- **bcrypt-ts**: Hash seguro de senhas
+- **Slug**: Geração de username único
+- **Zod**: Validação de dados
+- **Multer**: Upload de arquivos multipart/form-data
+- **Cloudinary**: Armazenamento de mídia em nuvem
 
-## ⚙️ Pré-requisitos
-- Node.js (versão 18+)
-- PostgreSQL (versão 12+)
-- npm ou yarn
+## Funcionalidades
+
+- Sistema de cadastro e login com upload de imagem de perfil via Cloudinary
+- Autenticação de usuários com JWT
+- Organização de estudos por temas, com criação de tarefas vinculadas
+- CRUD de estudos e tarefas
+- Sistema de quizzes desbloqueáveis conforme os estudos cadastrados
+- Registro de pontuação e tempo gasto em cada tentativa de quiz
+- Controle de acesso por tipo de usuário (user/admin) com rotas protegidas
+- Rotas que retornam dados de desempenho para Dashboard
 
 ## Rotas da API
 
 ### Rotas auth e users
-
 
 | Método   | Rota           | Descrição                          | Auth?      |
 | -------- | -------------- | ---------------------------------- | ---------- |
@@ -61,7 +61,6 @@ O  PlanejaEstudos tem o objetivo de organizar e facilitar os estudos dos desenvo
 | `GET`    | `/studies/all`      | Retorna todos os estudos (DEV)          | ✔️ (dev) |
 | `GET`    | `/studies/:studyId` | Retorna um estudo do usuário e tarefas  | ✔️       |
 | `GET`    | `/studies`          | Retorna os estudos do usuário e tarefas | ✔️       |
-| `GET`    | `/tasks/:studyId`   | Retorna as tarefas de um estudo         | ✔️       |
 | `POST`   | `/studies`          | Cria um estudo                          | ✔️       |
 | `PUT`    | `/studies/:studyId` | Atualiza um estudo                      | ✔️       |
 | `DELETE` | `/studies/:studyId` | Deleta um estudo                        | ✔️       |
@@ -72,36 +71,48 @@ O  PlanejaEstudos tem o objetivo de organizar e facilitar os estudos dos desenvo
 
 ### Rotas quizzes
 
-| Método   | Rota                      | Descrição                                   | Auth?      |
-| -------- | ------------------------- | ------------------------------------------- | ---------- |
-| `GET`    | `/quizzes`                | Retorna os quizzes desbloqueados do usuário | ✔️         |
-| `POST`   | `/quizzes`                | Cria um quiz                                | ✔️ (dev)   |
-| `POST`   | `/quizzes/many`           | Cria vários quizzes                         | ✔️ (dev)   |
-| `GET`    | `/quizzes/:quizId`        | Retorna os dados de um quiz                 | ✔️         |
-| `PUT`    | `/quizzes/:quizId`        | Atualiza um quiz                            | ✔️ (dev) |
-| `DELETE` | `/quizzes/:quizId`        | Deleta um quiz                              | ✔️ (dev) |
-| `PUT`    | `/quizzes/:quizId/unlock` | Desbloqueia um quiz para o usuário          | ✔️         |
-| `POST`   | `/quizzes/:quizId/image`  | Atualiza a imagem do quiz                   | ✔️ (dev) |
-| `POST`   | `/quizzes/:quizId/start`  | Inicia uma tentativa do quiz                | ✔️         |
-| `PUT`    | `/quizzes/:quizId/finish` | Finaliza uma tentativa do quiz              | ✔️         |
+| Método   | Rota                | Descrição                              | Auth?    |
+| -------- | ------------------- | -------------------------------------- | -------- |
+| `GET`    | `/quizzes/all`      | Retorna todos os quizzes               | ✔️       |
+| `GET`    | `/quizzes/locked`   | Retorna quizzes bloqueados do usuário  | ✔️       |
+| `GET`    | `/quizzes/attempts` | Retorna todas as tentativas do usuário | ✔️       |
+| `GET`    | `/quizzes`          | Retorna quizzes disponíveis do usuário | ✔️       |
+| `POST`   | `/quizzes/many`     | Cria vários quizzes                    | ✔️ (dev) |
+| `POST`   | `/quizzes`          | Cria um quiz                           | ✔️ (dev) |
+| `PUT`    | `/quizzes/:quizId/unlock` | Desbloqueia um quiz para o usuário | ✔️       |
+| `POST`   | `/quizzes/:quizId/image`  | Atualiza a imagem do quiz          | ✔️ (dev) |
+| `GET`    | `/quizzes/:quizId` | Retorna os dados do quiz | ✔️       |
+| `PUT`    | `/quizzes/:quizId` | Atualiza um quiz         | ✔️ (dev) |
+| `DELETE` | `/quizzes/:quizId` | Deleta um quiz           | ✔️ (dev) |
+
+
+
+### Rotas attempts
+
+| Método   | Rota                               | Descrição                          | Auth? |
+| -------- | ---------------------------------- | ---------------------------------- | ----- |
+| `GET`    | `/quizzes/:quizId/attempts/last`   | Retorna a última tentativa do quiz | ✔️    |
+| `POST`   | `/quizzes/:quizId/attempts/start`  | Inicia uma tentativa do quiz       | ✔️    |
+| `PUT`    | `/quizzes/:quizId/attempts/finish` | Finaliza uma tentativa do quiz     | ✔️    |
+| `DELETE` | `/quizzes/:quizId/attempts/delete` | Deleta a tentativa do quiz         | ✔️    |
+
 
 ### Rotas questions
 
 | Método   | Rota                                     | Descrição                       | Auth?      |
 | -------- | ---------------------------------------- | ------------------------------- | ---------- |
-| `POST`   | `/quizzes/:quizId/questions`             | Cria uma pergunta               | ✔️ (dev) |
-| `POST`   | `/quizzes/:quizId/questions/many`        | Cria várias perguntas           | ✔️ (dev) |
-| `PUT`    | `/quizzes/:quizId/questions/:questionId` | Atualiza uma pergunta           | ✔️ (dev) |
-| `DELETE` | `/quizzes/:quizId/questions/:questionId` | Deleta uma pergunta             | ✔️ (dev) |
+| `POST`   | `/quizzes/:quizId/questions`             | Cria uma pergunta     | ✔️ (dev) |
+| `POST`   | `/quizzes/:quizId/questions/many`        | Cria várias perguntas | ✔️ (dev) |
+| `PUT`    | `/quizzes/:quizId/questions/:questionId` | Atualiza uma pergunta | ✔️ (dev) |
+| `DELETE` | `/quizzes/:quizId/questions/:questionId` | Deleta uma pergunta   | ✔️ (dev) |
 
 ### Rotas alternatives
 
 | Método   | Rota                                     | Descrição                       | Auth?      |
 | -------- | ---------------------------------------- | ------------------------------- | ---------- |
-| `POST`   | `/quizzes/:quizId/questions/:questionId/alternatives` | Cria alternativas | ✔️ (dev) |
-| `POST`   | `/quizzes/:quizId/questions/:questionId/alternatives/many` | Cria várias alternativas | ✔️ (dev) |
+| `POST`   | `/quizzes/:quizId/questions/alternatives`                            | Cria várias alternativas | ✔️ (dev) |
 | `PUT`    | `/quizzes/:quizId/questions/:questionId/alternatives/:alternativeId` | Atualiza uma alternativa | ✔️ (dev) |
-| `DELETE` | `/quizzes/:quizId/questions/:questionId/alternatives/:alternativeId` | Deleta uma alternativa | ✔️ (dev) |
+| `DELETE` | `/quizzes/:quizId/questions/:questionId/alternatives/:alternativeId` | Deleta uma alternativa   | ✔️ (dev) |
 
 
 ### Rotas charts
@@ -116,7 +127,7 @@ O  PlanejaEstudos tem o objetivo de organizar e facilitar os estudos dos desenvo
 | `GET`    | `/faster-attempts`          | Retorna as tentativas de quizzes mais rápidas  | ✔️      |
 
 
-## Exemplos de retorno das rotas
+## Exemplos de retorno das rotas GET
 
 - **/auth/signup**
 ``` bash
@@ -134,49 +145,83 @@ O  PlanejaEstudos tem o objetivo de organizar e facilitar os estudos dos desenvo
 ]
 ```
 
-- **/studies**
+- **/auth/signin**
 ``` bash
-{
-  "name": "HTML",
-  "type": "frontend",
-  "link": "https://developer.mozilla.org/pt-BR/docs/Web/HTML",
-  "description": "HTML (HyperText Markup Language)",
-  "status": "em_andamento"
-  "progress": 0
-}
+[
+  "message": "Login bem sucedido",
+  "token": "token",
+  "user": {
+    "id": "userid",
+    "name": "nome",
+    "username": "username",
+    "email": "email@gmail.com",
+    "profileImage": null,
+    "role": "user",
+    "createdAt": "2025-12-22T19:11:24.801Z"
+  }
+]
 ```
 
-- **/taks/:studyId**
+- **/studies**
 ``` bash
-{
-  "title": "Aprender a estrutura básica do HTML",
-  "link": "https://developer.mozilla.org/pt-BR/docs/Learn_web_development/Getting_started/Your_first_website/Creating_the_content",
-  "finishIn": "2025-11-14T00:10:00.000Z"
-}
+[
+  {
+    "study": {
+      "id": "idestudo1",
+      "name": "HTML",
+      "type": "frontend",
+      "link": "https://app.b7web.com.br/lesson/ae9f1a01-b8ed-4876-b386-a11e4df144ca",
+      "description": "descrição estudo 1",
+      "status": "finalizado",
+      "progress": 100,
+      "userId": "userId",
+      "createdAt": "2025-12-22T19:11:24.801Z",
+      "updatedAt": "2025-12-22T19:11:24.801Z"
+    },
+    "tasks": [
+      {
+        "id": "c15a2236-81fd-4f27-9895-4716c7428d18",
+        "title": "Criar páginas de login",
+        "link": null,
+        "done": true,
+        "studyId": "idestudo1",
+        "createdAt": "2025-12-22T19:11:24.801Z",
+        "finishIn": null,
+        "finishedAt": "22025-12-22T19:11:24.801Z"
+      },
+    ]
+  },
+  {
+    // mais estudos e tarefas...
+  }
+]
 ```
 
 - **/quizzes**
 ``` bash
 [
   {
-    "id": "0e35b57e-b8dc-4822-bedd-03eda0a3827e",
+    "id": "quizId",
     "title": "HTML",
     "description": "Pratique seus estudos com o quiz de HTML da DevOrganiza",
     "type": "frontend",
     "imageUrl": "https://res.cloudinary.com/dvuxplf3j/image/upload/v1764444330/Quizzes/zvhoqjhiidbiylw5bggu.png",
-    "createdAt": "2025-12-11T16:54:40.488Z",
-    "updatedAt": "2025-12-11T16:54:40.488Z",
-    "unlockedAt": "2025-12-11T19:14:35.905Z",
+    "createdAt": "2025-12-22T19:11:24.801Z",
+    "updatedAt": "2025-12-22T19:11:24.801Z",
+    "unlockedAt": "2025-12-22T19:11:24.801Z",
     "lastAttempt": {
-        "id": "e05d046f-c990-4a54-b124-f09411d1fc04",
-        "userId": "123",
-        "quizId": "0e35b57e-b8dc-4822-bedd-03eda0a3827e",
-        "startedAt": "2025-12-14T12:12:34.449Z",
-        "finishedAt": "2025-12-14T12:14:29.335Z",
-        "score": 0,
-        "durationSec": 114
+      "id": "attemptId",
+      "userId": "userId",
+      "quizId": "quizId",
+      "startedAt": "2025-12-22T19:11:24.801Z",
+      "finishedAt": "2025-12-22T19:11:24.801Z",
+      "score": 20,
+      "durationSec": 300
     }
   },
+  {
+    // mais quizzes e tentativas...
+  }
 ]
 ```
 
@@ -184,14 +229,26 @@ O  PlanejaEstudos tem o objetivo de organizar e facilitar os estudos dos desenvo
 ``` bash
 [
   {
-    "id": "0e35b57e-b8dc-4822-bedd-03eda0a3827e",
+    "id": "quizId",
     "title": "HTML",
     "description": "Pratique seus estudos com o quiz de HTML da DevOrganiza",
     "type": "frontend",
     "imageUrl": "https://res.cloudinary.com/dvuxplf3j/image/upload/v1764444330/Quizzes/zvhoqjhiidbiylw5bggu.png",
-    "createdAt": "2025-12-11T16:54:40.488Z",
-    "updatedAt": "2025-12-11T16:54:40.488Z"
+    "createdAt": "2025-12-22T19:11:24.801Z",
+    "updatedAt": "2025-12-22T19:11:24.801Z"
   },
+  {
+    "id": "quizId",
+    "title": "CSS",
+    "description": "Pratique seus estudos com o quiz de CSS da DevOrganiza",
+    "type": "frontend",
+    "imageUrl": "https://res.cloudinary.com/dvuxplf3j/image/upload/v1764451996/Quizzes/fxsjsrsim3jd14vu3xjc.png",
+    "createdAt": "2025-12-22T19:11:24.801Z",
+    "updatedAt": "2025-12-22T19:11:24.801Z"
+  },
+  {
+    // mais quizzes...
+  }
 ]
 ```
 
@@ -199,80 +256,15 @@ O  PlanejaEstudos tem o objetivo de organizar e facilitar os estudos dos desenvo
 ``` bash
 [
   {
-    "id": "d5d5964f-a7eb-44d9-bdf4-1126b8556484",
-    "quizId": "4df5cdeb-3e56-4cf5-ae6f-de5a997fbc2c",
-    "quizTitle": "Javascript",
-    "quizImage": "https://res.cloudinary.com/dvuxplf3j/image/upload/v1764700935/Quizzes/pjvto2ofgpqthc4xo5yx.png",
-    "startedAt": "2025-12-22T13:11:28.021Z",
-    "finishedAt": "2025-12-22T13:12:28.688Z",
-    "score": 12,
-    "durationSec": 60
+    "id": "attemptId",
+    "quizId": "quizId",
+    "quizTitle": "HTML",
+    "quizImage": "https://res.cloudinary.com/dvuxplf3j/image/upload/v1764444330/Quizzes/zvhoqjhiidbiylw5bggu.png",
+    "startedAt": "2025-12-22T19:11:24.801Z",
+    "finishedAt": "2025-12-22T19:11:24.801Z",
+    "score": 20,
+    "durationSec": 300
   },
-]
-```
-
-- **/quizzes/locked**
-``` bash
-[
-  {
-    "id": "50a922ee-64b4-4c3e-9c39-e9f865242a7d",
-    "title": "Next",
-    "description": "Pratique seus estudos com o quiz de Next da DevOrganiza",
-    "type": "frontend",
-    "imageUrl": "https://res.cloudinary.com/dvuxplf3j/image/upload/v1764805626/Quizzes/sdum6n1yq8e4ubtkpxp2.jpg",
-    "createdAt": "2025-12-11T16:54:40.488Z",
-    "updatedAt": "2025-12-11T16:54:40.488Z"
-  },
-]
-```
-
-- **/quizzes/:quizId/attempts/finish**
-``` bash
-[
-  {
-    "questionId": "1",
-    "answerId": "1"
-  },
-  {
-    "questionId": "1",
-    "answerId": "1"
-  }
-]
-```
-
-- **/quizzes/:quizId/attempts/questions**
-``` bash
-{
-  "question": "Qual tag é usada para indicar o início de um documento HTML?"
-}
-```
-
-- **/quizzes/:quizId/questions/many**
-``` bash
-[
-  {
-    "question": "Qual tag é usada para indicar o início de um documento HTML?"
-  },
-  {
-    "question": "Onde ficam as informações não visíveis na página, como o título e meta tags?"
-  }
-]
-```
-
-- **/quizzes/:quizId/questions/:questionId/alternatives**
-``` bash
-{
-  "text": "<doctype>", "isCorrect": false, "questionId": 1
-}
-```
-
-- **/quizzes/:quizId/questions/:questionId/alternatives/many**
-``` bash
-[
-  { "text": "<doctype>", "isCorrect": false, "questionId": 1 },
-  { "text": "<html>", "isCorrect": true, "questionId": 1 },
-  { "text": "<header>", "isCorrect": false, "questionId": 1 },
-  { "text": "<document>", "isCorrect": false, "questionId": 1 }
 ]
 ```
 
@@ -282,6 +274,7 @@ O  PlanejaEstudos tem o objetivo de organizar e facilitar os estudos dos desenvo
 src/
 |-- controllers/   # Lógica dos endpoints
 |-- db/            # Configurações do Drizzle ORM e schemas
+|-- lib/           # Configurações de bibliotecas
 |-- middlewares/   # Autenticação, validações
 |-- routes/        # Arquitetura RESTful
 |-- schemas/       # Validação Zod
@@ -292,13 +285,17 @@ src/
 |-- server.ts      # Entry-point do servidor
 ```
 
-
 ## Comandos de execução
 
-- **npm run dev** (Roda em desenvolvimento)
-- **npm run generate** (Gera schemas do Drizzle baseado no banco)
-- **npm run build** (Compila TypeScript para JavaScript)
-- **npm run start** (Inicia o servidor em produção)
+- **npm run dev**: Roda em desenvolvimento
+- **npm run generate**: Gera schemas do Drizzle baseado no banco
+- **npm run build**: Compila TypeScript para JavaScript
+- **npm run start**: Inicia o servidor em produção
+
+## ⚙️ Pré-requisitos
+- Node.js (versão 18+)
+- PostgreSQL (versão 12+)
+- npm ou yarn
 
 ## Instalação
 

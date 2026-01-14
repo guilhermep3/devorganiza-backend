@@ -21,8 +21,8 @@ quizRoutes.get('/:quizId/attempts/last', verifyJWT, validateQuiz, quizController
 quizRoutes.post('/:quizId/attempts/start', verifyJWT, validateQuiz, quizController.startQuizAttempt); 
 quizRoutes.put('/:quizId/attempts/finish', verifyJWT, validateQuiz, quizController.finishQuizAttempt); 
 quizRoutes.delete('/:quizId/attempts/delete', verifyJWT, validateQuiz, quizController.deleteQuizAttempt); 
-quizRoutes.put('/:quizId/unlock', verifyJWT, validateQuiz, quizController.unlockQuiz);
 
+quizRoutes.put('/:quizId/unlock', verifyJWT, validateQuiz, quizController.unlockQuiz);
 quizRoutes.post('/:quizId/image', 
   verifyJWT, validateQuiz, verifyRole, upload.single("image"), quizController.updateQuizImage);
 
