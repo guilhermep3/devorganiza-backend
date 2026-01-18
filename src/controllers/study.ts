@@ -139,7 +139,7 @@ export const createStudy = async (req: ExtendedRequest, res: Response) => {
 export const updateStudy = async (req: ExtendedRequest, res: Response) => {
   try {
     const userId = req.idLogged as string;
-    const studyId = req.params.id as string;
+    const studyId = req.params.studyId as string;
 
     if (!studyId) {
       res.status(400).json({ error: "Id do estudo inválido" });
@@ -174,7 +174,7 @@ export const updateStudy = async (req: ExtendedRequest, res: Response) => {
 export const deleteStudy = async (req: ExtendedRequest, res: Response) => {
   try {
     const userId = req.idLogged as string;
-    const studyId = req.params.id as string;
+    const studyId = req.params.studyId as string;
 
     if (!studyId) {
       res.status(400).json({ error: "Id do estudo inválido" });
