@@ -6,7 +6,7 @@ export type StudyUpdate = typeof updateStudySchema;
 
 export const createStudySchema: z.ZodType<Omit<StudyInsert, 'userId'>> = z.object({
   name: z.string().min(1, "O título é obrigatório"),
-  type: z.string().min(1, "O tipo não pode ser vazio").optional().nullable(),
+  type: z.enum(["frontend", "backend", "outro"]),
   link: z.string().url("O link precisa ser uma URL válida").optional().nullable(),
   description: z.string().optional().nullable(),
   status: z.enum(["em_andamento", "finalizado"]).default("em_andamento").optional(),
