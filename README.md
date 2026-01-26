@@ -8,46 +8,52 @@ O objetivo da DevOrganiza é organizar e facilitar os estudos dos desenvolvedore
 
 ## 📌 Visão Geral
 
-DevOrganiza é uma aplicação web fullstack voltada para desenvolvedores que desejam organizar estudos, tarefas e acompanhar sua evolução por meio de quizzes e métricas de desempenho.
+Este repositório é a camada backend da DevOrganiza, uma API RESTful, desenvolvida em Node.js + TypeScript, responsável por gerenciar autenticação, estudos, tarefas, quizzes, dados de usuário e métricas de desempenho.
 
 ## 🎯 Objetivo do projeto
 
 - Demonstrar domínio em Node.js + TypeScript
 - Simular um ambiente próximo ao mundo real / produção
-- Criar uma API REST robusta, validada e documentada
-- Aplicar arquitetura em camadas
-- Implementar autenticação segura
-- Trabalhar com ORM moderno e tipado
+- Criar uma API REST organizada, escalável e validada
+- Aplicar arquitetura em camadas (Layered Architecture)
+- Implementar autenticação e autorização com JWT
+- Trabalhar com ORM moderno e com migrations
 
 ## 🧩 Tecnologias utilizadas
 
 - **Node.js**: Ambiente de execução JavaScript server-side
-- **Express**: Framework web minimalista para Node.js
+- **Express**: Framework web minimalista
 - **Typescript**: Superset do JavaScript com tipagem estática
 - **PostgreSQL**: Banco de dados relacional
 
 ## 🧩 Bibliotecas
 
 - **Drizzle ORM**: ORM TypeScript-first para acesso ao banco de dados
-- **Drizzle Kit**: Ferramenta CLI para migrações e geração de schemas
-- **Helmet**: Segurança de headers HTTP
+- **Drizzle Kit**: CLI para migrações e geração de schemas
+- **Zod**: Validação de dados
+- **Helmet**: Segurança via headers HTTP
 - **Jsonwebtoken**: Autenticação JWT
 - **bcrypt-ts**: Hash seguro de senhas
 - **Slug**: Geração de username único
-- **Zod**: Validação de dados
 - **Multer**: Upload de arquivos multipart/form-data
-- **Cloudinary**: Armazenamento de mídia em nuvem
+- **Cloudinary**: Armazenamento de imagens em nuvem
 
 ## 🏗️ Arquitetura
 
-- **Arquitetura baseada em camadas (Layered Architecture)**:
-  - **Routes**: definição das rotas e versionamento da API
-  - **Controllers**: responsabilidade de lidar com HTTP (req/res)
+A aplicação segue arquitetura em camadas, separando responsabilidades e facilitando manutenção e escalabilidade.
+
+- ### Camadas
+
+  - **Routes**: Definição e versionamento das rotas
+  - **Middlewares**: Autenticação, autorização e validações
+  - **Controllers**: Interface HTTP (req/res)
   - **Services**: regras de negócio e orquestração
-  - **DB/Repositories**: acesso e persistência de dados
-- **Fluxo de requisição**:
-  1. Requisição chega pela rota
-  2. Middlewares executam autenticação e validações
+  - **Schemas**: Validação de dados com Zod
+  - **DB/Repositories**: Persistência de dados com Drizzle ORM
+
+- ### Fluxo de requisição:
+  1. A Requisição chega pela rota
+  2. Middlewares validam autenticação e permissões
   3. Controller recebe a requisição
   4. Schema valida os dados enviados com Zod
   5. Service executa a regra de negócio
@@ -56,14 +62,15 @@ DevOrganiza é uma aplicação web fullstack voltada para desenvolvedores que de
 
 ## 🚀 Funcionalidades Principais
 
-- Sistema de cadastro e login com upload de imagem de perfil via Cloudinary
-- Autenticação de usuários com JWT
+- Cadastro e login de usuários
+- Upload de imagem de perfil (Cloudinary)
+- Autenticação via JWT
 - Organização de estudos por temas, com criação de tarefas vinculadas
-- CRUD de estudos e tarefas
+- CRUD completo de estudos e tarefas
 - Sistema de quizzes desbloqueáveis conforme os estudos cadastrados
-- Registro de pontuação e tempo gasto em cada tentativa de quiz
-- Controle de acesso por tipo de usuário (user/admin) com rotas protegidas
-- Rotas que retornam dados de desempenho para Dashboard
+- Registro de tentativas, pontuação e tempo de jogatina do quiz
+- Controle de acesso de rotas por tipo de usuário (user/admin)
+- Endpoints de métricas para dashboards
 
 ## 🛣️ Rotas da API
 
@@ -297,17 +304,17 @@ DevOrganiza é uma aplicação web fullstack voltada para desenvolvedores que de
 
 ``` bash
 src/
-|-- controllers/   # Lógica dos endpoints
-|-- db/            # Configurações do Drizzle ORM e schemas
-|-- lib/           # Configurações de bibliotecas
-|-- middlewares/   # Autenticação, validações
-|-- routes/        # Arquitetura RESTful
-|-- schemas/       # Validação Zod
-|-- services/      # Regras de negócio + banco
-|-- types/         # Tipos TypeScript
-|-- utils/         # Funções utilitárias
-|-- drizzle/       # Configurações do Drizzle
-|-- server.ts      # Entry-point do servidor
+├── controllers/   # Camada HTTP
+├── db/            # Configuração do Drizzle ORM e schemas
+├── drizzle/       # Migrations e geração de schemas
+├── lib/           # Configurações de bibliotecas
+├── middlewares/   # Autenticação e validações
+├── routes/        # Definição das rotas
+├── schemas/       # Validação com Zod
+├── services/      # Regras de negócio
+├── types/         # Tipos TypeScript
+├── utils/         # Funções utilitárias
+└── server.ts      # Entry-point da aplicação
 ```
 
 ## Comandos de execução
