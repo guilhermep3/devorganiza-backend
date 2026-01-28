@@ -38,6 +38,18 @@ Este repositório é a camada backend da DevOrganiza, uma API RESTful, desenvolv
 - **Multer**: Upload de arquivos multipart/form-data
 - **Cloudinary**: Armazenamento de imagens em nuvem
 
+## 🚀 Funcionalidades Principais
+
+- Cadastro e login de usuários
+- Upload de imagem de perfil (Cloudinary)
+- Autenticação via JWT
+- Organização de estudos por temas, com criação de tarefas vinculadas
+- CRUD completo de estudos e tarefas
+- Sistema de quizzes desbloqueáveis conforme os estudos cadastrados
+- Registro de tentativas, pontuação e tempo de jogatina do quiz
+- Controle de acesso de rotas por tipo de usuário (user/admin)
+- Endpoints de métricas para dashboards
+
 ## 🏗️ Arquitetura
 
 A aplicação segue arquitetura em camadas, separando responsabilidades e facilitando manutenção e escalabilidade.
@@ -60,17 +72,21 @@ A aplicação segue arquitetura em camadas, separando responsabilidades e facili
   6. Drizzle ORM interage com o banco de dados
   7. Controller retorna a resposta HTTP
 
-## 🚀 Funcionalidades Principais
+## Estrutura do projeto
 
-- Cadastro e login de usuários
-- Upload de imagem de perfil (Cloudinary)
-- Autenticação via JWT
-- Organização de estudos por temas, com criação de tarefas vinculadas
-- CRUD completo de estudos e tarefas
-- Sistema de quizzes desbloqueáveis conforme os estudos cadastrados
-- Registro de tentativas, pontuação e tempo de jogatina do quiz
-- Controle de acesso de rotas por tipo de usuário (user/admin)
-- Endpoints de métricas para dashboards
+``` bash
+src/
+├── controllers/   # Camada HTTP
+├── db/            # Configuração do Drizzle ORM e schemas
+├── lib/           # Configurações de bibliotecas
+├── middlewares/   # Autenticação e validações
+├── routes/        # Definição das rotas
+├── schemas/       # Validação com Zod
+├── services/      # Regras de negócio
+├── types/         # Tipos TypeScript
+├── utils/         # Funções utilitárias
+└── server.ts      # Entry-point da aplicação
+```
 
 ## 🛣️ Rotas da API
 
@@ -118,7 +134,6 @@ A aplicação segue arquitetura em camadas, separando responsabilidades e facili
 | `DELETE` | `/quizzes/:quizId` | Deleta um quiz           | ✔️ (dev) |
 
 
-
 ### Rotas attempts
 
 | Método   | Rota                               | Descrição                          | Auth? |
@@ -137,6 +152,7 @@ A aplicação segue arquitetura em camadas, separando responsabilidades e facili
 | `POST`   | `/quizzes/:quizId/questions/many`        | Cria várias perguntas | ✔️ (dev) |
 | `PUT`    | `/quizzes/:quizId/questions/:questionId` | Atualiza uma pergunta | ✔️ (dev) |
 | `DELETE` | `/quizzes/:quizId/questions/:questionId` | Deleta uma pergunta   | ✔️ (dev) |
+
 
 ### Rotas alternatives
 
@@ -298,23 +314,6 @@ A aplicação segue arquitetura em camadas, separando responsabilidades e facili
     "durationSec": 300
   },
 ]
-```
-
-## Estrutura do projeto
-
-``` bash
-src/
-├── controllers/   # Camada HTTP
-├── db/            # Configuração do Drizzle ORM e schemas
-├── drizzle/       # Migrations e geração de schemas
-├── lib/           # Configurações de bibliotecas
-├── middlewares/   # Autenticação e validações
-├── routes/        # Definição das rotas
-├── schemas/       # Validação com Zod
-├── services/      # Regras de negócio
-├── types/         # Tipos TypeScript
-├── utils/         # Funções utilitárias
-└── server.ts      # Entry-point da aplicação
 ```
 
 ## Comandos de execução
