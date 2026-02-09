@@ -108,6 +108,8 @@ export const updateStudyProgress = async (id: string, progress: number) => {
   dataUpdated.progress = progress
   if (progress === 100) {
     dataUpdated.status = "finalizado"
+  } else {
+    dataUpdated.status = "em_andamento"
   }
 
   return await db.update(studiesTable)

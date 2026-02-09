@@ -168,7 +168,7 @@ src/
 | Método   | Rota                        | Descrição           | Auth?    |
 |----------|-----------------------------|---------------------|----------|
 | `GET`    | `/weekly-productivity`      | Retorna as tarefas criadas e finalizadas em cada dia da semana | ✔️      |
-| `GET`    | `/tasks-by-type`            | Retorna a quantidade de tarefas por setor (frontent, backend e ferramentas) | ✔️      |
+| `GET`    | `/tasks-by-type`            | Retorna a quantidade de tarefas por setor (frontent, backend e outro) | ✔️      |
 | `GET`    | `/finished-tasks-by-month`  | Retorna a quantidade de tarefas finalizadas por mês | ✔️      |
 | `GET`    | `/average-time-finish-task` | Retorna o tempo médio para finalizar tarefas de cada estudo  | ✔️      |
 | `GET`    | `/average-score`            | Retorna a pontuação média por quiz | ✔️      |
