@@ -1,10 +1,10 @@
 import type { Response } from "express";
 import type { ExtendedRequest } from "../types/request.js";
 import {
-  createUserTask, deleteUserTask, findFinishedTasksCount, findTasksCount, updateUserTask
+  createUserTask, deleteUserTask, findFinishedTasksCount, findTaskById, findTasksCount, updateUserTask
 } from "../services/task.js";
 import { createTaskSchema, updateTaskSchema } from "../schemas/task.js";
-import { updateStudyProgress } from "../services/study.js";
+import { updateStudyStatusProgress } from "../services/study.js";
 
 export const createTask = async (req: ExtendedRequest, res: Response) => {
   try {
@@ -43,6 +43,7 @@ export const createTask = async (req: ExtendedRequest, res: Response) => {
 export const updateTask = async (req: ExtendedRequest, res: Response) => {
   try {
     const taskId = req.params.taskId as string;
+    
     if (!taskId) {
       res.status(400).json({ error: "Id da tarefa inválida" });
       return;
@@ -54,9 +55,19 @@ export const updateTask = async (req: ExtendedRequest, res: Response) => {
       return;
     }
 
+    const currentTask = await findTaskById(taskId);
+    
+    if (!currentTask) {
+      res.status(404).json({ error: "Tarefa não encontrada" });
+      return;
+    }
+    
+    const studyId = (currentTask as any).studyId;
+
     const cleanedData: any = Object.fromEntries(
       Object.entries(safeData.data).filter(([_, v]) => v !== undefined)
     );
+    
     if ("done" in cleanedData) {
       if (cleanedData.done === true) {
         cleanedData.finishedAt = new Date();
@@ -67,22 +78,21 @@ export const updateTask = async (req: ExtendedRequest, res: Response) => {
 
     const updatedTask = await updateUserTask(taskId, cleanedData as Parameters<typeof updateUserTask>[1]);
 
-    const updatedTaskRecord = Array.isArray(updatedTask) ? updatedTask[0] : updatedTask;
-
-    if ("done" in cleanedData) {
-      const studyId = (updatedTaskRecord as any).studyId;
+    if ("done" in cleanedData) {      
       const tasksCount = await findTasksCount(studyId);
       const finishedTasksCount = await findFinishedTasksCount(studyId);
+      
       const progress = tasksCount === 0 ? 0 : Math.round((finishedTasksCount / tasksCount) * 100);
 
-      await updateStudyProgress(studyId, progress);
+      await updateStudyStatusProgress(studyId, progress);
     }
 
     res.json(updatedTask);
   } catch (error) {
+    console.error('Erro ao atualizar tarefa:', error);
     res.status(500).json({
       error: "Erro ao atualizar tarefa",
-      errorDetails: error
+      errorDetails: error instanceof Error ? error.message : error
     });
   }
 };

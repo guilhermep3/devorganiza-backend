@@ -3,6 +3,14 @@ import { tasksTable } from "../db/schema.js";
 import { db } from "../lib/drizzle.js";
 import { TaskInsert } from "../schemas/task.js";
 
+export const findTaskById = async (taskId: string) => {
+  return await db
+    .select()
+    .from(tasksTable)
+    .where(eq(tasksTable.id, taskId))
+    .then(res => res[0]);
+}
+
 export const createUserTask = async (data: TaskInsert) => {
   return await db
     .insert(tasksTable)

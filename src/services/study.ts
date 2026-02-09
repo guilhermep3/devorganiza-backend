@@ -103,19 +103,29 @@ export const updateStudyById = async (
   return updatedStudy;
 };
 
-export const updateStudyProgress = async (id: string, progress: number) => {
+export const updateStudyStatusProgress = async (id: string, progress: number) => {
   const dataUpdated: Record<string, any> = {};
-  dataUpdated.progress = progress
+
+  dataUpdated.progress = progress;
+
   if (progress === 100) {
-    dataUpdated.status = "finalizado"
+    dataUpdated.status = "finalizado";
+    dataUpdated.finishedAt = new Date();
   } else {
-    dataUpdated.status = "em_andamento"
+    dataUpdated.status = "em_andamento";
+    dataUpdated.finishedAt = null;
   }
 
-  return await db.update(studiesTable)
-    .set(dataUpdated)
-    .where(eq(studiesTable.id, id))
-    .returning();
+  try {
+    const result = await db.update(studiesTable)
+      .set(dataUpdated)
+      .where(eq(studiesTable.id, id))
+      .returning();
+
+    return result;
+  } catch (error) {
+    throw error;
+  }
 }
 
 export const deleteStudyById = async (studyId: string, userId: string) => {
