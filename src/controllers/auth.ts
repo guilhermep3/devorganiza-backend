@@ -1,5 +1,4 @@
 import type { Request, Response } from "express";
-import { signinSchema, signupSchema } from "../schemas/auth.js";
 import slug from "slug";
 import { createUser, findUserByEmail, findUserByUsername } from "../services/user.js";
 import { compare, hash } from "bcrypt-ts";
@@ -7,36 +6,30 @@ import { createJWT } from "../middlewares/jwt.js";
 
 export const signup = async (req: Request, res: Response) => {
   try {
-    const safeData = signupSchema.safeParse(req.body);
-    if (!safeData.success) {
-      res.status(422).json({ error: safeData.error.flatten().fieldErrors });
-      return;
-    }
+    const { name, username, email, password } = req.body;
 
-    const hasEmail = await findUserByEmail(safeData.data.email);
+    const hasEmail = await findUserByEmail(email);
     if (hasEmail) {
       res.status(409).json({ error: 'Email já existe' });
       return;
     }
 
-    let generateSlug = true;
-    let username = safeData.data.username;
-    while (generateSlug) {
-      const hasSlug = await findUserByUsername(username);
-      if (hasSlug) {
-        const slugSuffix = Math.floor(Math.random() * 999999).toString();
-        username = slug(safeData.data.username + slugSuffix);
-      } else {
-        generateSlug = false;
-      }
+    let finalUsername = username;
+    let userExists = await findUserByUsername(finalUsername);
+
+    while (userExists) {
+      const slugSuffix = Math.floor(Math.random() * 999999).toString();
+      finalUsername = slug(username + slugSuffix);
+      userExists = await findUserByUsername(finalUsername);
     }
 
-    const hashPassword = await hash(safeData.data.password, 10);
+    const hashPassword = await hash(password, 10);
 
     const userData = {
-      ...safeData.data,
-      username,
-      password: hashPassword
+      name,
+      username: finalUsername,
+      email: email,
+      password: hashPassword,
     }
 
     const newUser = await createUser(userData);
@@ -48,20 +41,16 @@ export const signup = async (req: Request, res: Response) => {
 
 export const signin = async (req: Request, res: Response) => {
   try {
-    const safeData = signinSchema.safeParse(req.body);
-    if (!safeData.success) {
-      res.status(422).json({ error: safeData.error.flatten().fieldErrors });
-      return;
-    }
+    const { email, password } = req.body;
 
-    const account = await findUserByEmail(safeData.data.email);
+    const account = await findUserByEmail(email);
     if (!account) {
       res.status(400).json({ error: 'Acesso negado' });
       return;
     }
 
     const verifyPassword = await compare(
-      safeData.data.password,
+      password,
       account.password
     );
 
