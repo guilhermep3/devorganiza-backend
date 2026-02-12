@@ -11,7 +11,7 @@
     "generate": "drizzle-kit generate",
     "build": "tsc",
     "prebuild": "drizzle-kit generate",
-    "start": "node dist/server.js",
+    "start": "node dist/src/server.js",
     "seed": "node --import=tsx ./src/db/seeds/seed.ts"
   },
   "dependencies": {
