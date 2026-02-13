@@ -3,19 +3,15 @@ import type { ExtendedRequest } from "../types/request.js"
 import {
   createNewQuestion, createNewQuestions, deleteQuestionById, updateQuestionById
 } from "../services/question.js";
-import { createQuestionSchema, manyQuestionSchema, updateQuestionSchema } from "../schemas/question.js";
+import { createManyQuestionType, createQuestionType, manyQuestionSchema, updateQuestionSchema, updateQuestionType } from "../schemas/question.js";
 
 export const createQuestion = async (req: ExtendedRequest, res: Response) => {
   try {
     const quizId = req.params.quizId as string;
 
-    const safeData = createQuestionSchema.safeParse(req.body);
-    if (!safeData.success) {
-      res.status(422).json({ error: safeData.error.flatten().fieldErrors });
-      return;
-    }
+    const data: createQuestionType = req.body;
 
-    const newQuestion = await createNewQuestion(safeData.data.question, quizId);
+    const newQuestion = await createNewQuestion(data.question, quizId);
 
     res.json(newQuestion);
     return;
@@ -27,14 +23,10 @@ export const createQuestion = async (req: ExtendedRequest, res: Response) => {
 
 export const createManyQuestion = async (req: ExtendedRequest, res: Response) => {
   try {
-    const safeData = manyQuestionSchema.safeParse(req.body);
-    if (!safeData.success) {
-      res.status(400).json({ error: safeData.error.flatten().fieldErrors });
-      return;
-    }
+    const data: createManyQuestionType = req.body;
 
     const quizId = req.params.quizId as string;
-    const questions = safeData.data.map(q => ({
+    const questions = data.map(q => ({
       question: q.question,
       quizId
     }));
@@ -53,13 +45,9 @@ export const updateQuestion = async (req: ExtendedRequest, res: Response) => {
   try {
     const questionId = req.params.questionId as string;
 
-    const safeData = updateQuestionSchema.safeParse(req.body);
-    if (!safeData.success) {
-      res.status(422).json({ error: safeData.error.flatten().fieldErrors });
-      return;
-    }
+    const data: updateQuestionType = req.body;
 
-    const questionUpdated = await updateQuestionById(safeData.data.question, questionId);
+    const questionUpdated = await updateQuestionById(data.question, questionId);
 
     res.json(questionUpdated);
     return;

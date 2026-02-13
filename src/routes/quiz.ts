@@ -8,6 +8,7 @@ import * as questionsController from "../controllers/question.js";
 import * as alternativeController from "../controllers/alternative.js";
 import { validateSchema } from "../middlewares/validateSchema.js";
 import { createQuizSchema, createQuizzesSchema, updateQuizSchema } from "../schemas/quiz.js";
+import { createQuestionSchema } from "../schemas/question.js";
 
 export const quizRoutes = Router();
 
@@ -29,8 +30,8 @@ quizRoutes.post('/:quizId/image',
   verifyJWT, validateQuiz, verifyRole, upload.single("image"), quizController.updateQuizImage);
 
 // questions
-quizRoutes.post('/:quizId/questions',
-  verifyJWT, validateQuiz, verifyRole, questionsController.createQuestion);
+quizRoutes.post('/:quizId/questions', verifyJWT, validateQuiz, verifyRole,
+  validateSchema(createQuestionSchema), questionsController.createQuestion);
 quizRoutes.post('/:quizId/questions/many',
   verifyJWT, validateQuiz, verifyRole, questionsController.createManyQuestion);
 quizRoutes.put('/:quizId/questions/:questionId',
