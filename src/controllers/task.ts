@@ -3,7 +3,7 @@ import type { ExtendedRequest } from "../types/request.js";
 import {
   createUserTask, deleteUserTask, findFinishedTasksCount, findTaskById, findTasksCount, updateUserTask
 } from "../services/task.js";
-import { createTaskSchema, updateTaskSchema } from "../schemas/task.js";
+import { TaskInsert, updateTaskSchema } from "../schemas/task.js";
 import { updateStudyStatusProgress } from "../services/study.js";
 
 export const createTask = async (req: ExtendedRequest, res: Response) => {
@@ -14,17 +14,13 @@ export const createTask = async (req: ExtendedRequest, res: Response) => {
       return;
     }
 
-    const safeData = await createTaskSchema.safeParse(req.body);
-    if (!safeData.success) {
-      res.status(400).json({ error: safeData.error.flatten().fieldErrors });
-      return;
-    }
+    const data: TaskInsert = req.body;
 
     const convertedData = {
-      ...safeData.data,
-      title: safeData.data.title,
-      link: safeData.data.link ?? null,
-      finishIn: safeData.data.finishIn ?? null,
+      ...data,
+      title: data.title,
+      link: data.link ?? null,
+      finishIn: data.finishIn ?? null,
       done: false,
     };
 
