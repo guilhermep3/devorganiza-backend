@@ -1,6 +1,7 @@
 import { eq } from "drizzle-orm";
 import { db } from "../lib/drizzle.js";
 import { questionsTable, alternativesTable } from "../db/schema.js";
+import { updateAlternativeType } from "../schemas/alternative.js";
 
 export const createNewQuestion = async (question: string, quizId: string) => {
   return await db.insert(questionsTable)
@@ -30,7 +31,7 @@ export const createNewAlternatives = async (data: typeof alternativesTable.$infe
 };
 
 export const updateAlternativeById = async (
-  data: Partial<typeof alternativesTable.$inferInsert>,
+  data: updateAlternativeType,
   id: string
 ) => {
   return await db.update(alternativesTable).set(data)

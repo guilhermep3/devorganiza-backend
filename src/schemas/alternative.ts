@@ -3,8 +3,10 @@ import { alternativesTable } from "../db/schema";
 
 export type AlternativeInsert = typeof alternativesTable.$inferInsert;
 export type AlternativeUpdate = Partial<AlternativeInsert>;
+export type createManyAlternativesType = z.infer<typeof createManyAlternativesSchema>;
+export type updateAlternativeType = z.infer<typeof updateAlternativeSchema>;
 
-export const createManyAlternativeSchema: z.ZodType<AlternativeInsert[]> = z.array(
+export const createManyAlternativesSchema = z.array(
   z.object({
     text: z.string(),
     isCorrect: z.boolean().default(false),

@@ -9,6 +9,7 @@ import * as alternativeController from "../controllers/alternative.js";
 import { validateSchema } from "../middlewares/validateSchema.js";
 import { createQuizSchema, createQuizzesSchema, updateQuizSchema } from "../schemas/quiz.js";
 import { createQuestionSchema } from "../schemas/question.js";
+import { createManyAlternativesSchema, updateAlternativeSchema } from "../schemas/alternative.js";
 
 export const quizRoutes = Router();
 
@@ -41,9 +42,9 @@ quizRoutes.delete('/:quizId/questions/:questionId',
 
 // alternatives
 quizRoutes.post('/:quizId/questions/alternatives',
-  verifyJWT, verifyRole, alternativeController.createManyAlternatives);
+  verifyJWT, verifyRole, validateSchema(createManyAlternativesSchema), alternativeController.createManyAlternatives);
 quizRoutes.put('/:quizId/questions/:questionId/alternatives/:alternativeId',
-  verifyJWT, verifyRole, alternativeController.updateAlternative);
+  verifyJWT, verifyRole, validateSchema(updateAlternativeSchema), alternativeController.updateAlternative);
 quizRoutes.delete('/:quizId/questions/:questionId/alternatives/:alternativeId',
   verifyJWT, verifyRole, alternativeController.deleteAlternative);
 

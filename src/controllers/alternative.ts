@@ -1,4 +1,4 @@
-import { createManyAlternativeSchema, updateAlternativeSchema } from "../schemas/alternative.js";
+import { createManyAlternativesType, updateAlternativeType } from "../schemas/alternative.js";
 import {
   createNewAlternatives, deleteAlternativeById, updateAlternativeById
 } from "../services/question.js";
@@ -7,13 +7,9 @@ import type { Response } from "express";
 
 export const createManyAlternatives = async (req: ExtendedRequest, res: Response) => {
   try {
-    const safeData = createManyAlternativeSchema.safeParse(req.body);
-    if (!safeData.success) {
-      res.status(422).json({ error: safeData.error.flatten().fieldErrors });
-      return;
-    }
+    const data: createManyAlternativesType[] = req.body;
 
-    const alternatives = safeData.data.map((a: any) => ({
+    const alternatives = data.map((a: any) => ({
       text: a.text,
       isCorrect: a.isCorrect,
       questionId: a.questionId as string
@@ -36,16 +32,12 @@ export const updateAlternative = async (req: ExtendedRequest, res: Response) => 
       return;
     }
 
-    const safeData = updateAlternativeSchema.safeParse(req.body);
-    if (!safeData.success) {
-      res.status(422).json({ error: safeData.error.flatten().fieldErrors });
-      return;
-    }
+    const data: updateAlternativeType = req.body;
 
     const convertedData = {
-      ...safeData.data,
-      text: safeData.data.text!,
-      isCorrect: safeData.data.isCorrect!
+      ...data,
+      text: data.text,
+      isCorrect: data.isCorrect
     }
 
     const newAlternative = await updateAlternativeById(convertedData, alternativeId);
