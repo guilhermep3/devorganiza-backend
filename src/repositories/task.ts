@@ -5,27 +5,21 @@ import { TaskInsert } from "../schemas/task.js";
 
 export const taskRepository = {
   async findById(taskId: string) {
-    const result = await db
-      .select()
-      .from(tasksTable)
+    const result = await db.select().from(tasksTable)
       .where(eq(tasksTable.id, taskId));
 
     return result[0];
   },
 
   async create(data: TaskInsert) {
-    const result = await db
-      .insert(tasksTable)
-      .values(data)
+    const result = await db.insert(tasksTable).values(data)
       .returning();
 
     return result[0];
   },
 
   async update(taskId: string, data: Partial<TaskInsert>) {
-    const result = await db
-      .update(tasksTable)
-      .set(data)
+    const result = await db.update(tasksTable).set(data)
       .where(eq(tasksTable.id, taskId))
       .returning();
 
@@ -33,24 +27,19 @@ export const taskRepository = {
   },
 
   async delete(taskId: string) {
-    return db
-      .delete(tasksTable)
+    return db.delete(tasksTable)
       .where(eq(tasksTable.id, taskId));
   },
 
   async countByStudyId(studyId: string) {
-    const tasks = await db
-      .select()
-      .from(tasksTable)
+    const tasks = await db.select().from(tasksTable)
       .where(eq(tasksTable.studyId, studyId));
 
     return tasks.length;
   },
 
   async countFinishedByStudyId(studyId: string) {
-    const tasks = await db
-      .select()
-      .from(tasksTable)
+    const tasks = await db.select().from(tasksTable)
       .where(
         and(
           eq(tasksTable.studyId, studyId),
