@@ -6,29 +6,29 @@ import { createJWT } from "../middlewares/jwt.js";
 
 export const signup = async (req: Request, res: Response) => {
   try {
-    const { name, username, email, password } = req.body;
+    const data = req.body;
 
-    const hasEmail = await findUserByEmail(email);
+    const hasEmail = await findUserByEmail(data.email);
     if (hasEmail) {
       res.status(409).json({ error: 'Email já existe' });
       return;
     }
 
-    let finalUsername = username;
+    let finalUsername = data.username;
     let userExists = await findUserByUsername(finalUsername);
 
     while (userExists) {
       const slugSuffix = Math.floor(Math.random() * 999999).toString();
-      finalUsername = slug(username + slugSuffix);
+      finalUsername = slug(data.username + slugSuffix);
       userExists = await findUserByUsername(finalUsername);
     }
 
-    const hashPassword = await hash(password, 10);
+    const hashPassword = await hash(data.password, 10);
 
     const userData = {
-      name,
+      name: data.name,
       username: finalUsername,
-      email: email,
+      email: data.email,
       password: hashPassword,
     }
 
