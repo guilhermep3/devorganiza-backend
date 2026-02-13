@@ -1,14 +1,8 @@
-import { and, asc, eq } from "drizzle-orm"
-import { studiesTable, tasksTable } from "../db/schema.js"
-import { db } from "../lib/drizzle.js"
 import { StudyInsert } from "../schemas/study.js"
+import { studyRepository } from "../repositories/study.js";
 
 export const findAllStudies = async (userId: string, perPage: number, currentPage: number) => {
-  const rows = await db.select().from(studiesTable)
-    .where(eq(studiesTable.userId, userId))
-    .leftJoin(tasksTable, eq(studiesTable.id, tasksTable.studyId))
-    .limit(perPage)
-    .offset(currentPage * perPage)
+  const rows = await studyRepository.findAll(userId, perPage, currentPage);
 
   const map = new Map<string, any>();
 
@@ -32,10 +26,7 @@ export const findAllStudies = async (userId: string, perPage: number, currentPag
 };
 
 export const findUserStudies = async (userId: string) => {
-  const rows = await db.select().from(studiesTable)
-    .where(eq(studiesTable.userId, userId))
-    .leftJoin(tasksTable, eq(studiesTable.id, tasksTable.studyId))
-    .orderBy(asc(studiesTable.createdAt))
+  const rows = await studyRepository.findStudies(userId);
 
   const studiesMap = new Map<string, any>();
 
@@ -59,10 +50,7 @@ export const findUserStudies = async (userId: string) => {
 }
 
 export const findUserStudyById = async (id: string) => {
-  const rows = await db.select().from(studiesTable)
-    .where(eq(studiesTable.id, id))
-    .leftJoin(tasksTable, eq(tasksTable.studyId, studiesTable.id))
-    .orderBy(asc(studiesTable.createdAt), asc(tasksTable.createdAt))
+  const rows = await studyRepository.findById(id);
 
   if (!rows.length) return null;
 
@@ -77,30 +65,15 @@ export const findUserStudyById = async (id: string) => {
 }
 
 export const findUserStudyByName = async (name: string, userId: string) => {
-  return await db.select().from(studiesTable)
-    .where(and(
-      eq(studiesTable.name, name),
-      eq(studiesTable.userId, userId)
-    ))
-    .leftJoin(tasksTable, eq(studiesTable.id, tasksTable.studyId));
+  return await studyRepository.findByName(name, userId);
 };
 
 export const createUserStudy = async (data: StudyInsert) => {
-  return await db.insert(studiesTable).values(data).returning();
+  return await studyRepository.create(data);
 }
 
-export const updateStudyById = async (
-  studyId: string, userId: string, data: Partial<StudyInsert>
-) => {
-  const updatedStudy = await db.update(studiesTable)
-    .set(data)
-    .where(and(
-      eq(studiesTable.id, studyId),
-      eq(studiesTable.userId, userId)
-    ))
-    .returning();
-
-  return updatedStudy;
+export const updateStudyById = async (studyId: string, userId: string, data: Partial<StudyInsert>) => {
+  return await studyRepository.update(studyId, userId, data);
 };
 
 export const updateStudyStatusProgress = async (id: string, progress: number) => {
@@ -117,10 +90,7 @@ export const updateStudyStatusProgress = async (id: string, progress: number) =>
   }
 
   try {
-    const result = await db.update(studiesTable)
-      .set(dataUpdated)
-      .where(eq(studiesTable.id, id))
-      .returning();
+    const result = await studyRepository.updateStudyProgress(dataUpdated, id);
 
     return result;
   } catch (error) {
@@ -129,9 +99,5 @@ export const updateStudyStatusProgress = async (id: string, progress: number) =>
 }
 
 export const deleteStudyById = async (studyId: string, userId: string) => {
-  return await db.delete(studiesTable)
-    .where(and(
-      eq(studiesTable.id, studyId),
-      eq(studiesTable.userId, userId)
-    ));
+  return await studyRepository.delete(studyId, userId);
 };
