@@ -19,6 +19,6 @@ export const updateStudySchema = z.object({
   type: z.string().optional().nullable(),
   link: z.string().url("O link precisa ser uma URL válida").optional().nullable(),
   description: z.string().optional().nullable(),
-  status: z.enum(["em_andamento", "completo"]).optional(),
+  status: z.enum(["em_andamento", "finalizado"]).optional(),
   progress: z.number().min(0).max(100).optional(),
 });
