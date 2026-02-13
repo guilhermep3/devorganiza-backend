@@ -5,7 +5,7 @@ import {
   findLockedQuizzes, findQuizById, findUserAttemtps, findUserQuiz, findUserQuizzes, finishAttempt,
   startUserQuiz, unlockUserQuiz, updateImageByQuiz, updateQuizById
 } from "../services/quiz.js";
-import { attemptAnswersSchema, createQuizSchema, createQuizzesSchema, updateQuizSchema } from "../schemas/quiz.js";
+import { attemptAnswersType, attemptAnswersSchema, createQuizSchema, createQuizzesSchema, quizInsert, updateQuizSchema } from "../schemas/quiz.js";
 import cloudinary from "../utils/cloudinary.js";
 import { uploadToCloudinary } from "../utils/uploadToCloudinary.js";
 import { calculateDuration } from "../utils/calculateDuration.js";
@@ -85,33 +85,11 @@ export const getUserAttempts = async (req: ExtendedRequest, res: Response) => {
   }
 }
 
-export const createQuiz = async (req: ExtendedRequest, res: Response) => {
-  try {
-    const safeData = createQuizSchema.safeParse(req.body);
-    if (!safeData.success) {
-      res.status(400).json({ error: safeData.error.flatten().fieldErrors });
-      return;
-    }
-
-    const newQuiz = await createNewQuiz(safeData.data);
-
-    res.status(201).json(newQuiz);
-    return;
-  } catch (error) {
-    res.status(500).json({ error: "Erro ao criar um quiz", errorDetails: error });
-    return;
-  }
-}
-
 export const createManyQuiz = async (req: ExtendedRequest, res: Response) => {
   try {
-    const safeData = createQuizzesSchema.safeParse(req.body);
-    if (!safeData.success) {
-      res.status(400).json({ error: safeData.error.flatten().fieldErrors });
-      return;
-    }
+    const data: quizInsert[] = req.body;
 
-    const newQuizzes = await createNewQuizzes(safeData.data);
+    const newQuizzes = await createNewQuizzes(data);
 
     res.status(201).json({ message: "Quizzes criados com sucesso!", newQuizzes });
     return;
@@ -120,6 +98,20 @@ export const createManyQuiz = async (req: ExtendedRequest, res: Response) => {
     return;
   }
 };
+
+export const createQuiz = async (req: ExtendedRequest, res: Response) => {
+  try {
+    const data: quizInsert = req.body;
+
+    const newQuiz = await createNewQuiz(data);
+
+    res.status(201).json(newQuiz);
+    return;
+  } catch (error) {
+    res.status(500).json({ error: "Erro ao criar um quiz", errorDetails: error });
+    return;
+  }
+}
 
 export const getQuiz = async (req: ExtendedRequest, res: Response) => {
   try {
@@ -140,11 +132,7 @@ export const getQuiz = async (req: ExtendedRequest, res: Response) => {
 
 export const updateQuiz = async (req: ExtendedRequest, res: Response) => {
   try {
-    const safeData = updateQuizSchema.safeParse(req.body);
-    if (!safeData.success) {
-      res.status(400).json({ error: safeData.error.flatten().fieldErrors });
-      return;
-    }
+    const data = req.body;
 
     const idLogged = req.idLogged as string;
     if (!idLogged) {
@@ -155,9 +143,9 @@ export const updateQuiz = async (req: ExtendedRequest, res: Response) => {
     const quizId = req.params.quizId as string;
 
     const convertedData = {
-      ...safeData.data,
-      title: safeData.data.title!,
-      description: safeData.data.description!
+      ...data,
+      title: data.title!,
+      description: data.description!
     }
 
     const quizUpdated = await updateQuizById(quizId, convertedData);
@@ -329,19 +317,13 @@ export const finishQuizAttempt = async (req: ExtendedRequest, res: Response) => 
       return;
     }
 
-    const safeData = attemptAnswersSchema.safeParse(req.body);
-    if (!safeData.success) {
-      res.status(400).json({ error: safeData.error.flatten().fieldErrors });
-      return;
-    }
-
-    const answers = safeData.data;
+    const data: attemptAnswersType[] = req.body;
 
     const correctAnswersMap = await findCorrectAnswers(quizId);
 
     let score = 0;
 
-    answers.forEach((answer) => {
+    data.forEach((answer) => {
       const correct = correctAnswersMap.find((a: any) =>
         a.questionId === answer.questionId && a.id === answer.answerId
       )

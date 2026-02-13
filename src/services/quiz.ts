@@ -3,6 +3,7 @@ import { db } from "../lib/drizzle.js";
 import {
   quizzesTable, userQuizzesTable, quizAttemptsTable, questionsTable, alternativesTable
 } from "../db/schema.js";
+import { quizInsert } from "../schemas/quiz.js";
 
 export const createNewQuiz = async (
   data: typeof quizzesTable.$inferInsert
@@ -13,7 +14,7 @@ export const createNewQuiz = async (
 };
 
 export const createNewQuizzes = async (
-  data: { title: string; description?: string, type: string }[]
+  data: quizInsert[]
 ) => {
   return await db.insert(quizzesTable)
     .values(data).onConflictDoNothing().returning();
