@@ -1,6 +1,6 @@
 import { desc, eq } from "drizzle-orm"
 import { studiesTable, tasksTable, usersTable } from "../db/schema.js"
-import { db } from "../lib/drizzle"
+import { db } from "../lib/drizzle.js"
 import { UpdateUserType, UserInsert } from "../schemas/auth.js"
 
 export const userRepository = {
