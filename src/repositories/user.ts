@@ -1,7 +1,7 @@
 import { desc, eq } from "drizzle-orm"
-import { studiesTable, tasksTable, usersTable } from "../db/schema"
+import { studiesTable, tasksTable, usersTable } from "../db/schema.js"
 import { db } from "../lib/drizzle"
-import { UpdateUserType, UserInsert } from "../schemas/auth"
+import { UpdateUserType, UserInsert } from "../schemas/auth.js"
 
 export const userRepository = {
   async findAll(perPage: number, currentPage: number) {
