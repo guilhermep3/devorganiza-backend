@@ -59,17 +59,18 @@ A aplicação segue arquitetura em camadas, separando responsabilidades e facili
   - **Routes**: Definição e versionamento das rotas
   - **Middlewares**: Autenticação, autorização e validações
   - **Controllers**: Interface HTTP (req/res)
-  - **Services**: regras de negócio e orquestração
+  - **Services**: Regras de negócio e orquestração
+  - **Repositories**: Acesso e manipulação de dados
   - **Schemas**: Validação de dados com Zod
   - **DB/Repositories**: Persistência de dados com Drizzle ORM
 
 - ### Fluxo de requisição:
   1. A Requisição chega pela rota
   2. Middlewares validam autenticação e permissões
-  3. Controller recebe a requisição
-  4. Schema valida os dados enviados com Zod
+  3. Schema valida os dados enviados com Zod
+  4. Controller recebe a requisição
   5. Service executa a regra de negócio
-  6. Drizzle ORM interage com o banco de dados
+  6. Repositories com Drizzle ORM interagem com o banco de dados
   7. Controller retorna a resposta HTTP
 
 ## Estrutura do projeto
@@ -80,6 +81,7 @@ src/
 ├── db/            # Configuração do Drizzle ORM e schemas
 ├── lib/           # Configurações de bibliotecas
 ├── middlewares/   # Autenticação e validações
+├── repositories/  # Acesso ao banco de dados
 ├── routes/        # Definição das rotas
 ├── schemas/       # Validação com Zod
 ├── services/      # Regras de negócio
