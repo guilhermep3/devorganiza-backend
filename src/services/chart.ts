@@ -19,7 +19,12 @@ export const findWeeklyProductivity = async (userId: string) => {
       tasksTable,
       eq(tasksTable.studyId, studiesTable.id)
     )
-    .where(eq(studiesTable.userId, userId))
+    .where(
+      and(
+        eq(studiesTable.userId, userId),
+        isNotNull(tasksTable.createdAt)
+      )
+    )
     .groupBy(weekDay);
 };
 
