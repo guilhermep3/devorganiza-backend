@@ -5,7 +5,7 @@ import {
   findLockedQuizzes, findQuizById, findUserAttemtps, findUserQuiz, findUserQuizzes, finishAttempt,
   startUserQuiz, unlockUserQuiz, updateImageByQuiz, updateQuizById
 } from "../services/quiz.js";
-import { attemptAnswersType, attemptAnswersSchema, createQuizSchema, createQuizzesSchema, quizInsert, updateQuizSchema } from "../schemas/quiz.js";
+import { attemptAnswersType, quizInsert } from "../schemas/quiz.js";
 import cloudinary from "../utils/cloudinary.js";
 import { uploadToCloudinary } from "../utils/uploadToCloudinary.js";
 import { calculateDuration } from "../utils/calculateDuration.js";

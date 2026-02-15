@@ -4,63 +4,34 @@ import {
   quizzesTable, userQuizzesTable, quizAttemptsTable, questionsTable, alternativesTable
 } from "../db/schema.js";
 import { quizInsert } from "../schemas/quiz.js";
+import { quizRepository } from "../repositories/quiz.js";
 
-export const createNewQuiz = async (
-  data: typeof quizzesTable.$inferInsert
-) => {
-  return await db.insert(quizzesTable)
-    .values(data)
-    .returning().then(res => res[0]);
+export const createNewQuiz = async (data: typeof quizzesTable.$inferInsert) => {
+  return await quizRepository.create(data);
 };
 
-export const createNewQuizzes = async (
-  data: quizInsert[]
-) => {
-  return await db.insert(quizzesTable)
-    .values(data).onConflictDoNothing().returning();
+export const createNewQuizzes = async (data: quizInsert[]) => {
+  return await quizRepository.createMany(data);
 };
 
 export const updateImageByQuiz = async (quizId: string, imageUrl: string) => {
-  return await db.update(quizzesTable)
-    .set({ imageUrl })
-    .where(eq(quizzesTable.id, quizId))
-    .returning().then(res => res[0]);
+  return await quizRepository.updateImage(imageUrl, quizId);
 };
 
 export const findQuiz = async (name: string) => {
-  return await db.select().from(quizzesTable)
-    .where(eq(quizzesTable.title, name))
-    .limit(1).then(res => res[0]);
+  return await quizRepository.findByName(name);
 };
 
 export const findQuizById = async (id: string) => {
-  return await db.select().from(quizzesTable)
-    .where(eq(quizzesTable.id, id))
-    .limit(1).then(res => res[0]);
+  return await quizRepository.findById(id);
 };
 
 export const unlockUserQuiz = async (userId: string, quizId: string) => {
-  return await db.insert(userQuizzesTable)
-    .values({ userId, quizId })
-    .returning().then(res => res[0]);
+  return await quizRepository.unlock(userId, quizId);
 };
 
 export const findUserQuizzes = async (userId: string) => {
-  const rows = await db.select({
-    quiz: quizzesTable,
-    unlockedAt: userQuizzesTable.unlockedAt,
-    attempt: quizAttemptsTable
-  }).from(userQuizzesTable)
-    .leftJoin(quizzesTable, eq(quizzesTable.id, userQuizzesTable.quizId))
-    .leftJoin(
-      quizAttemptsTable,
-      and(
-        eq(quizAttemptsTable.quizId, userQuizzesTable.quizId),
-        eq(quizAttemptsTable.userId, userId)
-      )
-    )
-    .where(eq(userQuizzesTable.userId, userId))
-    .orderBy(asc(quizAttemptsTable.finishedAt));
+  const rows = await quizRepository.findUserQuizzes(userId);
 
   const map = new Map<string, any>();
 
@@ -82,73 +53,33 @@ export const findUserQuizzes = async (userId: string) => {
 };
 
 export const findAllQuizzes = async () => {
-  return await db.select().from(quizzesTable)
-    .orderBy(asc(quizzesTable.id));
+  return await quizRepository.findAll();
 };
 
 export const findLockedQuizzes = async (userId: string) => {
-  const rows = await db.select({
-    quiz: quizzesTable
-  }).from(quizzesTable)
-    .leftJoin(
-      userQuizzesTable,
-      and(
-        eq(userQuizzesTable.quizId, quizzesTable.id),
-        eq(userQuizzesTable.userId, userId)
-      )
-    )
-    .where(isNull(userQuizzesTable.id));
+  const rows = await quizRepository.findLockedQuizzes(userId);
 
   return rows.map(row => row.quiz);
 };
 
 export const findUserAttemtps = async (userId: string) => {
-  return await db
-    .select({
-      id: quizAttemptsTable.id,
-      quizId: quizAttemptsTable.quizId,
-      quizTitle: quizzesTable.title,
-      quizImage: quizzesTable.imageUrl,
-      startedAt: quizAttemptsTable.startedAt,
-      finishedAt: quizAttemptsTable.finishedAt,
-      score: quizAttemptsTable.score,
-      durationSec: quizAttemptsTable.durationSec,
-    })
-    .from(quizAttemptsTable)
-    .leftJoin(
-      quizzesTable,
-      eq(quizAttemptsTable.quizId, quizzesTable.id)
-    )
-    .where(eq(quizAttemptsTable.userId, userId))
-    .orderBy(desc(quizAttemptsTable.startedAt));
+  return await quizRepository.findUserAttemtps(userId);
 };
 
 export const findFullQuiz = async (quizId: string) => {
-  const quiz = await db.select().from(quizzesTable)
-    .where(eq(quizzesTable.id, quizId))
-    .limit(1).then(res => res[0]);
+  const quiz = await quizRepository.findFullById(quizId);
 
   if (!quiz) return null;
 
-  const questions = await db.select().from(questionsTable)
-    .where(eq(questionsTable.quizId, quizId));
+  const questions = await quizRepository.findQuestions(quizId);
 
   const questionIds = questions.map(q => q.id);
 
   const alternatives = questionIds.length
-    ? await db.select().from(alternativesTable)
-      .where(inArray(alternativesTable.questionId, questionIds))
+    ? await quizRepository.findQuestionAlternatives(questionIds)
     : [];
 
-  const activeAttempt = await db.select().from(quizAttemptsTable)
-    .where(
-      and(
-        eq(quizAttemptsTable.quizId, quizId),
-        isNull(quizAttemptsTable.finishedAt)
-      )
-    )
-    .orderBy(desc(quizAttemptsTable.startedAt))
-    .limit(1).then(res => res[0] ?? null);
+  const activeAttempt = await quizRepository.findActiveAttempt(quizId);
 
   return {
     ...quiz,
