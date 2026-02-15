@@ -1,8 +1,4 @@
-import { eq, desc, and, isNull, inArray, asc } from "drizzle-orm";
-import { db } from "../lib/drizzle.js";
-import {
-  quizzesTable, userQuizzesTable, quizAttemptsTable, questionsTable, alternativesTable
-} from "../db/schema.js";
+import { quizzesTable } from "../db/schema.js";
 import { quizInsert } from "../schemas/quiz.js";
 import { quizRepository } from "../repositories/quiz.js";
 
@@ -101,15 +97,7 @@ export const findUserQuiz = async (quizId: string, userId: string) => {
   const quiz = await findFullQuiz(quizId);
   if (!quiz) return null;
 
-  const lastAttempt = await db.select().from(quizAttemptsTable)
-    .where(
-      and(
-        eq(quizAttemptsTable.quizId, quizId),
-        eq(quizAttemptsTable.userId, userId)
-      )
-    )
-    .orderBy(desc(quizAttemptsTable.finishedAt))
-    .limit(1).then(res => res[0] ?? null);
+  const lastAttempt = await quizRepository.lastAttempt(userId, quizId)
 
   return {
     ...quiz,
@@ -118,84 +106,44 @@ export const findUserQuiz = async (quizId: string, userId: string) => {
 };
 
 export const updateQuizById = async (
-  quizId: string,
-  data: Partial<typeof quizzesTable.$inferInsert>
+  quizId: string, data: Partial<typeof quizzesTable.$inferInsert>
 ) => {
-  return await db.update(quizzesTable)
-    .set(data)
-    .where(eq(quizzesTable.id, quizId))
-    .returning().then(res => res[0]);
+  return await quizRepository.update(quizId, data)
 };
 
 export const startUserQuiz = async (userId: string, quizId: string) => {
-  const existingAttempt = await db.select().from(quizAttemptsTable)
-    .where(and(
-      eq(quizAttemptsTable.userId, userId),
-      eq(quizAttemptsTable.quizId, quizId),
-      isNull(quizAttemptsTable.finishedAt)
-    )).limit(1)
-    .then(res => res[0] ?? null);
+  const existingAttempt = await quizRepository.existingAttempt(userId, quizId)
 
   if (existingAttempt) {
     return existingAttempt;
   }
 
-  const newAttempt = await db.insert(quizAttemptsTable)
-    .values({ userId, quizId })
-    .returning().then(res => res[0]);
+  const newAttempt = await quizRepository.newAttempt(userId, quizId)
 
   return newAttempt;
 };
 
 export const findLastAttempt = async (userId: string, quizId: string) => {
-  return await db.select().from(quizAttemptsTable)
-    .where(
-      and(
-        eq(quizAttemptsTable.userId, userId),
-        eq(quizAttemptsTable.quizId, quizId)
-      )
-    )
-    .orderBy(desc(quizAttemptsTable.startedAt))
-    .limit(1).then(res => res[0]);
+  return await quizRepository.lastAttempt(userId, quizId)
 };
 
 export const findCorrectAnswers = async (quizId: string) => {
-  const questions = await db.select().from(questionsTable)
-    .where(eq(questionsTable.quizId, quizId));
+  const questions = await quizRepository.questions(quizId)
 
   const questionIds = questions.map(q => q.id);
   if (questionIds.length === 0) return [];
 
-  return await db.select().from(alternativesTable)
-    .where(
-      and(
-        eq(alternativesTable.isCorrect, true),
-        inArray(alternativesTable.questionId, questionIds)
-      )
-    );
+  return await quizRepository.correctAnswers(questionIds)
 };
 
-export const finishAttempt = async (
-  attemptId: string,
-  durationSec: number,
-  score: number
-) => {
-  return await db.update(quizAttemptsTable)
-    .set({
-      durationSec,
-      score,
-      finishedAt: new Date()
-    })
-    .where(eq(quizAttemptsTable.id, attemptId))
-    .returning().then(res => res[0]);
+export const finishAttempt = async (attemptId: string, durationSec: number, score: number) => {
+  return await quizRepository.finishLastAttempt(attemptId, durationSec, score)
 };
 
 export const deleteQuizAttemptById = async (id: string) => {
-  return await db.delete(quizAttemptsTable)
-    .where(eq(quizAttemptsTable.id, id))
+  return await quizRepository.deleteAttempt(id)
 }
 
 export const deleteQuizById = async (id: string) => {
-  return await db.delete(quizzesTable)
-    .where(eq(quizzesTable.id, id));
+  return await quizRepository.delete(id)
 };

@@ -122,5 +122,76 @@ export const quizRepository = {
       )
       .orderBy(desc(quizAttemptsTable.startedAt))
       .limit(1).then(res => res[0] ?? null);
+  },
+
+  async update(quizId: string, data: Partial<typeof quizzesTable.$inferInsert>) {
+    return await db.update(quizzesTable)
+      .set(data)
+      .where(eq(quizzesTable.id, quizId))
+      .returning().then(res => res[0]);
+  },
+
+  async existingAttempt(userId: string, quizId: string) {
+    return await db.select().from(quizAttemptsTable)
+      .where(and(
+        eq(quizAttemptsTable.userId, userId),
+        eq(quizAttemptsTable.quizId, quizId),
+        isNull(quizAttemptsTable.finishedAt)
+      )).limit(1)
+      .then(res => res[0] ?? null);
+  },
+
+  async newAttempt(userId: string, quizId: string) {
+    return await db.insert(quizAttemptsTable)
+      .values({ userId, quizId })
+      .returning().then(res => res[0]);
+  },
+
+  async lastAttempt(userId: string, quizId: string) {
+    return await db.select().from(quizAttemptsTable)
+      .where(
+        and(
+          eq(quizAttemptsTable.userId, userId),
+          eq(quizAttemptsTable.quizId, quizId)
+        )
+      )
+      .orderBy(desc(quizAttemptsTable.startedAt))
+      .limit(1).then(res => res[0]);
+  },
+
+  async questions(quizId: string) {
+    return await db.select().from(questionsTable)
+      .where(eq(questionsTable.quizId, quizId));
+  },
+
+  async correctAnswers(questionIds: string[]) {
+    return await db.select().from(alternativesTable)
+      .where(
+        and(
+          eq(alternativesTable.isCorrect, true),
+          inArray(alternativesTable.questionId, questionIds)
+        )
+      );
+  },
+
+  async finishLastAttempt(attemptId: string, durationSec: number, score: number) {
+    return await db.update(quizAttemptsTable)
+      .set({
+        durationSec,
+        score,
+        finishedAt: new Date()
+      })
+      .where(eq(quizAttemptsTable.id, attemptId))
+      .returning().then(res => res[0]);
+  },
+
+  async deleteAttempt(id: string) {
+    return await db.delete(quizAttemptsTable)
+      .where(eq(quizAttemptsTable.id, id))
+  },
+
+  async delete(id: string) {
+    return await db.delete(quizzesTable)
+      .where(eq(quizzesTable.id, id));
   }
 }
