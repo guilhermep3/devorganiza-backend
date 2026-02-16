@@ -1,7 +1,9 @@
 import { and, asc, desc, eq, inArray, isNull } from "drizzle-orm";
-import { alternativesTable, questionsTable, quizAttemptsTable, quizzesTable, userQuizzesTable } from "../db/schema";
-import { db } from "../lib/drizzle";
-import { quizInsert } from "../schemas/quiz";
+import {
+  alternativesTable, questionsTable, quizAttemptsTable, quizzesTable, userQuizzesTable
+} from "../db/schema.js";
+import { db } from "../lib/drizzle.js";
+import { quizInsert } from "../schemas/quiz.js";
 
 export const quizRepository = {
   async create(data: typeof quizzesTable.$inferInsert) {
