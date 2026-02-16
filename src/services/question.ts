@@ -1,45 +1,30 @@
-import { eq } from "drizzle-orm";
-import { db } from "../lib/drizzle.js";
-import { questionsTable, alternativesTable } from "../db/schema.js";
-import { updateAlternativeType } from "../schemas/alternative.js";
+import { AlternativeInsert, updateAlternativeType } from "../schemas/alternative.js";
+import { questionRepositories } from "../repositories/question.js";
 
 export const createNewQuestion = async (question: string, quizId: string) => {
-  return await db.insert(questionsTable)
-    .values({ question, quizId })
-    .returning().then(res => res[0]);
+  return await questionRepositories.create(question, quizId)
 };
 
-export const createNewQuestions = async (
-  data: { question: string; quizId: string }[]
-) => {
-  return await db.insert(questionsTable).values(data).returning();
+export const createNewQuestions = async (data: { question: string; quizId: string }[]) => {
+  return await questionRepositories.createMany(data)
 };
 
 export const updateQuestionById = async (question: string, id: string) => {
-  return await db.update(questionsTable).set({ question })
-    .where(eq(questionsTable.id, id))
-    .returning().then(res => res[0]);
+  return await questionRepositories.update(question, id)
 };
 
 export const deleteQuestionById = async (id: string) => {
-  return await db.delete(questionsTable)
-    .where(eq(questionsTable.id, id));
+  return await questionRepositories.delete(id)
 };
 
-export const createNewAlternatives = async (data: typeof alternativesTable.$inferInsert[]) => {
-  return await db.insert(alternativesTable).values(data).returning();
+export const createNewAlternatives = async (data: AlternativeInsert[]) => {
+  return await questionRepositories.createAlternatives(data)
 };
 
-export const updateAlternativeById = async (
-  data: updateAlternativeType,
-  id: string
-) => {
-  return await db.update(alternativesTable).set(data)
-    .where(eq(alternativesTable.id, id))
-    .returning().then(res => res[0]);
+export const updateAlternativeById = async (data: updateAlternativeType, id: string) => {
+  return await questionRepositories.updateAlternative(data, id)
 };
 
 export const deleteAlternativeById = async (id: string) => {
-  return await db.delete(alternativesTable)
-    .where(eq(alternativesTable.id, id));
+  return await questionRepositories.delete(id)
 };
