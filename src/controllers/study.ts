@@ -5,7 +5,7 @@ import {
 } from "../services/study.js";
 import { StudyInsert, updateStudySchema } from "../schemas/study.js";
 import { pageSchema } from "../schemas/page.js";
-import { findQuiz, unlockUserQuiz } from "../services/quiz.js";
+import { findQuizByName, unlockQuizForUser } from "../services/quiz.js";
 
 export const getAllStudies = async (req: ExtendedRequest, res: Response) => {
   try {
@@ -111,10 +111,10 @@ export const createStudy = async (req: ExtendedRequest, res: Response) => {
       userId: idLogged
     });
 
-    const quiz = await findQuiz(data.name);
+    const quiz = await findQuizByName(data.name);
 
     if (quiz) {
-      const quizUnlocked = await unlockUserQuiz(idLogged, quiz.id);
+      const quizUnlocked = await unlockQuizForUser(idLogged, quiz.id);
 
       res.status(201).json({
         study: newStudy,

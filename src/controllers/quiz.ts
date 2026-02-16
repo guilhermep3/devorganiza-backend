@@ -3,7 +3,7 @@ import type { ExtendedRequest } from "../types/request.js";
 import {
   createNewQuiz, createNewQuizzes, deleteQuizAttemptById, deleteQuizById, findAllQuizzes, findCorrectAnswers, findFullQuiz, findLastAttempt,
   findLockedQuizzes, findQuizById, findUserAttemtps, findUserQuiz, findUserQuizzes, finishAttempt,
-  startUserQuiz, unlockUserQuiz, updateImageByQuiz, updateQuizById
+  starUserQuizAttempt, unlockQuizForUser, updateImageByQuiz, updateQuizById
 } from "../services/quiz.js";
 import { attemptAnswersType, quizInsert } from "../schemas/quiz.js";
 import cloudinary from "../utils/cloudinary.js";
@@ -189,7 +189,7 @@ export const unlockQuiz = async (req: ExtendedRequest, res: Response) => {
 
     const quizId = req.params.quizId as string;
 
-    const quizUnlocked = await unlockUserQuiz(idLogged, quizId);
+    const quizUnlocked = await unlockQuizForUser(idLogged, quizId);
 
     res.json(quizUnlocked);
     return;
@@ -291,7 +291,7 @@ export const startQuizAttempt = async (req: ExtendedRequest, res: Response) => {
       return;
     }
 
-    const newAttempt = await startUserQuiz(idLogged, quizId);
+    const newAttempt = await starUserQuizAttempt(idLogged, quizId);
 
     res.status(201).json(newAttempt);
     return;

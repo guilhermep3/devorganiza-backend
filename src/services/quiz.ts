@@ -14,7 +14,7 @@ export const updateImageByQuiz = async (quizId: string, imageUrl: string) => {
   return await quizRepository.updateImage(imageUrl, quizId);
 };
 
-export const findQuiz = async (name: string) => {
+export const findQuizByName = async (name: string) => {
   return await quizRepository.findByName(name);
 };
 
@@ -22,7 +22,7 @@ export const findQuizById = async (id: string) => {
   return await quizRepository.findById(id);
 };
 
-export const unlockUserQuiz = async (userId: string, quizId: string) => {
+export const unlockQuizForUser = async (userId: string, quizId: string) => {
   return await quizRepository.unlock(userId, quizId);
 };
 
@@ -111,7 +111,7 @@ export const updateQuizById = async (
   return await quizRepository.update(quizId, data)
 };
 
-export const startUserQuiz = async (userId: string, quizId: string) => {
+export const starUserQuizAttempt = async (userId: string, quizId: string) => {
   const existingAttempt = await quizRepository.existingAttempt(userId, quizId)
 
   if (existingAttempt) {
