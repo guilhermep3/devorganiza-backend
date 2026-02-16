@@ -1,7 +1,7 @@
 import { eq } from "drizzle-orm";
-import { alternativesTable, questionsTable } from "../db/schema";
-import { db } from "../lib/drizzle";
-import { AlternativeInsert, updateAlternativeType } from "../schemas/alternative";
+import { alternativesTable, questionsTable } from "../db/schema.js";
+import { db } from "../lib/drizzle.js";
+import { AlternativeInsert, updateAlternativeType } from "../schemas/alternative.js";
 
 export const questionRepositories = {
   async create(question: string, quizId: string) {
