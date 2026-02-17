@@ -1,8 +1,9 @@
 import type { Request, Response } from "express";
 import slug from "slug";
 import { createUser, findUserByEmail, findUserByUsername } from "../services/user.js";
-import { compare, hash } from "bcrypt-ts";
+import { hash } from "bcrypt-ts";
 import { createJWT } from "../middlewares/jwt.js";
+import { usersTable } from "../db/schema.js";
 
 export const signup = async (req: Request, res: Response) => {
   try {
@@ -41,30 +42,14 @@ export const signup = async (req: Request, res: Response) => {
 
 export const signin = async (req: Request, res: Response) => {
   try {
-    const { email, password } = req.body;
-
-    const account = await findUserByEmail(email);
-    if (!account) {
-      res.status(400).json({ error: 'Acesso negado' });
-      return;
-    }
-
-    const verifyPassword = await compare(
-      password,
-      account.password
-    );
-
-    if (!verifyPassword) {
-      res.status(400).json({ error: 'Acesso negado' });
-      return;
-    }
+    const user = req.user as typeof usersTable.$inferSelect;
 
     const token = await createJWT(
-      account.id as string,
-      account.role
+      user.id as string,
+      user.role
     );
 
-    const { password: _, ...userWithoutPassword } = account;
+    const { password: _, ...userWithoutPassword } = user;
 
     res.json({
       message: "Login bem sucedido",

@@ -2,6 +2,8 @@ import express from 'express';
 import cors from "cors"
 import helmet from 'helmet';
 import mainRouter from './routes/main.js';
+import { localStrategy } from './strategy/local.js';
+import passport from 'passport';
 
 export const server = express();
 
@@ -25,6 +27,9 @@ server.use(cors({
 server.use(helmet({ contentSecurityPolicy: false }));
 server.use(express.json());
 server.use(express.urlencoded({ extended: true }));
+
+passport.use(localStrategy);
+server.use(passport.initialize());
 
 server.use('/', mainRouter);
 
