@@ -2,7 +2,7 @@ import type { NextFunction, Response } from "express";
 import type { ExtendedRequest } from "../types/request.js";
 import { findQuizById } from "../services/quiz.js";
 
-export const validateQuiz = async ( req: ExtendedRequest, res: Response, next: NextFunction ) => {
+export const validateQuiz = async (req: ExtendedRequest, res: Response, next: NextFunction) => {
   const quizId = req.params.quizId as string;
 
   if (!quizId) {

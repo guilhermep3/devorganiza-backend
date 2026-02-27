@@ -1,5 +1,5 @@
 import { Router, type Response } from "express";
-import { verifyJWT } from "../middlewares/jwt.js";
+import { verifyJWT } from "../others/oldVerifyJWT.js";
 import type { ExtendedRequest } from "../types/request.js";
 
 export const pingRoutes = Router();

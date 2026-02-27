@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { verifyJWT } from "../middlewares/jwt.js";
+import { verifyJWT } from "../others/oldVerifyJWT.js";
 import * as taskController from "../controllers/task.js"
 import { validateSchema } from "../middlewares/validateSchema.js";
 import { createTaskSchema } from "../schemas/task.js";
