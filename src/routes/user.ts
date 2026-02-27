@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { verifyJWT } from "../middlewares/jwt.js";
+import { verifyJWT } from "../others/oldVerifyJWT.js";
 import * as userController from "../controllers/user.js";
 import { upload } from "../middlewares/imageUpload.js";
 import { verifyRole } from "../middlewares/verifyRole.js";

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { verifyJWT } from "../middlewares/jwt.js";
+import { verifyJWT } from "../others/oldVerifyJWT.js";
 import * as studyController from "../controllers/study.js"
 import { verifyRole } from "../middlewares/verifyRole.js";
 import { validateSchema } from "../middlewares/validateSchema.js";

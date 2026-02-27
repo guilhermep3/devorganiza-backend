@@ -2,8 +2,8 @@ import type { Request, Response } from "express";
 import slug from "slug";
 import { createUser, findUserByEmail, findUserByUsername } from "../services/user.js";
 import { hash } from "bcrypt-ts";
-import { createJWT } from "../middlewares/jwt.js";
 import { usersTable } from "../db/schema.js";
+import { createJWT } from "../utils/createJWT.js";
 
 export const signup = async (req: Request, res: Response) => {
   try {

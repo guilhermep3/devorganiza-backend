@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { verifyJWT } from "../middlewares/jwt.js";
 import * as chartController from "../controllers/chart.js"
+import { verifyJWT } from "../others/oldVerifyJWT.js";
 export const chartRoutes = Router();
 
 chartRoutes.get('/weekly-productivity', verifyJWT, chartController.getWeeklyProductivity);
