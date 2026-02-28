@@ -1,11 +1,10 @@
 import passport from "passport";
-import { createUser, findUserByEmail, findUserByGoogleId, findUserById, linkUserGoogleAccount } from "../services/user";
-
-const GoogleStrategy = require('passport-google-oauth2').Strategy;
+import { createUser, findUserByEmail, findUserByGoogleId, findUserById, linkUserGoogleAccount } from "../services/user.js";
+import { Strategy as GoogleStrategy } from "passport-google-oauth2"
 
 passport.use(new GoogleStrategy({
-  clientID: process.env.GOOGLE_CLIENT_ID,
-  clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+  clientID: process.env.GOOGLE_CLIENT_ID!,
+  clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
   callbackURL: "http://localhost:3001/auth/google/callback",
   passReqToCallback: true
 },
@@ -61,13 +60,3 @@ passport.deserializeUser(async (id: string, done) => {
     done(err, null);
   }
 });
-
-// erro createUser: Type 'typeof usersTable.$inferInsert' is not assignable to type 'UserInsert'.
-
-// 🟢 Opção 1 — Gerar username + password fake (mais simples)
-// 🟢 Opção 2 — Tornar os campos username e password opcionais no banco de dados (mais complexo, mas mais correto)
-
-// verificar se a senha existe, se nao existir retorna um erro
-// if (!user.password) {
-//   throw new Error("Use login with Google");
-// }
