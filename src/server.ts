@@ -4,7 +4,6 @@ import helmet from 'helmet';
 import mainRouter from './routes/main.js';
 import { localStrategy } from './strategy/local.js';
 import passport from 'passport';
-import { jwtStrategy } from './strategy/jwt.js';
 import { googleStrategy } from './strategy/google.js';
 
 export const server = express();
@@ -31,7 +30,6 @@ server.use(express.json());
 server.use(express.urlencoded({ extended: true }));
 
 passport.use('local', localStrategy);
-passport.use('jwt', jwtStrategy);
 passport.use('google', googleStrategy);
 server.use(passport.initialize());
 

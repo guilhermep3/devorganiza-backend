@@ -1,28 +1,28 @@
 import { Router } from "express";
 import * as chartController from "../controllers/chart.js"
-import passport from "passport";
+import { verifyJWT } from "../middlewares/verifyJwt.js";
 export const chartRoutes = Router();
 
 chartRoutes.get('/weekly-productivity',
-  passport.authenticate('jwt', { session: false }), chartController.getWeeklyProductivity
+  verifyJWT, chartController.getWeeklyProductivity
 );
 
 chartRoutes.get('/tasks-by-type',
-  passport.authenticate('jwt', { session: false }), chartController.getTasksByType
+  verifyJWT, chartController.getTasksByType
 );
 
 chartRoutes.get('/finished-tasks-by-month',
-  passport.authenticate('jwt', { session: false }), chartController.getFinishedTasksByMonth
+  verifyJWT, chartController.getFinishedTasksByMonth
 );
 
 chartRoutes.get('/average-time-finish-task',
-  passport.authenticate('jwt', { session: false }), chartController.getAverageTimeFinishTask
+  verifyJWT, chartController.getAverageTimeFinishTask
 );
 
 chartRoutes.get('/average-score',
-  passport.authenticate('jwt', { session: false }), chartController.getAverageScore
+  verifyJWT, chartController.getAverageScore
 );
 
 chartRoutes.get('/faster-attempts',
-  passport.authenticate('jwt', { session: false }), chartController.getFasterAttempts
+  verifyJWT, chartController.getFasterAttempts
 );
