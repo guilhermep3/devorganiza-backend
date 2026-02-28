@@ -60,3 +60,23 @@ export const signin = async (req: Request, res: Response) => {
     res.status(500).json({ error: "Erro ao fazer login", errorDetails: error });
   }
 }
+
+export const googleAuthCallback = async (req: Request, res: Response) => {
+  try {
+    console.log("Google auth callback hit, user:", req.user);
+    const user = req.user as typeof usersTable.$inferSelect;
+
+    const token = await createJWT(
+      user.id as string,
+      user.role
+    );
+
+    const redirectUrl = `${process.env.FRONTEND_URL}/auth/success?token=${token}`;
+
+    res.redirect(redirectUrl);
+  } catch (error) {
+    res.status(500).json({
+      error: "Erro na autenticação Google"
+    });
+  }
+}

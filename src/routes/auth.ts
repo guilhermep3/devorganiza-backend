@@ -11,3 +11,17 @@ authRoutes.post('/signup', validateSchema(signupSchema), authController.signup);
 authRoutes.post('/signin', validateSchema(signinSchema),
   passport.authenticate('local', { session: false }), authController.signin
 );
+
+authRoutes.get('/google',
+  passport.authenticate("google", {
+    scope: ["profile", "email"], session: false
+  })
+);
+
+authRoutes.get(
+  "/google/callback",
+  passport.authenticate("google", {
+    session: false, failureRedirect: "/google/failure"
+  }),
+  authController.googleAuthCallback
+);

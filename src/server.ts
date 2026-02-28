@@ -5,6 +5,7 @@ import mainRouter from './routes/main.js';
 import { localStrategy } from './strategy/local.js';
 import passport from 'passport';
 import { jwtStrategy } from './strategy/jwt.js';
+import { googleStrategy } from './strategy/google.js';
 
 export const server = express();
 
@@ -31,6 +32,7 @@ server.use(express.urlencoded({ extended: true }));
 
 passport.use(localStrategy);
 passport.use(jwtStrategy);
+passport.use(googleStrategy);
 server.use(passport.initialize());
 
 server.use('/', mainRouter);
