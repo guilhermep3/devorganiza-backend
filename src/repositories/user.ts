@@ -28,6 +28,17 @@ export const userRepository = {
       .then(res => res[0])
   },
 
+  async findByGoogleId(googleId: string) {
+    return await db.select().from(usersTable)
+      .where(eq(usersTable.googleId, googleId)).limit(1)
+      .then(res => res[0])
+  },
+
+  async linkGoogleAccount(userId: string, googleId: string) {
+    return await db.update(usersTable).set({ googleId })
+      .where(eq(usersTable.id, userId))
+  },
+
   async create(data: UserInsert) {
     return await db.insert(usersTable).values(data).returning()
   },

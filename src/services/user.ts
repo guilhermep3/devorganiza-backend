@@ -1,5 +1,5 @@
 import { usersTable } from "../db/schema.js"
-import { UpdateUserType } from "../schemas/auth.js"
+import { UpdateUserType, UserInsert } from "../schemas/auth.js"
 import { userRepository } from "../repositories/user.js"
 
 export const findAllUsers = async (perPage: number, currentPage: number) => {
@@ -18,7 +18,15 @@ export const findUserByUsername = async (username: string) => {
   return userRepository.findByUsername(username)
 }
 
-export const createUser = async (data: typeof usersTable.$inferInsert) => {
+export const findUserByGoogleId = async (googleId: string) => {
+  return await userRepository.findByGoogleId(googleId)
+}
+
+export const linkUserGoogleAccount = async (userId: string, googleId: string) => {
+  return await userRepository.linkGoogleAccount(userId, googleId)
+}
+
+export const createUser = async (data: UserInsert) => {
   return userRepository.create(data)
 }
 

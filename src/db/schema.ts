@@ -6,12 +6,14 @@ export const studyTypeEnum = pgEnum("study_type", ["frontend", "backend", "outro
 
 export const usersTable = pgTable("users", {
   id: uuid("id").primaryKey().defaultRandom(),
+  googleId: varchar({ length: 255 }).unique(),
   name: varchar({ length: 255 }).notNull(),
   username: varchar({ length: 255 }).notNull().unique(),
   email: varchar({ length: 255 }).notNull().unique(),
-  password: varchar({ length: 255 }).notNull(),
+  password: varchar({ length: 255 }),
   profileImage: varchar({ length: 255 }),
   role: usersRoleEnum("role").default("user").notNull(),
+  provider: varchar({ length: 20 }).default("local").notNull(),
   createdAt: timestamp().defaultNow().notNull(),
 });
 
