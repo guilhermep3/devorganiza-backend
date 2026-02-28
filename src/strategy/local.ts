@@ -9,7 +9,7 @@ export const localStrategy = new LocalStrategy({
   try {
     const user = await findUserByEmail(email);
 
-    if (!user) {
+    if (!user || !user.password) {
       return done(null, false);
     }
 
