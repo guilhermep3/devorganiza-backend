@@ -10,7 +10,8 @@ pingRoutes.get('/ping', (req, res) => {
 
 pingRoutes.get('/privateping',
   passport.authenticate('jwt', { session: false }),
-  (req: ExtendedRequest, res: Response) => {
-    res.json({ pong: true, private: true, role: req.userRole });
+  (req, res: Response) => {
+    const extendedReq = req as ExtendedRequest;
+    res.json({ pong: true, private: true, role: extendedReq.user?.role });
   }
 );

@@ -6,7 +6,7 @@ import { ExtendedRequest } from "../types/request.js";
 
 export const getWeeklyProductivity = async (req: ExtendedRequest, res: Response) => {
   try {
-    const idLogged = req.idLogged as string;
+    const idLogged = req.user!.id!;
     if (!idLogged) {
       res.status(401).json({ error: "Usuário não autenticado." });
       return;
@@ -25,7 +25,7 @@ export const getWeeklyProductivity = async (req: ExtendedRequest, res: Response)
 
 export const getTasksByType = async (req: ExtendedRequest, res: Response) => {
   try {
-    const idLogged = req.idLogged as string;
+    const idLogged = req.user!.id!;
     if (!idLogged) {
       res.status(401).json({ error: "Usuário não autenticado." });
       return;
@@ -44,7 +44,7 @@ export const getTasksByType = async (req: ExtendedRequest, res: Response) => {
 
 export const getFinishedTasksByMonth = async (req: ExtendedRequest, res: Response) => {
   try {
-    const idLogged = req.idLogged as string;
+    const idLogged = req.user!.id!;
     if (!idLogged) {
       res.status(401).json({ error: "Usuário não autenticado." });
       return;
@@ -63,7 +63,7 @@ export const getFinishedTasksByMonth = async (req: ExtendedRequest, res: Respons
 
 export const getAverageTimeFinishTask = async (req: ExtendedRequest, res: Response) => {
   try {
-    const idLogged = req.idLogged as string;
+    const idLogged = req.user!.id!;
     if (!idLogged) {
       res.status(401).json({ error: "Usuário não autenticado." });
       return;
@@ -82,7 +82,7 @@ export const getAverageTimeFinishTask = async (req: ExtendedRequest, res: Respon
 
 export const getAverageScore = async (req: ExtendedRequest, res: Response) => {
   try {
-    const idLogged = req.idLogged as string;
+    const idLogged = req.user!.id!;
     if (!idLogged) {
       res.status(401).json({ error: "Usuário não autenticado." });
       return;
@@ -101,7 +101,7 @@ export const getAverageScore = async (req: ExtendedRequest, res: Response) => {
 
 export const getFasterAttempts = async (req: ExtendedRequest, res: Response) => {
   try {
-    const idLogged = req.idLogged as string;
+    const idLogged = req.user!.id!;
     if (!idLogged) {
       res.status(401).json({ error: "Usuário não autenticado." });
       return;

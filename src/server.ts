@@ -30,9 +30,9 @@ server.use(helmet({ contentSecurityPolicy: false }));
 server.use(express.json());
 server.use(express.urlencoded({ extended: true }));
 
-passport.use(localStrategy);
-passport.use(jwtStrategy);
-passport.use(googleStrategy);
+passport.use('local', localStrategy);
+passport.use('jwt', jwtStrategy);
+passport.use('google', googleStrategy);
 server.use(passport.initialize());
 
 server.use('/', mainRouter);

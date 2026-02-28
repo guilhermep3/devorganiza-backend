@@ -9,7 +9,7 @@ import { findQuizByName, unlockQuizForUser } from "../services/quiz.js";
 
 export const getAllStudies = async (req: ExtendedRequest, res: Response) => {
   try {
-    const idLogged = req.idLogged;
+    const idLogged = req.user!.id!;
 
     if (!idLogged) {
       res.status(401).json({ error: "Usuário não autenticado." });
@@ -38,7 +38,7 @@ export const getAllStudies = async (req: ExtendedRequest, res: Response) => {
 
 export const getStudies = async (req: ExtendedRequest, res: Response) => {
   try {
-    const idLogged = req.idLogged;
+    const idLogged = req.user!.id!;
 
     if (!idLogged) {
       res.status(401).json({ error: "Usuário não autenticado." });
@@ -78,7 +78,7 @@ export const getUserStudy = async (req: ExtendedRequest, res: Response) => {
 
 export const createStudy = async (req: ExtendedRequest, res: Response) => {
   try {
-    const idLogged = req.idLogged as string;
+    const idLogged = req.user!.id!;
 
     if (!idLogged) {
       res.status(401).json({ error: "Acesso negado" });
@@ -134,7 +134,7 @@ export const createStudy = async (req: ExtendedRequest, res: Response) => {
 
 export const updateStudy = async (req: ExtendedRequest, res: Response) => {
   try {
-    const userId = req.idLogged as string;
+    const userId = req.user!.id!;
     const studyId = req.params.studyId as string;
 
     if (!studyId) {
@@ -169,7 +169,7 @@ export const updateStudy = async (req: ExtendedRequest, res: Response) => {
 
 export const deleteStudy = async (req: ExtendedRequest, res: Response) => {
   try {
-    const userId = req.idLogged as string;
+    const userId = req.user!.id!;
     const studyId = req.params.studyId as string;
 
     if (!studyId) {

@@ -25,7 +25,7 @@ export const getAllUsers = async (req: ExtendedRequest, res: Response) => {
 
 export const getUser = async (req: ExtendedRequest, res: Response) => {
   try {
-    const idLogged = req.idLogged as string;
+    const idLogged = req.user!.id!;
 
     const user = await findUserById(idLogged);
     if (!user) {
@@ -45,7 +45,7 @@ export const getUser = async (req: ExtendedRequest, res: Response) => {
 
 export const getStudies = async (req: ExtendedRequest, res: Response) => {
   try {
-    const idLogged = req.idLogged as string;
+    const idLogged = req.user!.id!;
 
     if (!idLogged) {
       res.status(401).json({ error: "Acesso negado" });
@@ -62,7 +62,7 @@ export const getStudies = async (req: ExtendedRequest, res: Response) => {
 
 export const updateUser = async (req: ExtendedRequest, res: Response) => {
   try {
-    const idLogged = req.idLogged as string;
+    const idLogged = req.user!.id!;
 
     const data = updateUserSchema.safeParse(req.body);
     if (!data.success || !data.data) {
@@ -84,7 +84,7 @@ export const updateUser = async (req: ExtendedRequest, res: Response) => {
 
 export const updateUserImage = async (req: ExtendedRequest, res: Response) => {
   try {
-    const userId = req.idLogged as string;
+    const userId = req.user!.id!;
 
     if (!userId) {
       res.status(401).json({ error: "Usuário não autenticado." });
@@ -128,7 +128,7 @@ export const updateUserImage = async (req: ExtendedRequest, res: Response) => {
 
 export const deleteUser = async (req: ExtendedRequest, res: Response) => {
   try {
-    const userId = req.idLogged as string;
+    const userId = req.user!.id!;
 
     await deleteUserById(userId);
 
