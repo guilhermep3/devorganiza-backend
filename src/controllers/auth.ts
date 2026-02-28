@@ -63,7 +63,6 @@ export const signin = async (req: Request, res: Response) => {
 
 export const googleAuthCallback = async (req: Request, res: Response) => {
   try {
-    console.log("Google auth callback hit, user:", req.user);
     const user = req.user as typeof usersTable.$inferSelect;
 
     const token = await createJWT(

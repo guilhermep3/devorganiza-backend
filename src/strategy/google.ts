@@ -11,7 +11,6 @@ export const googleStrategy = new GoogleStrategy(
   },
   async (accessToken: any, refreshToken: any, profile: any, done: any) => {
     try {
-      console.log("Google profile:", profile);
       const googleUser = {
         googleId: profile.id,
         name: profile.displayName,
