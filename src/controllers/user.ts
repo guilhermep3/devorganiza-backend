@@ -25,7 +25,7 @@ export const getAllUsers = async (req: ExtendedRequest, res: Response) => {
 
 export const getUser = async (req: ExtendedRequest, res: Response) => {
   try {
-    const idLogged = req.user!.id!;
+    const idLogged = req.idLogged as string;
 
     const user = await findUserById(idLogged);
     if (!user) {
@@ -45,7 +45,7 @@ export const getUser = async (req: ExtendedRequest, res: Response) => {
 
 export const getStudies = async (req: ExtendedRequest, res: Response) => {
   try {
-    const idLogged = req.user!.id!;
+    const idLogged = req.idLogged as string;
 
     if (!idLogged) {
       res.status(401).json({ error: "Acesso negado" });
@@ -62,7 +62,7 @@ export const getStudies = async (req: ExtendedRequest, res: Response) => {
 
 export const updateUser = async (req: ExtendedRequest, res: Response) => {
   try {
-    const idLogged = req.user!.id!;
+    const idLogged = req.idLogged as string;
 
     const data = updateUserSchema.safeParse(req.body);
     if (!data.success || !data.data) {
@@ -84,9 +84,9 @@ export const updateUser = async (req: ExtendedRequest, res: Response) => {
 
 export const updateUserImage = async (req: ExtendedRequest, res: Response) => {
   try {
-    const userId = req.user!.id!;
+    const idLogged = req.idLogged as string;
 
-    if (!userId) {
+    if (!idLogged) {
       res.status(401).json({ error: "Usuário não autenticado." });
       return;
     }
@@ -96,7 +96,7 @@ export const updateUserImage = async (req: ExtendedRequest, res: Response) => {
       return;
     }
 
-    const user = await findUserById(userId);
+    const user = await findUserById(idLogged);
     if (!user) {
       res.status(404).json({ error: "Usuário não encontrado." });
       return;
@@ -111,7 +111,7 @@ export const updateUserImage = async (req: ExtendedRequest, res: Response) => {
       }
     }
 
-    const updatedUser = await updateImageByUser(userId, imageUrl);
+    const updatedUser = await updateImageByUser(idLogged, imageUrl);
 
     res.status(200).json({
       message: `Imagem ${user.profileImage ? "atualizada" : "adicionada"} com sucesso!`,
@@ -128,9 +128,9 @@ export const updateUserImage = async (req: ExtendedRequest, res: Response) => {
 
 export const deleteUser = async (req: ExtendedRequest, res: Response) => {
   try {
-    const userId = req.user!.id!;
+    const idLogged = req.idLogged as string;
 
-    await deleteUserById(userId);
+    await deleteUserById(idLogged);
 
     res.status(204).send();
   } catch (error) {
