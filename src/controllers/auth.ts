@@ -49,6 +49,13 @@ export const signin = async (req: Request, res: Response) => {
       user.role
     );
 
+    if (user.googleId && !user.password) {
+      res.status(400).json({
+        error: "Esta conta foi criada com Google. Faça login com Google."
+      });
+      return;
+    }
+
     const { password: _, ...userWithoutPassword } = user;
 
     res.json({
