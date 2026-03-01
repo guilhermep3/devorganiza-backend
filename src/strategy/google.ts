@@ -12,7 +12,7 @@ export const googleStrategy = new GoogleStrategy(
   async (accessToken: any, refreshToken: any, profile: any, done: any) => {
     try {
       const googleUser = {
-        googleId: profile.id,
+        googleId: profile.id.toString(),
         name: profile.displayName,
         email: profile.emails?.[0]?.value,
       };

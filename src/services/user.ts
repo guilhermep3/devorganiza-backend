@@ -1,4 +1,3 @@
-import { usersTable } from "../db/schema.js"
 import { UpdateUserType, UserInsert } from "../schemas/auth.js"
 import { userRepository } from "../repositories/user.js"
 
