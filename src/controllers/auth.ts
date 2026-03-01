@@ -49,11 +49,12 @@ export const signin = async (req: Request, res: Response) => {
       user.role
     );
 
-    if (user.googleId && !user.password) {
-      res.status(400).json({
-        error: "Esta conta foi criada com Google. Faça login com Google."
-      });
-      return;
+    if (user.provider === "local") {
+      if (user.googleId && !user.password) {
+        return res.status(400).json({
+          error: "Esta conta foi criada com Google."
+        });
+      }
     }
 
     const { password: _, ...userWithoutPassword } = user;
@@ -77,9 +78,14 @@ export const googleAuthCallback = async (req: Request, res: Response) => {
       user.role
     );
 
-    const redirectUrl = `${process.env.FRONTEND_URL}/auth/success?token=${token}`;
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "lax",
+      maxAge: 86400 * 3, // 3 dias
+    });
 
-    res.redirect(redirectUrl);
+    res.redirect(`${process.env.FRONTEND_URL}/dashboard`);
   } catch (error) {
     res.status(500).json({
       error: "Erro na autenticação Google"
