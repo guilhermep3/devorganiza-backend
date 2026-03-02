@@ -5,6 +5,16 @@ import { hash } from "bcrypt-ts";
 import { usersTable } from "../db/schema.js";
 import { createJWT } from "../utils/createJWT.js";
 
+const isProduction = process.env.NODE_ENV === 'production';
+
+const cookieOptions = {
+  httpOnly: true,
+  secure: isProduction,
+  sameSite: isProduction ? "none" as const : "lax" as const,
+  path: "/",
+  maxAge: 86400 * 3 * 1000,
+};
+
 export const signup = async (req: Request, res: Response) => {
   try {
     const data = req.body;
@@ -59,6 +69,8 @@ export const signin = async (req: Request, res: Response) => {
 
     const { password: _, ...userWithoutPassword } = user;
 
+    res.cookie("token", token, cookieOptions);
+
     res.json({
       message: "Login bem sucedido",
       token,
@@ -78,14 +90,9 @@ export const googleAuthCallback = async (req: Request, res: Response) => {
       user.role
     );
 
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: true,
-      sameSite: "lax",
-      maxAge: 86400 * 3, // 3 dias
-    });
+    res.cookie("token", token, cookieOptions);
 
-    res.redirect(`${process.env.FRONTEND_URL}/dashboard`);
+    res.redirect(`${process.env.FRONTEND_URL}/auth/callback`);
   } catch (error) {
     res.status(500).json({
       error: "Erro na autenticação Google"

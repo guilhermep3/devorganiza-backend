@@ -5,6 +5,7 @@ import mainRouter from './routes/main.js';
 import { localStrategy } from './strategy/local.js';
 import passport from 'passport';
 import { googleStrategy } from './strategy/google.js';
+import cookieParser from 'cookie-parser';
 
 export const server = express();
 
@@ -22,9 +23,12 @@ server.use(cors({
       callback(new Error('Not allowed by CORS'));
     }
   },
-  credentials: true
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 
+server.use(cookieParser());
 server.use(helmet({ contentSecurityPolicy: false }));
 server.use(express.json());
 server.use(express.urlencoded({ extended: true }));
