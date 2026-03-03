@@ -1,8 +1,9 @@
 import { boolean, integer, pgEnum, pgTable, timestamp, uniqueIndex, uuid, varchar } from "drizzle-orm/pg-core";
 
 export const studyStatusEnum = pgEnum("study_status", ["em_andamento", "finalizado",]);
-export const usersRoleEnum = pgEnum("user_role", ["user", "admin"]);
+export const userRoleEnum = pgEnum("user_role", ["user", "admin"]);
 export const studyTypeEnum = pgEnum("study_type", ["frontend", "backend", "outro"]);
+export const userProviderEnum = pgEnum("user_provider", ["local", "google"]);
 
 export const usersTable = pgTable("users", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -12,8 +13,8 @@ export const usersTable = pgTable("users", {
   email: varchar({ length: 255 }).notNull().unique(),
   password: varchar({ length: 255 }),
   profileImage: varchar({ length: 255 }),
-  role: usersRoleEnum("role").default("user").notNull(),
-  provider: varchar({ length: 20 }).default("local").notNull(),
+  role: userRoleEnum("role").default("user").notNull(),
+  provider: userProviderEnum("provider").default("local").notNull(),
   createdAt: timestamp().defaultNow().notNull(),
 });
 

@@ -35,7 +35,8 @@ export const googleStrategy = new GoogleStrategy(
         googleId: googleUser.googleId,
         name: googleUser.name,
         email: googleUser.email,
-        username: `${googleUser.email.split("@")[0]}_${Date.now()}`
+        username: `${googleUser.email.split("@")[0]}_${Date.now()}`,
+        provider: 'google',
       });
 
       return done(null, newUser);
