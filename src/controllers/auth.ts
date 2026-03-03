@@ -92,7 +92,7 @@ export const googleAuthCallback = async (req: Request, res: Response) => {
 
     res.cookie("token", token, cookieOptions);
 
-    res.redirect(`${process.env.FRONTEND_URL}/auth/callback`);
+    res.redirect(`${process.env.FRONTEND_URL}/auth/callback?token=${token}`);
   } catch (error) {
     res.status(500).json({
       error: "Erro na autenticação Google"

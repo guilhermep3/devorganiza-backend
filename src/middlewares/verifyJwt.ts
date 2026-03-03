@@ -5,13 +5,10 @@ import type { ExtendedRequest } from "../types/request.js";
 export const verifyJWT = (req: ExtendedRequest, res: Response, next: NextFunction) => {
 
   const bearerToken = req.headers.authorization?.split(" ")[1];
-  console.log("bearerToken", bearerToken);
 
   const cookieToken = req.cookies.token;
-  console.log("cookieToken", cookieToken);
 
   const token = cookieToken || bearerToken;
-  console.log("token", token);
 
   if (!token) {
     res.status(401).json(
