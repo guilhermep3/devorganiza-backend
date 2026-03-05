@@ -6,6 +6,8 @@ import { taskRoutes } from './task.js';
 import { quizRoutes } from './quiz.js';
 import { pingRoutes } from './ping.js';
 import { chartRoutes } from './chart.js';
+import { db } from '../lib/drizzle.js';
+import { usersTable } from '../db/schema.js';
 
 const mainRouter = Router();
 
@@ -13,6 +15,7 @@ mainRouter.get("/", (req, res) => {
   res.status(200).json({ status: "ok" });
 });
 mainRouter.get("/health", (req, res) => {
+  db.select().from(usersTable).limit(1).then(res => res[0]);
   res.status(200).json({ status: "ok" });
 });
 mainRouter.use(pingRoutes);
