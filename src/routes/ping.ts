@@ -8,8 +8,12 @@ pingRoutes.get('/ping', (req, res) => {
   res.json({ pong: true });
 });
 
-pingRoutes.get('/privateping', verifyJWT,
+pingRoutes.get('/ping/private', verifyJWT,
   (req: ExtendedRequest, res: Response) => {
-    res.json({ pong: true, private: true, role: req.userRole });
+    res.json({
+      pong: true,
+      private: true,
+      role: req.userRole
+    });
   }
 );

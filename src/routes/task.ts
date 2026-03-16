@@ -4,8 +4,8 @@ import { validateSchema } from "../middlewares/validateSchema.js";
 import { createTaskSchema } from "../schemas/task.js";
 import { verifyJWT } from "../middlewares/verifyJwt.js";
 
-export const taskRoutes = Router();
+export const tasksRoutes = Router();
 
-taskRoutes.post('/:studyId', verifyJWT, validateSchema(createTaskSchema), taskController.createTask);
-taskRoutes.put('/:taskId', verifyJWT, taskController.updateTask);
-taskRoutes.delete('/:taskId', verifyJWT, taskController.deleteTask);
+tasksRoutes.post('/:studyId', verifyJWT, validateSchema(createTaskSchema), taskController.createTask);
+tasksRoutes.put('/:taskId', verifyJWT, taskController.updateTask);
+tasksRoutes.delete('/:taskId', verifyJWT, taskController.deleteTask);

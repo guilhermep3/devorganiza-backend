@@ -1,28 +1,28 @@
 import { Router } from "express";
 import * as chartController from "../controllers/chart.js"
 import { verifyJWT } from "../middlewares/verifyJwt.js";
-export const chartRoutes = Router();
+export const chartsRoutes = Router();
 
-chartRoutes.get('/weekly-productivity',
+chartsRoutes.get('/weekly-productivity',
   verifyJWT, chartController.getWeeklyProductivity
 );
 
-chartRoutes.get('/tasks-by-type',
+chartsRoutes.get('/tasks-by-type',
   verifyJWT, chartController.getTasksByType
 );
 
-chartRoutes.get('/finished-tasks-by-month',
+chartsRoutes.get('/finished-tasks-by-month',
   verifyJWT, chartController.getFinishedTasksByMonth
 );
 
-chartRoutes.get('/average-time-finish-task',
+chartsRoutes.get('/average-time-finish-task',
   verifyJWT, chartController.getAverageTimeFinishTask
 );
 
-chartRoutes.get('/average-score',
+chartsRoutes.get('/average-score',
   verifyJWT, chartController.getAverageScore
 );
 
-chartRoutes.get('/faster-attempts',
+chartsRoutes.get('/faster-attempts',
   verifyJWT, chartController.getFasterAttempts
 );

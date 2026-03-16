@@ -11,55 +11,60 @@ import { createQuestionSchema } from "../schemas/question.js";
 import { createManyAlternativesSchema, updateAlternativeSchema } from "../schemas/alternative.js";
 import { verifyJWT } from "../middlewares/verifyJwt.js";
 
-export const quizRoutes = Router();
+export const quizzesRoutes = Router();
 
-quizRoutes.get('/all', verifyJWT, quizController.getAllQuizzes);
-quizRoutes.get('/locked', verifyJWT, quizController.getLockedQuizzes);
-quizRoutes.get('/attempts', verifyJWT, quizController.getUserAttempts);
-quizRoutes.get('/', verifyJWT, quizController.getQuizzes);
-quizRoutes.post('/many', verifyJWT, verifyRole, validateSchema(createQuizzesSchema), quizController.createManyQuiz);
-quizRoutes.post('/', verifyJWT, verifyRole, validateSchema(createQuizSchema), quizController.createQuiz);
+quizzesRoutes.get('/all', verifyJWT, quizController.getAllQuizzes);
+quizzesRoutes.get('/locked', verifyJWT, quizController.getLockedQuizzes);
+quizzesRoutes.get('/attempts', verifyJWT, quizController.getUserAttempts);
+quizzesRoutes.get('/', verifyJWT, quizController.getQuizzes);
+quizzesRoutes.post('/bulk',
+  verifyJWT, verifyRole, validateSchema(createQuizzesSchema),
+  quizController.createManyQuiz
+);
+quizzesRoutes.post('/',
+  verifyJWT, verifyRole, validateSchema(createQuizSchema),
+  quizController.createQuiz
+);
 
 // attempts
-quizRoutes.get('/:quizId/attempts/last', verifyJWT, validateQuiz, quizController.getLastQuizAttempt);
-quizRoutes.post('/:quizId/attempts/start', verifyJWT, validateQuiz, quizController.startQuizAttempt);
-quizRoutes.put('/:quizId/attempts/finish', verifyJWT, validateQuiz, quizController.finishQuizAttempt);
-quizRoutes.delete('/:quizId/attempts/delete', verifyJWT, validateQuiz, quizController.deleteQuizAttempt);
+quizzesRoutes.get('/:quizId/attempts/last', verifyJWT, validateQuiz, quizController.getLastQuizAttempt);
+quizzesRoutes.post('/:quizId/attempts/start', verifyJWT, validateQuiz, quizController.startQuizAttempt);
+quizzesRoutes.put('/:quizId/attempts/finish', verifyJWT, validateQuiz, quizController.finishQuizAttempt);
+quizzesRoutes.delete('/:quizId/attempts', verifyJWT, validateQuiz, quizController.deleteQuizAttempt);
 
-quizRoutes.put('/:quizId/unlock', verifyJWT, validateQuiz, quizController.unlockQuiz);
-quizRoutes.post('/:quizId/image',
+quizzesRoutes.put('/:quizId/unlock', verifyJWT, validateQuiz, quizController.unlockQuiz);
+quizzesRoutes.post('/:quizId/image',
  verifyJWT, validateQuiz, verifyRole, upload.single("image"), quizController.updateQuizImage
 );
 
-
 // questions
-quizRoutes.post('/:quizId/questions', verifyJWT, validateQuiz, verifyRole,
+quizzesRoutes.post('/:quizId/questions', verifyJWT, validateQuiz, verifyRole,
   validateSchema(createQuestionSchema), questionsController.createQuestion
 );
-quizRoutes.post('/:quizId/questions/many',
+quizzesRoutes.post('/:quizId/questions/bulk',
  verifyJWT, validateQuiz, verifyRole, questionsController.createManyQuestion
 );
-quizRoutes.put('/:quizId/questions/:questionId',
+quizzesRoutes.put('/:quizId/questions/:questionId',
  verifyJWT, verifyRole, questionsController.updateQuestion
 );
-quizRoutes.delete('/:quizId/questions/:questionId',
+quizzesRoutes.delete('/:quizId/questions/:questionId',
  verifyJWT, verifyRole, questionsController.deleteQuestion
 );
 
 // alternatives
-quizRoutes.post('/:quizId/questions/alternatives',
+quizzesRoutes.post('/:quizId/questions/alternatives/bulk',
  verifyJWT, verifyRole, validateSchema(createManyAlternativesSchema),
  alternativeController.createManyAlternatives
 );
-quizRoutes.put('/:quizId/questions/:questionId/alternatives/:alternativeId',
+quizzesRoutes.put('/:quizId/questions/:questionId/alternatives/:alternativeId',
  verifyJWT, verifyRole, validateSchema(updateAlternativeSchema), alternativeController.updateAlternative
 );
-quizRoutes.delete('/:quizId/questions/:questionId/alternatives/:alternativeId',
+quizzesRoutes.delete('/:quizId/questions/:questionId/alternatives/:alternativeId',
  verifyJWT, verifyRole, alternativeController.deleteAlternative
 );
 
-quizRoutes.get('/:quizId', verifyJWT, validateQuiz, quizController.getQuiz);
-quizRoutes.put('/:quizId', verifyJWT, verifyRole, validateQuiz,
+quizzesRoutes.get('/:quizId', verifyJWT, validateQuiz, quizController.getQuiz);
+quizzesRoutes.put('/:quizId', verifyJWT, verifyRole, validateQuiz,
   validateSchema(updateQuizSchema), quizController.updateQuiz);
-quizRoutes.delete('/:quizId', verifyJWT, validateQuiz, verifyRole, quizController.deleteQuiz
+quizzesRoutes.delete('/:quizId', verifyJWT, validateQuiz, verifyRole, quizController.deleteQuiz
 );

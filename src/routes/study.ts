@@ -7,7 +7,7 @@ import { verifyJWT } from "../middlewares/verifyJwt.js";
 
 export const studiesRoutes = Router();
 
-studiesRoutes.get('/all', verifyJWT, verifyRole, studyController.getAllStudies);
+studiesRoutes.get('/admin', verifyJWT, verifyRole, studyController.getAllStudies);
 studiesRoutes.get('/:studyId', verifyJWT, studyController.getUserStudy);
 studiesRoutes.get('/', verifyJWT, studyController.getStudies);
 studiesRoutes.post('/', verifyJWT, validateSchema(createStudySchema), studyController.createStudy);

@@ -1,29 +1,31 @@
 import { Router } from 'express';
 import { authRoutes } from './auth.js';
-import { userRoutes } from './user.js';
+import { usersRoutes } from './user.js';
 import { studiesRoutes } from './study.js';
-import { taskRoutes } from './task.js';
-import { quizRoutes } from './quiz.js';
+import { tasksRoutes } from './task.js';
+import { quizzesRoutes } from './quiz.js';
 import { pingRoutes } from './ping.js';
-import { chartRoutes } from './chart.js';
+import { chartsRoutes } from './chart.js';
 import { db } from '../lib/drizzle.js';
 import { usersTable } from '../db/schema.js';
 
 const mainRouter = Router();
 
-mainRouter.get("/", (req, res) => {
+mainRouter.get("/", (_, res) => {
   res.status(200).json({ status: "ok" });
 });
-mainRouter.get("/health", (req, res) => {
-  db.select().from(usersTable).limit(1).then(res => res[0]);
+
+mainRouter.get("/health", async (_, res) => {
+  await db.select().from(usersTable).limit(1);
   res.status(200).json({ status: "ok" });
 });
+
 mainRouter.use(pingRoutes);
-mainRouter.use('/auth', authRoutes);
-mainRouter.use('/users', userRoutes);
-mainRouter.use('/studies', studiesRoutes);
-mainRouter.use('/tasks', taskRoutes);
-mainRouter.use('/quizzes', quizRoutes);
-mainRouter.use('/charts', chartRoutes);
+mainRouter.use("/auth", authRoutes);
+mainRouter.use("/users", usersRoutes);
+mainRouter.use("/studies", studiesRoutes);
+mainRouter.use("/tasks", tasksRoutes);
+mainRouter.use("/quizzes", quizzesRoutes);
+mainRouter.use("/charts", chartsRoutes);
 
 export default mainRouter;
