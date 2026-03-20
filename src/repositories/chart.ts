@@ -61,7 +61,7 @@ export const chartRepository = {
     return await db.select({
       estudo: studiesTable.name,
       media: sql<number>`ROUND(
-          AVG(EXTRACT(EPOCH FROM (${tasksTable.finishedAt} - ${tasksTable.createdAt})) / 60)
+          AVG(EXTRACT(EPOCH FROM (${tasksTable.finishedAt} - ${tasksTable.createdAt})))
         )`
     }).from(studiesTable)
       .leftJoin(tasksTable,
