@@ -3,14 +3,15 @@ import type { ExtendedRequest } from "../types/request.js";
 import {
   createNewQuiz, createNewQuizzes, deleteQuizAttemptById, deleteQuizById, findAllQuizzes,
   findCorrectAnswers, findFullQuiz, findLastAttempt, findLockedQuizzes, findQuizById,
-  findQuizzesTitle,
-  findUserAttemtps, findUserQuiz, findUserQuizzes, finishAttempt,
+  findQuizzes, findUserAttemtps, findUserQuiz, findUserQuizzes, finishAttempt,
   starUserQuizAttempt, unlockQuizForUser, updateImageByQuiz, updateQuizById
 } from "../services/quiz.js";
 import { attemptAnswersType, quizInsert } from "../schemas/quiz.js";
 import cloudinary from "../utils/cloudinary.js";
 import { uploadToCloudinary } from "../utils/uploadToCloudinary.js";
 import { calculateDuration } from "../utils/calculateDuration.js";
+
+export type QuizField = "id" | "title" | "type" | "description";
 
 export const getQuizzes = async (req: ExtendedRequest, res: Response) => {
   try {
@@ -23,11 +24,12 @@ export const getQuizzes = async (req: ExtendedRequest, res: Response) => {
     const { fields } = req.query;
 
     const selectedFields = typeof fields === "string"
-      ? fields.split(",") : undefined;
+      ? fields.split(",").filter(f => ["id", "title", "type", "description"].includes(f)) as QuizField[]
+      : undefined;
 
-    if (selectedFields?.length === 1 && selectedFields[0] === "title") {
-      const quizzesTitle = await findQuizzesTitle();
-      res.json(quizzesTitle);
+    if (selectedFields) {
+      const quizzes = await findQuizzes(selectedFields);
+      res.json(quizzes);
       return;
     }
 

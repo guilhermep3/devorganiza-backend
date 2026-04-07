@@ -4,6 +4,7 @@ import {
 } from "../db/schema.js";
 import { db } from "../lib/drizzle.js";
 import { quizInsert } from "../schemas/quiz.js";
+import { QuizField } from "../controllers/quiz.js";
 
 export const quizRepository = {
   async create(data: typeof quizzesTable.$inferInsert) {
@@ -42,8 +43,27 @@ export const quizRepository = {
       .returning().then(res => res[0]);
   },
 
-  async findAllTitle() {
-    return await db.select({ title: quizzesTable.title }).from(quizzesTable);
+  async findAllWithFields(fields: QuizField[]) {
+    const fieldMap: Record<QuizField, any> = {
+      id: quizzesTable.id,
+      title: quizzesTable.title,
+      type: quizzesTable.type,
+      description: quizzesTable.description
+    };
+
+    const validFields = fields.filter(field => field in fieldMap);
+
+    if (validFields.length === 0) {
+      validFields.push("title");
+    }
+
+    const selectedFields = Object.fromEntries(
+      validFields.map(field => [field, fieldMap[field]])
+    );
+
+    return await db
+      .select(selectedFields)
+      .from(quizzesTable);
   },
 
   async findUserQuizzes(userId: string) {

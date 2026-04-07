@@ -1,11 +1,7 @@
 import { quizzesTable } from "../db/schema.js";
 import { quizInsert } from "../schemas/quiz.js";
 import { quizRepository } from "../repositories/quiz.js";
-
-type FindUserQuizzesOptions = {
-  fields?: string[];
-  onlyTitles?: boolean;
-};
+import { QuizField } from "../controllers/quiz.js";
 
 export const createNewQuiz = async (data: typeof quizzesTable.$inferInsert) => {
   return await quizRepository.create(data);
@@ -31,8 +27,8 @@ export const unlockQuizForUser = async (userId: string, quizId: string) => {
   return await quizRepository.unlock(userId, quizId);
 };
 
-export const findQuizzesTitle = async () => {
-  return await quizRepository.findAllTitle();
+export const findQuizzes = async (fields?: QuizField[]) => {
+  return await quizRepository.findAllWithFields(fields ?? []);
 };
 
 export const findUserQuizzes = async (userId: string) => {
