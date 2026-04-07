@@ -127,6 +127,7 @@ src/
 | `GET`    | `/quizzes/locked`   | Retorna quizzes bloqueados do usuário  | ✔️       |
 | `GET`    | `/quizzes/attempts` | Retorna todas as tentativas do usuário | ✔️       |
 | `GET`    | `/quizzes`          | Retorna quizzes disponíveis do usuário | ✔️       |
+| `GET`    | `/quizzes?field=title` | Retorna os títulos dos quizzes | ✔️       |
 | `POST`   | `/quizzes/many`     | Cria vários quizzes                    | ✔️ (dev) |
 | `POST`   | `/quizzes`          | Cria um quiz                           | ✔️ (dev) |
 | `PUT`    | `/quizzes/:quizId/unlock` | Desbloqueia um quiz para o usuário | ✔️       |

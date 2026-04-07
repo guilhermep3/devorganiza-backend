@@ -1,8 +1,10 @@
 import type { Response } from "express";
 import type { ExtendedRequest } from "../types/request.js";
 import {
-  createNewQuiz, createNewQuizzes, deleteQuizAttemptById, deleteQuizById, findAllQuizzes, findCorrectAnswers, findFullQuiz, findLastAttempt,
-  findLockedQuizzes, findQuizById, findUserAttemtps, findUserQuiz, findUserQuizzes, finishAttempt,
+  createNewQuiz, createNewQuizzes, deleteQuizAttemptById, deleteQuizById, findAllQuizzes,
+  findCorrectAnswers, findFullQuiz, findLastAttempt, findLockedQuizzes, findQuizById,
+  findQuizzesTitle,
+  findUserAttemtps, findUserQuiz, findUserQuizzes, finishAttempt,
   starUserQuizAttempt, unlockQuizForUser, updateImageByQuiz, updateQuizById
 } from "../services/quiz.js";
 import { attemptAnswersType, quizInsert } from "../schemas/quiz.js";
@@ -15,6 +17,17 @@ export const getQuizzes = async (req: ExtendedRequest, res: Response) => {
     const idLogged = req.idLogged as string;
     if (!idLogged) {
       res.status(401).json({ error: "Usuário não autenticado." });
+      return;
+    }
+
+    const { fields } = req.query;
+
+    const selectedFields = typeof fields === "string"
+      ? fields.split(",") : undefined;
+
+    if (selectedFields?.length === 1 && selectedFields[0] === "title") {
+      const quizzesTitle = await findQuizzesTitle();
+      res.json(quizzesTitle);
       return;
     }
 

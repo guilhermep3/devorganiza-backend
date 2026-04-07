@@ -42,6 +42,10 @@ export const quizRepository = {
       .returning().then(res => res[0]);
   },
 
+  async findAllTitle() {
+    return await db.select({ title: quizzesTable.title }).from(quizzesTable);
+  },
+
   async findUserQuizzes(userId: string) {
     return await db.select({
       quiz: quizzesTable,

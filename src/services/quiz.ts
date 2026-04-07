@@ -2,6 +2,11 @@ import { quizzesTable } from "../db/schema.js";
 import { quizInsert } from "../schemas/quiz.js";
 import { quizRepository } from "../repositories/quiz.js";
 
+type FindUserQuizzesOptions = {
+  fields?: string[];
+  onlyTitles?: boolean;
+};
+
 export const createNewQuiz = async (data: typeof quizzesTable.$inferInsert) => {
   return await quizRepository.create(data);
 };
@@ -24,6 +29,10 @@ export const findQuizById = async (id: string) => {
 
 export const unlockQuizForUser = async (userId: string, quizId: string) => {
   return await quizRepository.unlock(userId, quizId);
+};
+
+export const findQuizzesTitle = async () => {
+  return await quizRepository.findAllTitle();
 };
 
 export const findUserQuizzes = async (userId: string) => {
