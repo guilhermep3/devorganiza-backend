@@ -19,6 +19,7 @@
     "cloudinary": "^2.8.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
+    "drizzle-kit": "^0.31.7",
     "drizzle-orm": "^0.44.7",
     "express": "^5.1.0",
     "helmet": "^8.1.0",
@@ -44,7 +45,6 @@
     "@types/passport-local": "^1.0.38",
     "@types/pg": "^8.15.6",
     "@types/slug": "^5.0.9",
-    "drizzle-kit": "^0.31.7",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3"
   }
