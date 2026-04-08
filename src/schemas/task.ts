@@ -1,5 +1,5 @@
 import z from "zod";
-import { tasksTable } from "../db/schema";
+import { tasksTable } from "../db/schema.js";
 
 export type TaskInsert = typeof tasksTable.$inferInsert;
 

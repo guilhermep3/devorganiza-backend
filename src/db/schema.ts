@@ -38,6 +38,7 @@ export const tasksTable = pgTable("tasks", {
   done: boolean().default(false).notNull(),
   studyId: uuid("studyId").notNull().references(() => studiesTable.id, { onDelete: "cascade" }),
   createdAt: timestamp().defaultNow().notNull(),
+  updatedAt: timestamp().defaultNow().notNull().$onUpdate(() => new Date()),
   finishIn: timestamp(),
   finishedAt: timestamp(),
 });
