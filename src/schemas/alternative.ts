@@ -1,5 +1,5 @@
 import z from "zod";
-import { alternativesTable } from "../db/schema";
+import { alternativesTable } from "../db/schema.js";
 
 export type AlternativeInsert = typeof alternativesTable.$inferInsert;
 export type AlternativeUpdate = Partial<AlternativeInsert>;

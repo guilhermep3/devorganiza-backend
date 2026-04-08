@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { quizzesTable } from "../db/schema";
+import { quizzesTable } from "../db/schema.js";
 
 export type quizInsert = typeof quizzesTable.$inferInsert;
 export type attemptAnswersType = z.infer<typeof attemptAnswersSchema>[number];

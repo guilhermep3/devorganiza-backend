@@ -1,5 +1,5 @@
 import z from "zod";
-import { studiesTable } from "../db/schema";
+import { studiesTable } from "../db/schema.js";
 
 export type StudyInsert = typeof studiesTable.$inferInsert;
 export type StudyUpdate = typeof updateStudySchema;

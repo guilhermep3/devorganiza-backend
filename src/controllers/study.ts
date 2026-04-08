@@ -1,7 +1,8 @@
 import type { Response } from "express";
 import type { ExtendedRequest } from "../types/request.js";
 import {
-  createUserStudy, deleteStudyById, findAllStudies, findUserStudies, findUserStudyById, findUserStudyByName, updateStudyById
+  createUserStudy, deleteStudyById, findAllStudies, findUserStudies, findUserStudyById,
+  findUserStudyByName, updateStudyById
 } from "../services/study.js";
 import { StudyInsert, updateStudySchema } from "../schemas/study.js";
 import { pageSchema } from "../schemas/page.js";

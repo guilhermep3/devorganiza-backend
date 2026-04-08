@@ -3,7 +3,7 @@ import type { ExtendedRequest } from "../types/request.js"
 import {
   createNewQuestion, createNewQuestions, deleteQuestionById, updateQuestionById
 } from "../services/question.js";
-import { createManyQuestionType, createQuestionType, manyQuestionSchema, updateQuestionSchema, updateQuestionType } from "../schemas/question.js";
+import { createManyQuestionType, createQuestionType, updateQuestionType } from "../schemas/question.js";
 
 export const createQuestion = async (req: ExtendedRequest, res: Response) => {
   try {

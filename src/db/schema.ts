@@ -1,4 +1,6 @@
-import { boolean, integer, pgEnum, pgTable, timestamp, uniqueIndex, uuid, varchar } from "drizzle-orm/pg-core";
+import {
+  boolean, integer, pgEnum, pgTable, timestamp, uniqueIndex, uuid, varchar
+} from "drizzle-orm/pg-core";
 
 export const studyStatusEnum = pgEnum("study_status", ["em_andamento", "finalizado",]);
 export const userRoleEnum = pgEnum("user_role", ["user", "admin"]);

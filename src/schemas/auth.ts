@@ -1,5 +1,5 @@
 import z from "zod";
-import { usersTable } from "../db/schema";
+import { usersTable } from "../db/schema.js";
 
 export type UserInsert = typeof usersTable.$inferInsert;
 export type UpdateUserType = z.infer<typeof updateUserSchema>;
