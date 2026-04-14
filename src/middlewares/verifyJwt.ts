@@ -4,16 +4,13 @@ import type { ExtendedRequest } from "../types/request.js";
 
 export const verifyJWT = (req: ExtendedRequest, res: Response, next: NextFunction) => {
 
-  const bearerToken = req.headers.authorization?.split(" ")[1];
-
-  const cookieToken = req.cookies.token;
-
-  const token = cookieToken || bearerToken;
+  const token = req.headers.authorization?.split(" ")[1];
 
   if (!token) {
-    res.status(401).json(
-      { error: 'Acesso negado', errorDetails: 'Não possui o token de autorização' }
-    );
+    res.status(401).json({
+      error: 'Acesso negado',
+      errorDetails: 'Não possui o token de autorização'
+    });
     return;
   }
 
