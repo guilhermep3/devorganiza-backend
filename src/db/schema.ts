@@ -1,5 +1,5 @@
 import {
-  boolean, integer, pgEnum, pgTable, timestamp, uniqueIndex, uuid, varchar
+  boolean, integer, jsonb, pgEnum, pgTable, timestamp, uniqueIndex, uuid, varchar
 } from "drizzle-orm/pg-core";
 
 export const studyStatusEnum = pgEnum("study_status", ["em_andamento", "finalizado",]);
@@ -91,4 +91,23 @@ export const quizAttemptsTable = pgTable("quiz_attempts", {
   finishedAt: timestamp(),
   score: integer(),
   durationSec: integer(),
+});
+
+export const notesTable = pgTable("notes", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  name: varchar({ length: 255 }).notNull(),
+  userId: uuid("userId").notNull().references(() => usersTable.id, { onDelete: "cascade" }),
+  createdAt: timestamp().defaultNow().notNull(),
+  updatedAt: timestamp().defaultNow().notNull().$onUpdate(() => new Date()),
+});
+
+export const boxesTable = pgTable("boxes", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  type: varchar({ length: 50 }).notNull(),
+  content: jsonb("content").notNull(),
+  position: integer().notNull(),
+  notesId: uuid("notesId").notNull().references(() => notesTable.id, { onDelete: "cascade" }),
+  userId: uuid("userId").notNull().references(() => usersTable.id, { onDelete: "cascade" }),
+  createdAt: timestamp().defaultNow().notNull(),
+  updatedAt: timestamp().defaultNow().notNull().$onUpdate(() => new Date()),
 });

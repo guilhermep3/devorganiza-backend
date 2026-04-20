@@ -8,6 +8,7 @@ import { pingRoutes } from './ping.js';
 import { chartsRoutes } from './chart.js';
 import { db } from '../lib/drizzle.js';
 import { usersTable } from '../db/schema.js';
+import { notesRoutes } from './notes.js';
 
 const mainRouter = Router();
 
@@ -27,5 +28,6 @@ mainRouter.use("/studies", studiesRoutes);
 mainRouter.use("/tasks", tasksRoutes);
 mainRouter.use("/quizzes", quizzesRoutes);
 mainRouter.use("/charts", chartsRoutes);
+mainRouter.use("/notes", notesRoutes)
 
 export default mainRouter;
