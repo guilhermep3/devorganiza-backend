@@ -19,6 +19,7 @@ import {
   deleteBox,
   reorderBoxes,
 } from "../services/notes.js";
+import { AppError } from "../utils/appError.js";
 
 // ---------- Notes ----------
 
@@ -130,7 +131,16 @@ export const postBox = async (req: ExtendedRequest, res: Response) => {
     const box = await createBox(noteId as string, userId, parsed.data);
     res.status(201).json({ box });
   } catch (error) {
-    res.status(500).json({ error: "Erro ao criar bloco", errorDetails: error });
+    if (error instanceof AppError && error.code === "NOTE_SIZE_LIMIT_EXCEEDED") {
+      res.status(400).json({
+        error: error.message,
+        code: error.code
+      });
+    } else {
+      res.status(500).json({
+        error: "Erro ao criar bloco"
+      });
+    }
   }
 };
 
@@ -153,7 +163,16 @@ export const putBox = async (req: ExtendedRequest, res: Response) => {
 
     res.json({ box });
   } catch (error) {
-    res.status(500).json({ error: "Erro ao atualizar bloco", errorDetails: error });
+    if (error instanceof AppError && error.code === "NOTE_SIZE_LIMIT_EXCEEDED") {
+      res.status(400).json({
+        error: error.message,
+        code: error.code
+      });
+    } else {
+      res.status(500).json({
+        error: "Erro ao atualizar bloco"
+      });
+    }
   }
 };
 

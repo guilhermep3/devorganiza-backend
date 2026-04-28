@@ -6,6 +6,8 @@ import {
   UpdateBoxType,
   UpdateNoteType,
 } from "../schemas/notes.js";
+import { AppError } from "../utils/appError.js";
+import { getContentSize, MAX_NOTE_SIZE } from "../utils/getContentSize.js";
 
 // ---------- Notes ----------
 
@@ -45,18 +47,45 @@ export const findBoxesByNote = async (notesId: string, userId: string) => {
 };
 
 export const createBox = async (notesId: string, userId: string, data: CreateBoxType) => {
+  const boxes = await notesRepository.findBoxesByNote(notesId, userId);
+
+  const currentSize = boxes.reduce((acc, b) => {
+    return acc + getContentSize(b.content);
+  }, 0);
+
+  const newBoxSize = getContentSize(data.content);
+
+  if (currentSize + newBoxSize > MAX_NOTE_SIZE) {
+    throw new AppError(
+      "Tamanho máximo da anotação excedido",
+      "NOTE_SIZE_LIMIT_EXCEEDED",
+      400
+    );
+  }
+
   return notesRepository.createBox(notesId, userId, data);
 };
 
-export const updateBox = async (
-  noteId: string,
-  boxId: string,
-  userId: string,
-  data: UpdateBoxType
-) => {
-  // Garante que o box pertence à nota correta antes de atualizar
+export const updateBox = async (noteId: string, boxId: string, userId: string, data: UpdateBoxType) => {
   const box = await notesRepository.findBoxById(boxId, userId);
   if (!box || box.notesId !== noteId) return null;
+
+  const boxes = await notesRepository.findBoxesByNote(noteId, userId);
+
+  const currentSize = boxes.reduce((acc, b) => {
+    if (b.id === boxId) return acc;
+    return acc + getContentSize(b.content);
+  }, 0);
+
+  const newBoxSize = getContentSize(data.content);
+
+  if (currentSize + newBoxSize > MAX_NOTE_SIZE) {
+    throw new AppError(
+      "Tamanho máximo da anotação excedido",
+      "NOTE_SIZE_LIMIT_EXCEEDED",
+      400
+    );
+  }
 
   return notesRepository.updateBox(boxId, userId, data);
 };
