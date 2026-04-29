@@ -200,3 +200,5 @@ Configure as variáveis de ambiente
 ``` bash
 cp .env.example .env
 ```
+
+Projeto desenvolvido por <a href="https://github.com/guilhermep3" target="_blank">Guilherme Pereira</a>
