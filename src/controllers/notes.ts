@@ -1,23 +1,12 @@
 import { Response } from "express";
 import { ExtendedRequest } from "../types/request.js";
 import {
-  createNoteSchema,
-  updateNoteSchema,
-  createBoxSchema,
-  updateBoxSchema,
-  reorderBoxesSchema,
+  createNoteSchema, updateNoteSchema, createBlockSchema, updateBlockSchema, reorderBlocksSchema,
 } from "../schemas/notes.js";
 import {
-  findAllNotesByUser,
-  findNoteById,
-  createNote,
-  updateNote,
-  deleteNote,
-  findBoxesByNote,
-  createBox,
-  updateBox,
-  deleteBox,
-  reorderBoxes,
+  findAllNotesByUser, findNoteById, createNote, updateNote,
+  deleteNote, findBlocksByNote, createBlock, updateBlock,
+  deleteBlock, reorderBlocks,
 } from "../services/notes.js";
 import { AppError } from "../utils/appError.js";
 
@@ -44,9 +33,9 @@ export const getNote = async (req: ExtendedRequest, res: Response) => {
       return;
     }
 
-    const boxes = await findBoxesByNote(id as string, userId);
+    const blocks = await findBlocksByNote(id as string, userId);
 
-    res.json({ note, boxes });
+    res.json({ note, blocks });
   } catch (error) {
     res.status(500).json({ error: "Erro ao buscar anotação", errorDetails: error });
   }
@@ -109,13 +98,13 @@ export const deleteNoteController = async (req: ExtendedRequest, res: Response) 
   }
 };
 
-// ---------- Boxes ----------
+// ---------- Blocks ----------
 
-export const postBox = async (req: ExtendedRequest, res: Response) => {
+export const postBlock = async (req: ExtendedRequest, res: Response) => {
   try {
     const userId = req.idLogged as string;
     const { id: noteId } = req.params;
-    const parsed = createBoxSchema.safeParse(req.body);
+    const parsed = createBlockSchema.safeParse(req.body);
 
     if (!parsed.success) {
       res.status(400).json({ error: "Dados inválidos", details: parsed.error.flatten() });
@@ -128,8 +117,8 @@ export const postBox = async (req: ExtendedRequest, res: Response) => {
       return;
     }
 
-    const box = await createBox(noteId as string, userId, parsed.data);
-    res.status(201).json({ box });
+    const block = await createBlock(noteId as string, userId, parsed.data);
+    res.status(201).json({ block });
   } catch (error) {
     if (error instanceof AppError && error.code === "NOTE_SIZE_LIMIT_EXCEEDED") {
       res.status(400).json({
@@ -144,24 +133,24 @@ export const postBox = async (req: ExtendedRequest, res: Response) => {
   }
 };
 
-export const putBox = async (req: ExtendedRequest, res: Response) => {
+export const putBlock = async (req: ExtendedRequest, res: Response) => {
   try {
     const userId = req.idLogged as string;
-    const { id: noteId, boxId } = req.params;
-    const parsed = updateBoxSchema.safeParse(req.body);
+    const { id: noteId, blockId } = req.params;
+    const parsed = updateBlockSchema.safeParse(req.body);
 
     if (!parsed.success) {
       res.status(400).json({ error: "Dados inválidos", details: parsed.error.flatten() });
       return;
     }
 
-    const box = await updateBox(noteId as string, boxId as string, userId, parsed.data);
-    if (!box) {
+    const block = await updateBlock(noteId as string, blockId as string, userId, parsed.data);
+    if (!block) {
       res.status(404).json({ error: "Bloco não encontrado" });
       return;
     }
 
-    res.json({ box });
+    res.json({ block });
   } catch (error) {
     if (error instanceof AppError && error.code === "NOTE_SIZE_LIMIT_EXCEEDED") {
       res.status(400).json({
@@ -176,13 +165,13 @@ export const putBox = async (req: ExtendedRequest, res: Response) => {
   }
 };
 
-export const deleteBoxController = async (req: ExtendedRequest, res: Response) => {
+export const deleteBlockController = async (req: ExtendedRequest, res: Response) => {
   try {
     const userId = req.idLogged as string;
-    const { id: noteId, boxId } = req.params;
+    const { id: noteId, blockId } = req.params;
 
-    const box = await deleteBox(noteId as string, boxId as string, userId);
-    if (!box) {
+    const block = await deleteBlock(noteId as string, blockId as string, userId);
+    if (!block) {
       res.status(404).json({ error: "Bloco não encontrado" });
       return;
     }
@@ -193,24 +182,24 @@ export const deleteBoxController = async (req: ExtendedRequest, res: Response) =
   }
 };
 
-export const putReorderBoxes = async (req: ExtendedRequest, res: Response) => {
+export const putReorderBlocks = async (req: ExtendedRequest, res: Response) => {
   try {
     const userId = req.idLogged as string;
     const { id: noteId } = req.params;
-    const parsed = reorderBoxesSchema.safeParse(req.body);
+    const parsed = reorderBlocksSchema.safeParse(req.body);
 
     if (!parsed.success) {
       res.status(400).json({ error: "Dados inválidos", details: parsed.error.flatten() });
       return;
     }
 
-    const boxes = await reorderBoxes(noteId as string, userId, parsed.data);
-    if (!boxes) {
+    const blocks = await reorderBlocks(noteId as string, userId, parsed.data);
+    if (!blocks) {
       res.status(400).json({ error: "Um ou mais blocos não pertencem a esta anotação" });
       return;
     }
 
-    res.json({ boxes });
+    res.json({ blocks });
   } catch (error) {
     res.status(500).json({ error: "Erro ao reordenar blocos", errorDetails: error });
   }

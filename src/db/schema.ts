@@ -101,7 +101,7 @@ export const notesTable = pgTable("notes", {
   updatedAt: timestamp().defaultNow().notNull().$onUpdate(() => new Date()),
 });
 
-export const boxesTable = pgTable("boxes", {
+export const blocksTable = pgTable("blocks", {
   id: uuid("id").primaryKey().defaultRandom(),
   type: varchar({ length: 50 }).notNull(),
   content: jsonb("content").notNull(),

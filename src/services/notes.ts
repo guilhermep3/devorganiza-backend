@@ -1,10 +1,6 @@
 import { notesRepository } from "../repositories/notes.js";
 import {
-  CreateBoxType,
-  CreateNoteType,
-  ReorderBoxesType,
-  UpdateBoxType,
-  UpdateNoteType,
+  CreateBlockType, CreateNoteType, ReorderBlocksType, UpdateBlockType, UpdateNoteType,
 } from "../schemas/notes.js";
 import { AppError } from "../utils/appError.js";
 import { getContentSize, MAX_NOTE_SIZE } from "../utils/getContentSize.js";
@@ -23,7 +19,7 @@ export const createNote = async (data: CreateNoteType, userId: string) => {
   const note = await notesRepository.create(data, userId);
 
   // Toda anotação inicia com um bloco text vazio !!!
-  await notesRepository.createBox(note!.id, userId, {
+  await notesRepository.createBlock(note!.id, userId, {
     type: "text",
     content: { text: "" },
     position: 0,
@@ -40,22 +36,22 @@ export const deleteNote = async (id: string, userId: string) => {
   return notesRepository.delete(id, userId);
 };
 
-// ---------- Boxes ----------
+// ---------- Blocks ----------
 
-export const findBoxesByNote = async (notesId: string, userId: string) => {
-  return notesRepository.findBoxesByNote(notesId, userId);
+export const findBlocksByNote = async (notesId: string, userId: string) => {
+  return notesRepository.findBlocksByNote(notesId, userId);
 };
 
-export const createBox = async (notesId: string, userId: string, data: CreateBoxType) => {
-  const boxes = await notesRepository.findBoxesByNote(notesId, userId);
+export const createBlock = async (notesId: string, userId: string, data: CreateBlockType) => {
+  const blocks = await notesRepository.findBlocksByNote(notesId, userId);
 
-  const currentSize = boxes.reduce((acc, b) => {
+  const currentSize = blocks.reduce((acc, b) => {
     return acc + getContentSize(b.content);
   }, 0);
 
-  const newBoxSize = getContentSize(data.content);
+  const newBlockSize = getContentSize(data.content);
 
-  if (currentSize + newBoxSize > MAX_NOTE_SIZE) {
+  if (currentSize + newBlockSize > MAX_NOTE_SIZE) {
     throw new AppError(
       "Tamanho máximo da anotação excedido",
       "NOTE_SIZE_LIMIT_EXCEEDED",
@@ -63,23 +59,23 @@ export const createBox = async (notesId: string, userId: string, data: CreateBox
     );
   }
 
-  return notesRepository.createBox(notesId, userId, data);
+  return notesRepository.createBlock(notesId, userId, data);
 };
 
-export const updateBox = async (noteId: string, boxId: string, userId: string, data: UpdateBoxType) => {
-  const box = await notesRepository.findBoxById(boxId, userId);
-  if (!box || box.notesId !== noteId) return null;
+export const updateBlock = async (noteId: string, blockId: string, userId: string, data: UpdateBlockType) => {
+  const block = await notesRepository.findBlockById(blockId, userId);
+  if (!block || block.notesId !== noteId) return null;
 
-  const boxes = await notesRepository.findBoxesByNote(noteId, userId);
+  const blocks = await notesRepository.findBlocksByNote(noteId, userId);
 
-  const currentSize = boxes.reduce((acc, b) => {
-    if (b.id === boxId) return acc;
+  const currentSize = blocks.reduce((acc, b) => {
+    if (b.id === blockId) return acc;
     return acc + getContentSize(b.content);
   }, 0);
 
-  const newBoxSize = getContentSize(data.content);
+  const newBlockSize = getContentSize(data.content);
 
-  if (currentSize + newBoxSize > MAX_NOTE_SIZE) {
+  if (currentSize + newBlockSize > MAX_NOTE_SIZE) {
     throw new AppError(
       "Tamanho máximo da anotação excedido",
       "NOTE_SIZE_LIMIT_EXCEEDED",
@@ -87,27 +83,27 @@ export const updateBox = async (noteId: string, boxId: string, userId: string, d
     );
   }
 
-  return notesRepository.updateBox(boxId, userId, data);
+  return notesRepository.updateBlock(blockId, userId, data);
 };
 
-export const deleteBox = async (noteId: string, boxId: string, userId: string) => {
-  const box = await notesRepository.findBoxById(boxId, userId);
-  if (!box || box.notesId !== noteId) return null;
+export const deleteBlock = async (noteId: string, blockId: string, userId: string) => {
+  const block = await notesRepository.findBlockById(blockId, userId);
+  if (!block || block.notesId !== noteId) return null;
 
-  return notesRepository.deleteBox(boxId, userId);
+  return notesRepository.deleteBlock(blockId, userId);
 };
 
-export const reorderBoxes = async (
+export const reorderBlocks = async (
   noteId: string,
   userId: string,
-  data: ReorderBoxesType
+  data: ReorderBlocksType
 ) => {
-  // Valida que todos os boxes pertencem à nota
-  const boxes = await notesRepository.findBoxesByNote(noteId, userId);
-  const boxIds = new Set(boxes.map((b) => b.id));
+  // Valida que todos os blocks pertencem à nota
+  const blocks = await notesRepository.findBlocksByNote(noteId, userId);
+  const blockIds = new Set(blocks.map((b) => b.id));
 
-  const allBelong = data.boxes.every((b) => boxIds.has(b.id));
+  const allBelong = data.blocks.every((b) => blockIds.has(b.id));
   if (!allBelong) return null;
 
-  return notesRepository.reorderBoxes(data.boxes, userId);
+  return notesRepository.reorderBlocks(data.blocks, userId);
 };

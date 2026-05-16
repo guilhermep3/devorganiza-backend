@@ -11,8 +11,8 @@ notesRoutes.post("/", verifyJWT, notesController.postNote);
 notesRoutes.put("/:id", verifyJWT, notesController.putNote);
 notesRoutes.delete("/:id", verifyJWT, notesController.deleteNoteController);
 
-// ---------- Boxes ----------
-notesRoutes.post("/:id/boxes", verifyJWT, notesController.postBox);
-notesRoutes.put("/:id/boxes/reorder", verifyJWT, notesController.putReorderBoxes);
-notesRoutes.put("/:id/boxes/:boxId", verifyJWT, notesController.putBox);
-notesRoutes.delete("/:id/boxes/:boxId", verifyJWT, notesController.deleteBoxController);
+// ---------- Blocks ----------
+notesRoutes.post("/:id/blocks", verifyJWT, notesController.postBlock);
+notesRoutes.put("/:id/blocks/reorder", verifyJWT, notesController.putReorderBlocks);
+notesRoutes.put("/:id/blocks/:blockId", verifyJWT, notesController.putBlock);
+notesRoutes.delete("/:id/blocks/:blockId", verifyJWT, notesController.deleteBlockController);

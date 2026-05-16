@@ -1,10 +1,10 @@
 import z from "zod";
-import { boxesTable, notesTable } from "../db/schema.js";
+import { blocksTable, notesTable } from "../db/schema.js";
 
 export type NoteInsert = typeof notesTable.$inferInsert;
 export type NoteSelect = typeof notesTable.$inferSelect;
-export type BoxInsert = typeof boxesTable.$inferInsert;
-export type BoxSelect = typeof boxesTable.$inferSelect;
+export type BlockInsert = typeof blocksTable.$inferInsert;
+export type BlockSelect = typeof blocksTable.$inferSelect;
 
 // ---------- Conteúdo dos blocos ----------
 
@@ -24,7 +24,7 @@ const tableContentSchema = z.object({
   rows: z.array(z.array(z.string())).max(10),
 });
 
-export const boxContentSchema = z.union([
+export const blockContentSchema = z.union([
   textContentSchema,
   listContentSchema,
   tableContentSchema,
@@ -40,20 +40,20 @@ export const updateNoteSchema = z.object({
   name: z.string().min(1, "Nome é obrigatório").max(255, "Nome muito longo").optional(),
 });
 
-export const createBoxSchema = z.object({
+export const createBlockSchema = z.object({
   type: z.enum(["text", "list", "table"]),
-  content: boxContentSchema,
+  content: blockContentSchema,
   position: z.number().int().min(0),
 });
 
-export const updateBoxSchema = z.object({
+export const updateBlockSchema = z.object({
   type: z.enum(["text", "list", "table"]).optional(),
-  content: boxContentSchema.optional(),
+  content: blockContentSchema.optional(),
   position: z.number().int().min(0).optional(),
 });
 
-export const reorderBoxesSchema = z.object({
-  boxes: z.array(
+export const reorderBlocksSchema = z.object({
+  blocks: z.array(
     z.object({
       id: z.string().uuid(),
       position: z.number().int().min(0),
@@ -65,6 +65,6 @@ export const reorderBoxesSchema = z.object({
 
 export type CreateNoteType = z.infer<typeof createNoteSchema>;
 export type UpdateNoteType = z.infer<typeof updateNoteSchema>;
-export type CreateBoxType = z.infer<typeof createBoxSchema>;
-export type UpdateBoxType = z.infer<typeof updateBoxSchema>;
-export type ReorderBoxesType = z.infer<typeof reorderBoxesSchema>;
+export type CreateBlockType = z.infer<typeof createBlockSchema>;
+export type UpdateBlockType = z.infer<typeof updateBlockSchema>;
+export type ReorderBlocksType = z.infer<typeof reorderBlocksSchema>;

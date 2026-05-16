@@ -1,7 +1,7 @@
 import { and, asc, desc, eq } from "drizzle-orm";
-import { boxesTable, notesTable } from "../db/schema.js";
+import { blocksTable, notesTable } from "../db/schema.js";
 import { db } from "../lib/drizzle.js";
-import { CreateBoxType, CreateNoteType, UpdateBoxType, UpdateNoteType } from "../schemas/notes.js";
+import { CreateBlockType , CreateNoteType, UpdateBlockType, UpdateNoteType } from "../schemas/notes.js";
 
 export const notesRepository = {
   // ---------- Notes ----------
@@ -48,58 +48,58 @@ export const notesRepository = {
       .then((res) => res[0]);
   },
 
-  // ---------- Boxes ----------
+  // ---------- Blocks ----------
 
-  async findBoxesByNote(notesId: string, userId: string) {
+  async findBlocksByNote(notesId: string, userId: string) {
     return await db
       .select()
-      .from(boxesTable)
-      .where(and(eq(boxesTable.notesId, notesId), eq(boxesTable.userId, userId)))
-      .orderBy(asc(boxesTable.position));
+      .from(blocksTable)
+      .where(and(eq(blocksTable.notesId, notesId), eq(blocksTable.userId, userId)))
+      .orderBy(asc(blocksTable.position));
   },
 
-  async findBoxById(id: string, userId: string) {
+  async findBlockById(id: string, userId: string) {
     return await db
       .select()
-      .from(boxesTable)
-      .where(and(eq(boxesTable.id, id), eq(boxesTable.userId, userId)))
+      .from(blocksTable)
+      .where(and(eq(blocksTable.id, id), eq(blocksTable.userId, userId)))
       .limit(1)
       .then((res) => res[0]);
   },
 
-  async createBox(notesId: string, userId: string, data: CreateBoxType) {
+  async createBlock(notesId: string, userId: string, data: CreateBlockType) {
     return await db
-      .insert(boxesTable)
+      .insert(blocksTable)
       .values({ ...data, notesId, userId })
       .returning()
       .then((res) => res[0]);
   },
 
-  async updateBox(id: string, userId: string, data: UpdateBoxType) {
+  async updateBlock(id: string, userId: string, data: UpdateBlockType) {
     return await db
-      .update(boxesTable)
+      .update(blocksTable)
       .set(data)
-      .where(and(eq(boxesTable.id, id), eq(boxesTable.userId, userId)))
+      .where(and(eq(blocksTable.id, id), eq(blocksTable.userId, userId)))
       .returning()
       .then((res) => res[0]);
   },
 
-  async deleteBox(id: string, userId: string) {
+  async deleteBlock(id: string, userId: string) {
     return await db
-      .delete(boxesTable)
-      .where(and(eq(boxesTable.id, id), eq(boxesTable.userId, userId)))
+      .delete(blocksTable)
+      .where(and(eq(blocksTable.id, id), eq(blocksTable.userId, userId)))
       .returning()
       .then((res) => res[0]);
   },
 
-  async reorderBoxes(updates: { id: string; position: number }[], userId: string) {
+  async reorderBlocks(updates: { id: string; position: number }[], userId: string) {
     return await db.transaction(async (tx) => {
       const results = [];
       for (const { id, position } of updates) {
         const updated = await tx
-          .update(boxesTable)
+          .update(blocksTable)
           .set({ position })
-          .where(and(eq(boxesTable.id, id), eq(boxesTable.userId, userId)))
+          .where(and(eq(blocksTable.id, id), eq(blocksTable.userId, userId)))
           .returning()
           .then((res) => res[0]);
         if (updated) results.push(updated);
